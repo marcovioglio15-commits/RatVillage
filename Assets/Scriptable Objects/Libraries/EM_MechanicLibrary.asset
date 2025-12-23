@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46c13c77decc3d343a8d1025bf540565, type: 3}
+  m_Name: EM_MechanicLibrary
+  m_EditorClassIdentifier: Assembly-CSharp::Emergence.EM_MechanicLibrary
+  signals:
+  - {fileID: 11400000, guid: 164600f09eb80384c83350023b094241, type: 2}
+  - {fileID: 11400000, guid: 79a8079fc8696354d97629150deabeb9, type: 2}
+  - {fileID: 11400000, guid: 26b5abfed79f0974c924dae247a28a34, type: 2}
+  - {fileID: 11400000, guid: 58c4076f7b035c24dbc092de5b4645df, type: 2}
+  - {fileID: 11400000, guid: 2315e8084d3d40d41a450f874fbc302e, type: 2}
+  - {fileID: 11400000, guid: de469410502ed2a41a4075dc225f042a, type: 2}
+  - {fileID: 11400000, guid: e41b7e63e8e596d4aaf5ea7320c769b8, type: 2}
+  - {fileID: 11400000, guid: f2f06c95035a8c04a910f12ac9b1a72a, type: 2}
+  - {fileID: 11400000, guid: 7a56b3c808c297f45b208dfb12e970b7, type: 2}
+  - {fileID: 11400000, guid: f5e8e2a1f7ec4e947820671de73225d5, type: 2}
+  - {fileID: 11400000, guid: 690f14f62b80e6247be31451b4947a8c, type: 2}
+  ruleSets:
+  - {fileID: 11400000, guid: b0b74bd65d42e3346809d1a44a7b09a9, type: 2}
+  - {fileID: 11400000, guid: 37db7b6faee20e74481533df653fd71d, type: 2}
+  effects:
+  - {fileID: 11400000, guid: 39acf4a256f53cb49ae577c6abe69741, type: 2}
+  - {fileID: 11400000, guid: 44c977027fdc08c4c9175e48c059d8c2, type: 2}
+  - {fileID: 11400000, guid: a5ad6c8f1428bb741bdef38279b8859e, type: 2}
+  - {fileID: 11400000, guid: 93df50b545860ba44af12ec6a97992e1, type: 2}
+  - {fileID: 11400000, guid: ccd74eead200b2943b378befed53dac1, type: 2}
+  - {fileID: 11400000, guid: 6e9874eff1914a04eb84788cd8a5b8a1, type: 2}
+  - {fileID: 11400000, guid: a5e839a427ef5df43a922b401d96767d, type: 2}
+  metrics:
+  - {fileID: 11400000, guid: 069111e40a7333b45ac658d30f995df8, type: 2}
+  - {fileID: 11400000, guid: 0b84d8174d51e2d40af44bcfcd96e5bd, type: 2}
+  - {fileID: 11400000, guid: 3b1e28fbfc7030843bd4ad936f485e85, type: 2}
+  - {fileID: 11400000, guid: 700a2ddcc1fd5fa468f9e143a86dd184, type: 2}
+  norms: []
+  institutions: []
+  domains:
+  - {fileID: 11400000, guid: bc79c9e0d052bd74aa1f6e157d5be3bd, type: 2}
+  - {fileID: 11400000, guid: 67934f9aea4c20a46893c8a5e5bc5990, type: 2}
+  - {fileID: 11400000, guid: 7da1438a032733943bdc54a7c688d6eb, type: 2}
+  - {fileID: 11400000, guid: 6765cbbd9675fe9469f4d7954982a4f7, type: 2}
+  profiles:
+  - {fileID: 11400000, guid: fa4910e5f44fb584798ee25d76284f4e, type: 2}

@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0551ef25dac0f045962a0667f8f483e, type: 3}
+  m_Name: EM_RuleSet_Schedule
+  m_EditorClassIdentifier: Assembly-CSharp::Emergence.EM_RuleSetDefinition
+  ruleSetId: RuleSet.Schedule
+  displayName: Schedule Rules
+  isEnabled: 1
+  domain: {fileID: 11400000, guid: 6765cbbd9675fe9469f4d7954982a4f7, type: 2}
+  rules:
+  - signal: {fileID: 11400000, guid: 58c4076f7b035c24dbc092de5b4645df, type: 2}
+    effect: {fileID: 11400000, guid: 39acf4a256f53cb49ae577c6abe69741, type: 2}
+    priority: 0
+    weight: 1
+    minimumSignalValue: 0
+    cooldownSeconds: 0
+  - signal: {fileID: 11400000, guid: 2315e8084d3d40d41a450f874fbc302e, type: 2}
+    effect: {fileID: 11400000, guid: 44c977027fdc08c4c9175e48c059d8c2, type: 2}
+    priority: 0
+    weight: 1
+    minimumSignalValue: 0
+    cooldownSeconds: 0
+  - signal: {fileID: 11400000, guid: 2315e8084d3d40d41a450f874fbc302e, type: 2}
+    effect: {fileID: 11400000, guid: a5ad6c8f1428bb741bdef38279b8859e, type: 2}
+    priority: 0
+    weight: 1
+    minimumSignalValue: 0
+    cooldownSeconds: 0
+  - signal: {fileID: 11400000, guid: de469410502ed2a41a4075dc225f042a, type: 2}
+    effect: {fileID: 11400000, guid: 93df50b545860ba44af12ec6a97992e1, type: 2}
+    priority: 0
+    weight: 1
+    minimumSignalValue: 0
+    cooldownSeconds: 0
+  - signal: {fileID: 11400000, guid: de469410502ed2a41a4075dc225f042a, type: 2}
+    effect: {fileID: 11400000, guid: ccd74eead200b2943b378befed53dac1, type: 2}
+    priority: 0
+    weight: 1
+    minimumSignalValue: 0
+    cooldownSeconds: 0
+  description: 

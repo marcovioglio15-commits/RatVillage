@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7067dc20c7c949f43bd6948ea376421d, type: 3}
+  m_Name: EM_Domain_Schedule
+  m_EditorClassIdentifier: Assembly-CSharp::Emergence.EM_DomainDefinition
+  domainId: Domain.Schedule
+  displayName: Schedule
+  domainColor: {r: 0.8, g: 0.7, b: 0.2, a: 1}
+  isEnabled: 1
+  updateWeight: 1
+  ruleSets:
+  - {fileID: 11400000, guid: b0b74bd65d42e3346809d1a44a7b09a9, type: 2}
+  description: 
