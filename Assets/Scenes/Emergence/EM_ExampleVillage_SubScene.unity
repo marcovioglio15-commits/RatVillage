@@ -149,7 +149,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Emergence.EmergenceLibraryAuthoring
   library: {fileID: 11400000, guid: 95bee5170c5e63749a06e60449626e92, type: 2}
-  defaultProfile: {fileID: 11400000, guid: fa4910e5f44fb584798ee25d76284f4e, type: 2}
 --- !u!4 &1399031818
 Transform:
   m_ObjectHideFlags: 0
@@ -195,11 +194,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Emergence.EmergenceNpcSpawnerAuthoring
   npcPrefab: {fileID: 3413567824012304399, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
+  spawnEntries: []
   societyRoot: {fileID: 1984070724}
   count: 12
   radius: 12
   height: 0
   randomSeed: 0
+  LogNamePrefix: 
 --- !u!4 &1924287886
 Transform:
   m_ObjectHideFlags: 0
@@ -247,99 +248,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Emergence.EmergenceSocietySimulationAuthoring
   dayLengthSeconds: 120
   startTimeOfDay: 6
-  sleepStartHour: 22
-  sleepEndHour: 6
-  workStartHour: 8
-  workEndHour: 17
-  tickIntervalHours: 1
-  sleepSignalId: Time.SleepWindow
-  workSignalId: Time.WorkWindow
-  leisureSignalId: Time.LeisureWindow
-  sleepTickSignalId: Time.SleepTick
-  workTickSignalId: Time.WorkTick
-  leisureTickSignalId: Time.LeisureTick
-  scheduleCurveSamples: 32
-  sleepCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.5
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  workCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  leisureCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 0.6
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
   societyResources:
   - ResourceId: Resource.Food
     Amount: 50
@@ -373,7 +281,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Emergence.EmergenceSocietyProfileAuthoring
   library: {fileID: 11400000, guid: 95bee5170c5e63749a06e60449626e92, type: 2}
   profile: {fileID: 11400000, guid: fa4910e5f44fb584798ee25d76284f4e, type: 2}
+  LogName: Rat Society
   initialLod: 0
+  randomSeed: 0
 --- !u!4 &1984070727
 Transform:
   m_ObjectHideFlags: 0

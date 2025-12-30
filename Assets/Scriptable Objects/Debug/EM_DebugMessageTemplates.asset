@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: EM_DebugMessageTemplates
   m_EditorClassIdentifier: Assembly-CSharp::Emergence.EM_DebugMessageTemplates
   timeLabelTemplate: 'Time of Day: {time}'
-  scheduleWindowTemplate: '[{time}] Society {society} entered {window} window.'
-  scheduleTickTemplate: '[{time}] Society {society} {window} tick value {value}.'
+  scheduleWindowTemplate: '[{time}] {subject} started {window} activity.'
+  scheduleTickTemplate: '[{time}] {subject} {window} activity tick (value {value}).'
   tradeAttemptTemplate: '[{time}] Villager {subject} seeks {resource} for {need}
     from Villager {target}.'
   tradeSuccessTemplate: '[{time}] Villager {subject} obtained {resource} from Villager

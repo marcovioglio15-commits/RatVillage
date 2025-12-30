@@ -49,8 +49,9 @@ MonoBehaviour:
   societyRoot: {fileID: 0}
   lodTier: 0
   initialReputation: 0
-  randomSeed: 0
-  debugName: Blue
+  randomSeed: 3
+  npcTypeId: Gianni The Rat
+  schedulePreset: {fileID: 11400000, guid: 6b3b6f92814ddc54e91cfccfd7e4db5a, type: 2}
   needs:
   - NeedId: Need.Hunger
     Value: 0.2
@@ -61,7 +62,30 @@ MonoBehaviour:
   needRules:
   - NeedId: Need.Hunger
     ResourceId: Resource.Food
-    RatePerHour: 0.06
+    RatePerHour:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
     MinValue: 0
     MaxValue: 1
     StartThreshold: 0.5
@@ -72,7 +96,30 @@ MonoBehaviour:
     NeedSatisfactionAmount: 0.4
   - NeedId: Need.Thirst
     ResourceId: Resource.Water
-    RatePerHour: 0.08
+    RatePerHour:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
     MinValue: 0
     MaxValue: 1
     StartThreshold: 0.4
@@ -83,7 +130,30 @@ MonoBehaviour:
     NeedSatisfactionAmount: 0.5
   - NeedId: Need.Sleep
     ResourceId: Resource.Sleep
-    RatePerHour: 0.05
+    RatePerHour:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 34
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
     MinValue: 0
     MaxValue: 1
     StartThreshold: 0.6
@@ -100,6 +170,7 @@ MonoBehaviour:
   - ResourceId: Resource.Sleep
     Amount: 0
   relationships: []
+  relationshipTypes: []
 --- !u!33 &5218148292420720532
 MeshFilter:
   m_ObjectHideFlags: 0
