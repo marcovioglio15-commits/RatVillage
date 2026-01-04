@@ -1,12 +1,9 @@
-using System.Diagnostics.CodeAnalysis;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.VisualScripting;
-using UnityEngine;
 
 namespace EmergentMechanics
 {
-    public struct EM_BufferElement_NeedRule : IBufferElementData
+    public struct EM_BufferElement_NeedSetting : IBufferElementData
     {
         #region Data
         public FixedString64Bytes NeedId;
@@ -14,20 +11,31 @@ namespace EmergentMechanics
         public FixedList128Bytes<float> RatePerHourSamples;
         public float MinValue;
         public float MaxValue;
-        public float StartThreshold;
-        public float MaxProbability;
-        public float ProbabilityExponent;
-        public float CooldownSeconds;
-        public float ResourceTransferAmount;
-        public float NeedSatisfactionAmount;
+        public float RequestAmount;
+        public float NeedSatisfactionPerUnit;
         #endregion
     }
 
-    public struct EM_BufferElement_NeedResolutionState : IBufferElementData
+    public struct EM_BufferElement_NeedActivityRate : IBufferElementData
     {
         #region Data
         public FixedString64Bytes NeedId;
+        public FixedString64Bytes ActivityId;
+        public FixedList128Bytes<float> RatePerHourSamples;
+        #endregion
+    }
+
+    public struct EM_BufferElement_Intent : IBufferElementData
+    {
+        #region Data
+        public FixedString64Bytes IntentId;
+        public FixedString64Bytes NeedId;
+        public FixedString64Bytes ResourceId;
+        public float Urgency;
+        public float DesiredAmount;
+        public double CreatedTime;
         public double NextAttemptTime;
+        public Entity PreferredTarget;
         #endregion
     }
 
@@ -58,6 +66,15 @@ namespace EmergentMechanics
     {
         #region Data
         public uint Value;
+        #endregion
+    }
+
+    public struct EM_Component_NpcTradePreferences : IComponentData
+    {
+        #region Data
+        public FixedList128Bytes<float> AffinityMultiplierSamples;
+        public float MinMultiplier;
+        public float MaxMultiplier;
         #endregion
     }
 }

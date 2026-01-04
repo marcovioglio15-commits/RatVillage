@@ -14,13 +14,6 @@ namespace EmergentMechanics
         #endregion
     }
 
-    public struct EM_Component_SocietyLod : IComponentData
-    {
-        #region Data
-        public EmergenceLodTier Tier;
-        #endregion
-    }
-
     public struct EM_Component_SocietyProfileReference : IComponentData
     {
         #region Data
@@ -58,10 +51,4 @@ namespace EmergentMechanics
         #endregion
     }
 
-    public struct EM_Component_Population : IComponentData
-    {
-        #region Data
-        public int Value;
-        #endregion
-    }
 }

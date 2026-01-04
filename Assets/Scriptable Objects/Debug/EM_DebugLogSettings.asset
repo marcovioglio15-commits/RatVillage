@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef8b57d796c699f488be8d632e7b26fd, type: 3}
+  m_Name: EM_DebugLogSettings
+  m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_DebugLogSettings
+  filterMode: 0
+  includeSignals: 1
+  needSignalPrefix: Need.
+  includeNeedSignals: 1
+  tradeSignalPrefix: Trade.
+  includeTradeSignals: 1
+  includeOtherSignals: 1
+  includeIntents: 1
+  includeEffects: 1
+  includeInteractionAttempts: 1
+  includeInteractionSuccess: 1
+  includeInteractionFailures: 1
+  includeScheduleStart: 1
+  includeScheduleEnd: 1
+  includeScheduleTick: 1

@@ -10,9 +10,6 @@ namespace EmergentMechanics
         [Tooltip("Unique key used to group signals and rule sets. Treat as a stable category id so profiles and masks remain valid.")]
         [Header("Identity")]
         [SerializeField] private string domainId = "Domain.Id";
-
-        [Tooltip("Designer-facing label shown in tools and debug views. Use clear category names (e.g., Economy, Social, Survival).")]
-        [SerializeField] private string displayName = "Domain";
         #endregion
 
         #region Visualization
@@ -41,14 +38,6 @@ namespace EmergentMechanics
             get
             {
                 return domainId;
-            }
-        }
-
-        public string DisplayName
-        {
-            get
-            {
-                return displayName;
             }
         }
 

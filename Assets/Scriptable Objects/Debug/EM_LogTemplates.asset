@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05a42299ddb8a41a887eabf0bb7fa0, type: 3}
+  m_Name: EM_LogTemplates
+  m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_DebugMessageTemplates
+  timeLabelTemplate: 'Time of Day: {time}'
+  signalEmittedTemplate: '[{time}] {subject} emitted {signal} ({context}) value {value}.'
+  intentCreatedTemplate: '[{time}] {subject} created intent {intent} for {need} ({resource})
+    amount {value} urgency {delta}.'
+  effectAppliedTemplate: '[{time}] {subject} applied {effect} on {target} ({parameter}/{context})
+    delta {delta} (from {before} to {after}).'
+  interactionAttemptTemplate: '[{time}] {subject} attempts to resolve {need} using
+    {resource}.'
+  interactionSuccessTemplate: '[{time}] {subject} obtained {resource} from {target}
+    for {need} (amount {value}).'
+  interactionFailTemplate: '[{time}] {subject} failed to resolve {need} using {resource}
+    (reason: {reason}).'
+  scheduleWindowTemplate: '[{time}] {subject} started activity {activity}.'
+  scheduleTickTemplate: '[{time}] {subject} activity {activity} tick (value {value}).'

@@ -171,8 +171,8 @@ namespace EmergentMechanics
             return math.saturate(value);
         }
 
-        private static void EmitSignal(FixedString64Bytes signalId, DynamicBuffer<EM_BufferElement_SignalEvent> signals,
-            Entity subject, Entity societyRoot, float value)
+        private static void EmitSignal(FixedString64Bytes signalId, FixedString64Bytes contextId, DynamicBuffer<EM_BufferElement_SignalEvent> signals,
+            Entity subject, Entity societyRoot, float value, bool hasDebugBuffer, DynamicBuffer<EM_Component_Event> debugBuffer, int maxEntries)
         {
             if (signalId.Length == 0)
                 return;
@@ -182,11 +182,19 @@ namespace EmergentMechanics
                 SignalId = signalId,
                 Value = value,
                 Subject = subject,
+                Target = Entity.Null,
                 SocietyRoot = societyRoot,
+                ContextId = contextId,
                 Time = 0d
             };
 
             signals.Add(signalEvent);
+
+            if (!hasDebugBuffer)
+                return;
+
+            EM_Component_Event debugEvent = EM_Utility_LogEvent.BuildSignalEvent(signalId, value, contextId, subject, Entity.Null, societyRoot);
+            EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, debugEvent);
         }
         #endregion
 
@@ -195,21 +203,7 @@ namespace EmergentMechanics
         private static EM_Component_Event ScheduleLogEvent(EM_DebugEventType eventType, float timeOfDay,
             Entity society, Entity subject, FixedString64Bytes activityId, float value)
         {
-            EM_Component_Event debugEvent = new EM_Component_Event
-            {
-                Type = eventType,
-                Time = timeOfDay,
-                Society = society,
-                Subject = subject,
-                Target = Entity.Null,
-                NeedId = default,
-                ResourceId = default,
-                WindowId = activityId,
-                Reason = default,
-                Value = value
-            };
-
-            return debugEvent;
+            return EM_Utility_LogEvent.BuildScheduleEvent(eventType, timeOfDay, society, subject, activityId, value);
         }
         #endregion
         #endregion

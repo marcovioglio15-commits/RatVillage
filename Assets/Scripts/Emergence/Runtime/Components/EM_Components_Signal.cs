@@ -9,7 +9,9 @@ namespace EmergentMechanics
         public FixedString64Bytes SignalId;
         public float Value;
         public Entity Subject;
+        public Entity Target;
         public Entity SocietyRoot;
+        public FixedString64Bytes ContextId;
         public double Time;
         #endregion
     }

@@ -114,6 +114,9 @@ namespace EmergentMechanics
 
                 EM_Blob_Metric metric = metrics[i];
 
+                if (metric.SamplingMode == EmergenceMetricSamplingMode.Event)
+                    continue;
+
                 if (metric.Scope != scope)
                     continue;
 

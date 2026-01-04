@@ -109,6 +109,7 @@ namespace EmergentMechanics
                     }
                 }
 
+                FixedString64Bytes previousActivityId = scheduleState.ValueRO.CurrentActivityId;
                 byte overrideFlag = (byte)(overrideActive ? 1 : 0);
                 bool activityChanged = scheduleState.ValueRO.CurrentEntryIndex != entryIndex ||
                     scheduleState.ValueRO.IsOverride != overrideFlag ||
@@ -116,13 +117,20 @@ namespace EmergentMechanics
 
                 if (activityChanged)
                 {
+                    if (hasDebugBuffer && previousActivityId.Length > 0 && !previousActivityId.Equals(activityId))
+                    {
+                        EM_Component_Event debugEvent = ScheduleLogEvent(EM_DebugEventType.ScheduleEnd, timeOfDay,
+                            societyRoot, entity, previousActivityId, 0f);
+                        EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, debugEvent);
+                    }
+
                     scheduleState.ValueRW.CurrentEntryIndex = entryIndex;
                     scheduleState.ValueRW.CurrentActivityId = activityId;
                     scheduleState.ValueRW.IsOverride = overrideFlag;
                     scheduleState.ValueRW.TickAccumulatorHours = 0f;
 
                     if (activityId.Length > 0 && startSignalId.Length > 0)
-                        EmitSignal(startSignalId, signals, entity, societyRoot, 1f);
+                        EmitSignal(startSignalId, activityId, signals, entity, societyRoot, 1f, hasDebugBuffer, debugBuffer, maxEntries);
 
                     if (hasDebugBuffer && activityId.Length > 0)
                     {
@@ -151,7 +159,7 @@ namespace EmergentMechanics
                 ref EM_Blob_NpcScheduleEntry tickEntry = ref entries[entryIndex];
                 float curveValue = SampleCurve(ref tickEntry.CurveSamples, progress);
 
-                EmitSignal(tickSignalId, signals, entity, societyRoot, curveValue);
+                EmitSignal(tickSignalId, activityId, signals, entity, societyRoot, curveValue, hasDebugBuffer, debugBuffer, maxEntries);
 
                 if (hasDebugBuffer)
                 {

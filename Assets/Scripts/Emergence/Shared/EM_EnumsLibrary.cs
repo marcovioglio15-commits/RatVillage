@@ -3,54 +3,74 @@ namespace EmergentMechanics
     #region Lod
     public enum EmergenceLodTier
     {
-        Full = 0,
-        Simplified = 1,
-        Aggregated = 2
+        Full,
+        Simplified,
+        Aggregated
     }
     #endregion
 
     #region Effect
     public enum EmergenceEffectTarget
     {
-        EventTarget = 0,
-        SocietyRoot = 1
+        EventTarget,
+        SocietyRoot,
+        SignalTarget
     }
 
 
     public enum EmergenceEffectType
     {
-        ModifyNeed = 0,
-        ModifyResource = 1,
-        ModifyReputation = 2,
-        ModifyCohesion = 3,
-        OverrideSchedule = 4
+        ModifyNeed,
+        ModifyResource,
+        ModifyReputation,
+        ModifyCohesion,
+        OverrideSchedule,
+        ModifyRelationship,
+        AddIntent,
+        EmitSignal
     }
     #endregion
 
     #region Metric
     public enum EmergenceMetricScope
     {
-        Society = 0,
-        Member = 1
+        Society,
+        Member
     }
 
     public enum EmergenceMetricAggregation
     {
-        Last = 0,
-        Average = 1,
-        Sum = 2,
-        Min = 3,
-        Max = 4,
-        Count = 5,
-        Rate = 6
+        No_Aggregation,
+        Average,
+        Sum,
+        Min,
+        Max,
+        Count,
+        Rate
     }
 
     public enum EmergenceMetricNormalization
     {
-        Clamp01 = 0,
-        Invert01 = 1,
-        Signed01 = 2,
-        Abs01 = 3
+        Clamp01,
+        Invert01,
+        Signed01,
+        Abs01
+    }
+    #endregion
+
+    #region Signal
+    public enum EmergenceSignalKind
+    {
+        Event,
+        State
+    }
+    #endregion
+
+    #region Sampling
+    public enum EmergenceMetricSamplingMode
+    {
+        Aggregate,
+        Event
     }
     #endregion
 
@@ -67,12 +87,15 @@ namespace EmergentMechanics
 
     public enum EM_DebugEventType
     {
+        SignalEmitted,
+        IntentCreated,
+        EffectApplied,
+        InteractionAttempt,
+        InteractionSuccess,
+        InteractionFail,
         ScheduleWindow,
-        ScheduleTick,
-        TradeAttempt,
-        TradeSuccess,
-        TradeFail,
-        DistributionTransfer
+        ScheduleEnd,
+        ScheduleTick
     }
     #endregion
 }

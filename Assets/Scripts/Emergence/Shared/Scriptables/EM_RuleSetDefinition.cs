@@ -8,28 +8,15 @@ namespace EmergentMechanics
     public sealed class EM_RuleSetDefinition : ScriptableObject
     {
 		#region Nested Types
-		[Serializable]
-        public struct MetricRuleEntry
+        [Serializable]
+        public struct RuleEffectEntry
         {
             #region Serialized
-            #region Mapping
-            [Tooltip("Metric sampled by this rule. Metrics define how signals are aggregated over time.")]
-            [SerializeField] private EM_MetricDefinition metric;
-
             [Tooltip("Effect triggered when the rule fires. Effects are reusable outcome blocks that define what changes in the simulation.")]
             [SerializeField] private EM_EffectDefinition effect;
-            #endregion
 
-            #region Behavior
-            [Tooltip("Probability curve evaluated using the normalized metric value (0-1). The curve result defines the chance to trigger the effect.")]
-            [SerializeField] private AnimationCurve probabilityCurve;
-
-            [Tooltip("Multiplier applied to the effect magnitude for this rule.")]
+            [Tooltip("Multiplier applied to the effect magnitude after the rule weight.")]
             [SerializeField] private float weight;
-
-            [Tooltip("Minimum seconds between firings on the same target.")]
-            [SerializeField] private float cooldownSeconds;
-            #endregion
             #endregion
 
             #region Public Properties
@@ -41,11 +28,76 @@ namespace EmergentMechanics
                 }
             }
 
+            public float Weight
+            {
+                get
+                {
+                    return weight;
+                }
+            }
+            #endregion
+
+            #region Methods
+            public bool EnsureDefaults()
+            {
+                if (weight > 0f)
+                    return false;
+
+                weight = 1f;
+                return true;
+            }
+            #endregion
+        }
+
+        [Serializable]
+        public struct RuleEntry
+        {
+            #region Serialized
+            #region Mapping
+            [Tooltip("Metric sampled by this rule. Metrics define how signals are aggregated over time.")]
+            [SerializeField] private EM_MetricDefinition metric;
+
+            [Tooltip("Optional context id filter. When set, the rule only triggers if the metric sample context matches this id.")]
+            [SerializeField] private string contextIdFilter;
+
+            [Tooltip("Effects applied when the rule fires. All effects in the list are applied together.")]
+            [SerializeField] private RuleEffectEntry[] effects;
+            #endregion
+
+            #region Behavior
+            [Tooltip("Probability curve evaluated using the normalized metric value (0-1). The curve result defines the chance to trigger the effects.")]
+            [SerializeField] private AnimationCurve probabilityCurve;
+
+            [Tooltip("Multiplier applied to all effects when this rule fires.")]
+            [SerializeField] private float weight;
+
+            [Tooltip("Minimum seconds between firings on the same target.")]
+            [SerializeField] private float cooldownSeconds;
+            #endregion
+            #endregion
+
+            #region Public Properties
             public EM_MetricDefinition Metric
             {
                 get
                 {
                     return metric;
+                }
+            }
+
+            public RuleEffectEntry[] Effects
+            {
+                get
+                {
+                    return effects;
+                }
+            }
+
+            public string ContextIdFilter
+            {
+                get
+                {
+                    return contextIdFilter;
                 }
             }
 
@@ -78,12 +130,36 @@ namespace EmergentMechanics
             #region Methods
             public bool EnsureDefaults()
             {
-                if (probabilityCurve != null)
-                    return false;
+                bool updated = false;
 
-                probabilityCurve = EM_RuleSetDefinition.BuildDefaultProbabilityCurve();
-                weight = 1f;
-                return true;
+                if (probabilityCurve == null)
+                {
+                    probabilityCurve = EM_RuleSetDefinition.BuildDefaultProbabilityCurve();
+                    updated = true;
+                }
+
+                if (weight <= 0f)
+                {
+                    weight = 1f;
+                    updated = true;
+                }
+
+                if (effects == null)
+                    return updated;
+
+                for (int i = 0; i < effects.Length; i++)
+                {
+                    RuleEffectEntry entry = effects[i];
+                    bool entryUpdated = entry.EnsureDefaults();
+
+                    if (!entryUpdated)
+                        continue;
+
+                    effects[i] = entry;
+                    updated = true;
+                }
+
+                return updated;
             }
             #endregion
         }
@@ -94,15 +170,12 @@ namespace EmergentMechanics
 		[Tooltip("Unique key referenced by profiles and runtime masks. Keep stable once in use to avoid breaking profile mappings.")]
         [Header("Identity")]
         [SerializeField] private string ruleSetId = "RuleSet.Id";
-
-        [Tooltip("Designer-facing label shown in tools and debug views. Safe to rename without affecting runtime links.")]
-        [SerializeField] private string displayName = "Rule Set";
         #endregion
 
         #region Rules
-        [Tooltip("Metric-to-effect rules evaluated on metric sample ticks. Use to map observations into outcomes.")]
+        [Tooltip("Rules evaluated on metric samples. Each rule can apply multiple effects together.")]
         [Header("Rules")]
-        [SerializeField] private MetricRuleEntry[] rules = new MetricRuleEntry[0];
+        [SerializeField] private RuleEntry[] rules = new RuleEntry[0];
         #endregion
 
         #region Notes
@@ -123,15 +196,7 @@ namespace EmergentMechanics
             }
         }
 
-        public string DisplayName
-        {
-            get
-            {
-                return displayName;
-            }
-        }
-
-        public MetricRuleEntry[] Rules
+        public RuleEntry[] Rules
         {
             get
             {
@@ -165,7 +230,7 @@ namespace EmergentMechanics
             // Initialize missing defaults for new or reset rule entries.
             for (int i = 0; i < rules.Length; i++)
             {
-                MetricRuleEntry entry = rules[i];
+                RuleEntry entry = rules[i];
                 bool updated = entry.EnsureDefaults();
 
                 if (!updated)

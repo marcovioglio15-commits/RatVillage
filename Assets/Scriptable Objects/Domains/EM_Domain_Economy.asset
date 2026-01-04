@@ -11,11 +11,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7067dc20c7c949f43bd6948ea376421d, type: 3}
   m_Name: EM_Domain_Economy
-  m_EditorClassIdentifier: Assembly-CSharp::Emergence.EM_DomainDefinition
-  domainId: Domain.Economy
-  displayName: Economy
-  domainColor: {r: 0.2, g: 0.7, b: 0.3, a: 1}
-  isEnabled: 1
-  updateWeight: 1
-  ruleSets: []
+  m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_DomainDefinition
+  domainId: Domain.Survival
+  domainColor: {r: 0, g: 1, b: 0.21209884, a: 1}
+  ruleSets:
+  - {fileID: 11400000, guid: 7146c2a35e37060478bb6e69fe0cf663, type: 2}
   description: 

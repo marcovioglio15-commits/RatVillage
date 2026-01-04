@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1201e77ab4cccfb4a86e413d77fbdb9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Emergence.EmergenceLibraryAuthoring
-  library: {fileID: 11400000, guid: 95bee5170c5e63749a06e60449626e92, type: 2}
+  library: {fileID: 0}
 --- !u!4 &1399031818
 Transform:
   m_ObjectHideFlags: 0
@@ -194,12 +194,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Emergence.EmergenceNpcSpawnerAuthoring
   npcPrefab: {fileID: 3413567824012304399, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
-  spawnEntries: []
+  spawnEntries:
+  - Prefab: {fileID: 3413567824012304399, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
+    Weight: 1
+  - Prefab: {fileID: 3413567824012304399, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
+    Weight: 1
+  - Prefab: {fileID: 3413567824012304399, guid: 936c1d72502bd9e47a5fad73f454eaa8, type: 3}
+    Weight: 1
   societyRoot: {fileID: 1984070724}
   count: 12
   radius: 12
   height: 0
-  randomSeed: 0
   LogNamePrefix: 
 --- !u!4 &1924287886
 Transform:
@@ -256,17 +261,14 @@ MonoBehaviour:
   - ResourceId: Resource.Sleep
     Amount: 50
   needTickRate: 1
+  needValueSignalId: 
+  needUrgencySignalId: Signal.Need.Urgency
+  needSignalOverrides: []
   tradeTickRate: 1
   tradeBaseAcceptance: 0.5
   tradeAffinityWeight: 0.5
-  affinityChangeOnSuccess: 0.05
-  affinityChangeOnFail: -0.05
-  tradeSuccessSignalId: Trade.Success
-  tradeFailSignalId: Trade.Fail
-  distributionTickRate: 0.5
-  distributionMaxTransfersPerMember: 1
-  distributionDefaultTransferAmount: 1
-  distributionDefaultNeedSatisfaction: 1
+  tradeSuccessSignalId: Signal.Trade.Success
+  tradeFailSignalId: Signal.Trade.Fail
 --- !u!114 &1984070726
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -280,10 +282,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Emergence.EmergenceSocietyProfileAuthoring
   library: {fileID: 11400000, guid: 95bee5170c5e63749a06e60449626e92, type: 2}
-  profile: {fileID: 11400000, guid: fa4910e5f44fb584798ee25d76284f4e, type: 2}
+  profile: {fileID: 11400000, guid: d1a8b463e1a0f9b4580e6b8f9eb7a4eb, type: 2}
   LogName: Rat Society
-  initialLod: 0
-  randomSeed: 0
 --- !u!4 &1984070727
 Transform:
   m_ObjectHideFlags: 0

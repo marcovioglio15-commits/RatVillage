@@ -14,8 +14,44 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_NpcSchedulePreset
   curveSamples: 32
   entries:
-  - activityId: Working
+  - activityId: Override.SeekFood
     startHour: 0
+    endHour: 0
+    tickIntervalHours: 0
+    startSignalId: 
+    tickSignalId: 
+    activityCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+  - activityId: Override.SeekWater
+    startHour: 0
+    endHour: 0
+    tickIntervalHours: 0
+    startSignalId: 
+    tickSignalId: 
+    activityCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+  - activityId: Override.Sleep
+    startHour: 0
+    endHour: 0
+    tickIntervalHours: 0
+    startSignalId: 
+    tickSignalId: 
+    activityCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+  - activityId: Work
+    startHour: 6
     endHour: 24
     tickIntervalHours: 0
     startSignalId: 

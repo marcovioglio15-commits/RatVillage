@@ -50,8 +50,9 @@ namespace EmergentMechanics
 
             Dictionary<EM_MetricDefinition, int> metricIndices = BuildIndexDictionary(metrics);
             List<float[]> curveSamples = new List<float[]>();
+            List<RuleEffectRecord> effectRecords = new List<RuleEffectRecord>();
 
-            RuleBuildRecord[] rules = BuildRuleRecords(ruleSets, ruleSetIndices, metricIndices, effectIndices, curveSamples, DefaultCurveSamples);
+            RuleBuildRecord[] rules = BuildRuleRecords(ruleSets, ruleSetIndices, metricIndices, effectIndices, effectRecords, curveSamples, DefaultCurveSamples);
             EM_Blob_RuleGroup[] ruleGroups = BuildRuleGroups(rules);
             MetricGroupRecord[] metricGroupRecords = BuildMetricGroupRecords(metrics, signalIndices);
             EM_Blob_MetricGroup[] metricGroups = BuildMetricGroups(metricGroupRecords);
@@ -68,6 +69,7 @@ namespace EmergentMechanics
             BlobBuilderArray<EM_Blob_Effect> effectArray = builder.Allocate(ref root.Effects, effects.Count);
             BlobBuilderArray<EM_Blob_RuleSet> ruleSetArray = builder.Allocate(ref root.RuleSets, ruleSets.Count);
             BlobBuilderArray<EM_Blob_Rule> ruleArray = builder.Allocate(ref root.Rules, rules.Length);
+            BlobBuilderArray<EM_Blob_RuleEffect> ruleEffectArray = builder.Allocate(ref root.RuleEffects, effectRecords.Count);
             BlobBuilderArray<EM_Blob_RuleGroup> groupArray = builder.Allocate(ref root.RuleGroups, ruleGroups.Length);
             BlobBuilderArray<EM_Blob_MetricGroup> metricGroupArray = builder.Allocate(ref root.MetricGroups, metricGroups.Length);
             BlobBuilderArray<int> metricGroupIndexArray = builder.Allocate(ref root.MetricGroupMetricIndices, metricGroupMetricIndices.Length);
@@ -80,9 +82,6 @@ namespace EmergentMechanics
             {
                 EM_SignalDefinition signal = signals[i];
                 FixedString64Bytes domainId = new FixedString64Bytes(string.Empty);
-
-                if (signal.Domain != null)
-                    domainId = new FixedString64Bytes(signal.Domain.DomainId);
 
                 signalArray[i] = new EM_Blob_Signal
                 {
@@ -102,6 +101,7 @@ namespace EmergentMechanics
                     MetricId = new FixedString64Bytes(metric.MetricId),
                     SignalIndex = signalIndex,
                     SampleInterval = metric.SampleInterval,
+                    SamplingMode = metric.SamplingMode,
                     Scope = metric.Scope,
                     Aggregation = metric.Aggregation,
                     Normalization = metric.Normalization
@@ -119,6 +119,7 @@ namespace EmergentMechanics
                     EffectType = effect.EffectType,
                     Target = effect.Target,
                     ParameterId = new FixedString64Bytes(effect.ParameterId),
+                    SecondaryId = new FixedString64Bytes(effect.SecondaryId),
                     Magnitude = effect.Magnitude,
                     UseClamp = effect.UseClamp ? (byte)1 : (byte)0,
                     MinValue = effect.MinValue,
@@ -143,11 +144,22 @@ namespace EmergentMechanics
                 ruleArray[i] = new EM_Blob_Rule
                 {
                     MetricIndex = rules[i].MetricIndex,
-                    EffectIndex = rules[i].EffectIndex,
                     RuleSetIndex = rules[i].RuleSetIndex,
+                    ContextId = rules[i].ContextId,
                     CurveIndex = rules[i].CurveIndex,
                     Weight = rules[i].Weight,
-                    CooldownSeconds = rules[i].CooldownSeconds
+                    CooldownSeconds = rules[i].CooldownSeconds,
+                    EffectStartIndex = rules[i].EffectStartIndex,
+                    EffectLength = rules[i].EffectLength
+                };
+            }
+
+            for (int i = 0; i < effectRecords.Count; i++)
+            {
+                ruleEffectArray[i] = new EM_Blob_RuleEffect
+                {
+                    EffectIndex = effectRecords[i].EffectIndex,
+                    Weight = effectRecords[i].Weight
                 };
             }
 

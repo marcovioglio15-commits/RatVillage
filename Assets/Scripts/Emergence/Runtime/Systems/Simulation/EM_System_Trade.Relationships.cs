@@ -6,8 +6,50 @@ namespace EmergentMechanics
 {
     public partial struct EM_System_Trade
     {
-        #region RelationshipHelpers
-        // Relationship affinity resolution with type fallback.
+        #region Relationships
+        private static bool FindBestProvider(Entity requester, Entity societyRoot, FixedString64Bytes resourceId,
+            NativeList<Entity> candidates, NativeList<Entity> candidateSocieties, BufferLookup<EM_BufferElement_Resource> resourceLookup,
+            BufferLookup<EM_BufferElement_Relationship> relationshipLookup, BufferLookup<EM_BufferElement_RelationshipType> relationshipTypeLookup,
+            ComponentLookup<EM_Component_NpcType> npcTypeLookup, out Entity provider, out float affinity, out float availableAmount)
+        {
+            provider = Entity.Null;
+            affinity = 0f;
+            availableAmount = 0f;
+            float bestAffinity = float.MinValue;
+
+            for (int i = 0; i < candidates.Length; i++)
+            {
+                Entity candidate = candidates[i];
+
+                if (candidate == requester)
+                    continue;
+
+                if (candidateSocieties[i] != societyRoot)
+                    continue;
+
+                if (!resourceLookup.HasBuffer(candidate))
+                    continue;
+
+                DynamicBuffer<EM_BufferElement_Resource> resources = resourceLookup[candidate];
+                float amount = GetResourceAmount(resources, resourceId);
+
+                if (amount <= 0f)
+                    continue;
+
+                float currentAffinity = GetAffinity(candidate, requester, ref relationshipLookup, ref relationshipTypeLookup, ref npcTypeLookup);
+
+                if (currentAffinity <= bestAffinity)
+                    continue;
+
+                bestAffinity = currentAffinity;
+                provider = candidate;
+                affinity = currentAffinity;
+                availableAmount = amount;
+            }
+
+            return provider != Entity.Null;
+        }
+
         private static float GetAffinity(Entity source, Entity target, ref BufferLookup<EM_BufferElement_Relationship> relationshipLookup,
             ref BufferLookup<EM_BufferElement_RelationshipType> relationshipTypeLookup, ref ComponentLookup<EM_Component_NpcType> npcTypeLookup)
         {
@@ -27,7 +69,6 @@ namespace EmergentMechanics
             return GetTypeAffinity(source, target, ref relationshipTypeLookup, ref npcTypeLookup);
         }
 
-        // Relationship affinity updates with type baseline.
         private static void ApplyAffinityDelta(Entity source, Entity target, float delta, ref BufferLookup<EM_BufferElement_Relationship> relationshipLookup,
             ref BufferLookup<EM_BufferElement_RelationshipType> relationshipTypeLookup, ref ComponentLookup<EM_Component_NpcType> npcTypeLookup)
         {
@@ -49,13 +90,11 @@ namespace EmergentMechanics
 
             float baseAffinity = GetTypeAffinity(source, target, ref relationshipTypeLookup, ref npcTypeLookup);
 
-            EM_BufferElement_Relationship newEntry = new EM_BufferElement_Relationship
+            relationships.Add(new EM_BufferElement_Relationship
             {
                 Other = target,
                 Affinity = math.clamp(baseAffinity + delta, -1f, 1f)
-            };
-
-            relationships.Add(newEntry);
+            });
         }
 
         private static float GetTypeAffinity(Entity source, Entity target, ref BufferLookup<EM_BufferElement_RelationshipType> relationshipTypeLookup,

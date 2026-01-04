@@ -11,6 +11,7 @@ namespace EmergentMechanics
         public BlobArray<EM_Blob_Effect> Effects;
         public BlobArray<EM_Blob_RuleSet> RuleSets;
         public BlobArray<EM_Blob_Rule> Rules;
+        public BlobArray<EM_Blob_RuleEffect> RuleEffects;
         public BlobArray<EM_Blob_RuleGroup> RuleGroups;
         public BlobArray<EM_Blob_MetricGroup> MetricGroups;
         public BlobArray<int> MetricGroupMetricIndices;
@@ -34,6 +35,7 @@ namespace EmergentMechanics
         public FixedString64Bytes MetricId;
         public int SignalIndex;
         public float SampleInterval;
+        public EmergenceMetricSamplingMode SamplingMode;
         public EmergenceMetricScope Scope;
         public EmergenceMetricAggregation Aggregation;
         public EmergenceMetricNormalization Normalization;
@@ -47,6 +49,7 @@ namespace EmergentMechanics
         public EmergenceEffectType EffectType;
         public EmergenceEffectTarget Target;
         public FixedString64Bytes ParameterId;
+        public FixedString64Bytes SecondaryId;
         public float Magnitude;
         public byte UseClamp;
         public float MinValue;
@@ -65,11 +68,21 @@ namespace EmergentMechanics
     {
         #region Data
         public int MetricIndex;
-        public int EffectIndex;
         public int RuleSetIndex;
+        public FixedString64Bytes ContextId;
         public int CurveIndex;
         public float Weight;
         public float CooldownSeconds;
+        public int EffectStartIndex;
+        public int EffectLength;
+        #endregion
+    }
+
+    public struct EM_Blob_RuleEffect
+    {
+        #region Data
+        public int EffectIndex;
+        public float Weight;
         #endregion
     }
 

@@ -27,6 +27,20 @@ namespace EmergentMechanics
         #endregion
     }
 
+    public struct EM_BufferElement_MetricEventSample : IBufferElementData
+    {
+        #region Data
+        public int MetricIndex;
+        public float Value;
+        public float NormalizedValue;
+        public double Time;
+        public Entity Subject;
+        public Entity Target;
+        public Entity SocietyRoot;
+        public FixedString64Bytes ContextId;
+        #endregion
+    }
+
     public struct EM_BufferElement_MetricTimer : IBufferElementData
     {
         #region Data

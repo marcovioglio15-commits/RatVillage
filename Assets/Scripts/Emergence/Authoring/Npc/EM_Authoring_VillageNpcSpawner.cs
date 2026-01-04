@@ -45,9 +45,6 @@ namespace EmergentMechanics
         [Tooltip("Spawn height offset.")]
         [SerializeField] private float height;
 
-        [Tooltip("Random seed (0 to auto-generate).")]
-        [SerializeField] private uint randomSeed;
-
         [Tooltip("Optional debug name prefix for spawned NPCs. Overrides the prefab debug name and will be suffixed with an index in the debug HUD.")]
         [SerializeField] private string LogNamePrefix;
         #endregion
@@ -81,7 +78,7 @@ namespace EmergentMechanics
                     Count = authoring.count,
                     Radius = authoring.radius,
                     Height = authoring.height,
-                    Seed = GetSeed(authoring.randomSeed, authoring.name),
+                    Seed = GetStableSeed(authoring.name),
                     LogNamePrefix = debugPrefix
                 };
 
@@ -103,6 +100,18 @@ namespace EmergentMechanics
         #endregion
 
         #region Helpers
+        /// <summary>
+        /// Adds valid spawn entries from the specified source array to the provided dynamic buffer.
+        /// </summary>
+        /// <remarks>
+        /// Only entries in <paramref name="source"/> with a non-<c>null</c> <c>Prefab</c> and a
+        /// <c>Weight</c> greater than zero are added to <paramref name="buffer"/>.
+        /// </remarks>
+        /// <param name="source">An array of <see cref="SpawnEntry"/> objects to process. Entries with a <c>null</c> <c>Prefab</c> or a
+        /// non-positive <c>Weight</c> are ignored.</param>
+        /// <param name="buffer">A reference to the dynamic buffer that receives the valid spawn entries.</param>
+        /// <param name="baker">The baker instance used to process each valid spawn entry.</param>
+        /// <returns>The number of spawn entries successfully added to the buffer.</returns>
         private static int AddSpawnEntries(SpawnEntry[] source, ref DynamicBuffer<EM_BufferElement_NpcSpawnEntry> buffer,
             Baker<EM_Authoring_VillageNpcSpawner> baker)
         {
@@ -132,6 +141,7 @@ namespace EmergentMechanics
             if (prefab == null)
                 return;
 
+            // Convert the prefab to an entity.
             Entity prefabEntity = baker.GetEntity(prefab, TransformUsageFlags.Dynamic);
 
             EM_BufferElement_NpcSpawnEntry entry = new EM_BufferElement_NpcSpawnEntry
@@ -143,10 +153,10 @@ namespace EmergentMechanics
             buffer.Add(entry);
         }
 
-        private static uint GetSeed(uint seed, string name)
+        private static uint GetStableSeed(string name)
         {
-            if (seed != 0u)
-                return seed;
+            if (string.IsNullOrWhiteSpace(name))
+                return 1u;
 
             FixedString64Bytes fixedName = new FixedString64Bytes(name);
             uint hashed = (uint)fixedName.GetHashCode();

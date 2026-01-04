@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Collections;
 
 namespace EmergentMechanics
 {
@@ -9,6 +10,7 @@ namespace EmergentMechanics
             Dictionary<EM_RuleSetDefinition, int> ruleSetIndices,
             Dictionary<EM_MetricDefinition, int> metricIndices,
             Dictionary<EM_EffectDefinition, int> effectIndices,
+            List<RuleEffectRecord> effectRecords,
             List<float[]> curveSamples,
             int curveSampleCount)
         {
@@ -17,7 +19,7 @@ namespace EmergentMechanics
             for (int i = 0; i < ruleSets.Count; i++)
             {
                 EM_RuleSetDefinition ruleSet = ruleSets[i];
-                EM_RuleSetDefinition.MetricRuleEntry[] rules = ruleSet.Rules;
+                EM_RuleSetDefinition.RuleEntry[] rules = ruleSet.Rules;
 
                 if (rules == null)
                     continue;
@@ -27,9 +29,8 @@ namespace EmergentMechanics
                 for (int j = 0; j < rules.Length; j++)
                 {
                     EM_MetricDefinition metric = rules[j].Metric;
-                    EM_EffectDefinition effect = rules[j].Effect;
 
-                    if (metric == null || effect == null)
+                    if (metric == null)
                         continue;
 
                     int metricIndex;
@@ -38,22 +39,57 @@ namespace EmergentMechanics
                     if (!metricFound)
                         continue;
 
-                    int effectIndex;
-                    bool effectFound = effectIndices.TryGetValue(effect, out effectIndex);
+                    EM_RuleSetDefinition.RuleEffectEntry[] effects = rules[j].Effects;
 
-                    if (!effectFound)
+                    if (effects == null || effects.Length == 0)
+                        continue;
+
+                    int effectStartIndex = effectRecords.Count;
+                    int effectCount = 0;
+
+                    for (int e = 0; e < effects.Length; e++)
+                    {
+                        EM_EffectDefinition effect = effects[e].Effect;
+
+                        if (effect == null)
+                            continue;
+
+                        int effectIndex;
+                        bool effectFound = effectIndices.TryGetValue(effect, out effectIndex);
+
+                        if (!effectFound)
+                            continue;
+
+                        RuleEffectRecord effectRecord = new RuleEffectRecord
+                        {
+                            EffectIndex = effectIndex,
+                            Weight = effects[e].Weight
+                        };
+
+                        effectRecords.Add(effectRecord);
+                        effectCount++;
+                    }
+
+                    if (effectCount <= 0)
                         continue;
 
                     int curveIndex = AddCurveSamples(rules[j].ProbabilityCurve, curveSampleCount, curveSamples);
 
+                    FixedString64Bytes contextId = default;
+
+                    if (!string.IsNullOrWhiteSpace(rules[j].ContextIdFilter))
+                        contextId = new FixedString64Bytes(rules[j].ContextIdFilter);
+
                     RuleBuildRecord record = new RuleBuildRecord
                     {
                         MetricIndex = metricIndex,
-                        EffectIndex = effectIndex,
                         RuleSetIndex = ruleSetIndex,
+                        ContextId = contextId,
                         CurveIndex = curveIndex,
                         Weight = rules[j].Weight,
-                        CooldownSeconds = rules[j].CooldownSeconds
+                        CooldownSeconds = rules[j].CooldownSeconds,
+                        EffectStartIndex = effectStartIndex,
+                        EffectLength = effectCount
                     };
 
                     records.Add(record);

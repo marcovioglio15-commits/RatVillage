@@ -1,5 +1,7 @@
+using TMPro;
 using Unity.Collections;
 using Unity.Entities;
+using UnityEngine;
 
 namespace EmergentMechanics
 {
@@ -76,6 +78,49 @@ namespace EmergentMechanics
             }
 
             return trimmed;
+        }
+
+        private void RefreshLogView()
+        {
+            EnsureLinePoolSize(logLines.Count);
+
+            for (int i = 0; i < linePool.Count; i++)
+            {
+                bool isActive = i < logLines.Count;
+                TMP_Text line = linePool[i];
+
+                if (isActive)
+                {
+                    if (!line.gameObject.activeSelf)
+                        line.gameObject.SetActive(true);
+
+                    line.text = logLines[i];
+                    continue;
+                }
+
+                if (line.gameObject.activeSelf)
+                    line.gameObject.SetActive(false);
+            }
+
+            if (!autoScroll || logScrollRect == null)
+                return;
+
+            Canvas.ForceUpdateCanvases();
+            if (logScrollRect.verticalScrollbar != null)
+                logScrollRect.verticalNormalizedPosition = 0f;
+        }
+
+        private void EnsureLinePoolSize(int requiredCount)
+        {
+            if (logContent == null || logLinePrefab == null)
+                return;
+
+            while (linePool.Count < requiredCount)
+            {
+                TMP_Text line = Object.Instantiate(logLinePrefab, logContent);
+                line.gameObject.SetActive(true);
+                linePool.Add(line);
+            }
         }
         #endregion
     }

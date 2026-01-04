@@ -10,9 +10,6 @@ namespace EmergentMechanics
         [Tooltip("Stable identifier for this profile.")]
         [Header("Identity")]
         [SerializeField] private string profileId = "Society.Profile";
-
-        [Tooltip("Designer-facing name for this profile.")]
-        [SerializeField] private string displayName = "Society Profile";
         #endregion
 
         #region Composition
@@ -35,14 +32,6 @@ namespace EmergentMechanics
             get
             {
                 return profileId;
-            }
-        }
-
-        public string DisplayName
-        {
-            get
-            {
-                return displayName;
             }
         }
 

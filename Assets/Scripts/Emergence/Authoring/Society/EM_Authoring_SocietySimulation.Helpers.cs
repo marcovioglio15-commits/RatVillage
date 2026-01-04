@@ -26,6 +26,27 @@ namespace EmergentMechanics
             }
         }
 
+        private static void AddNeedSignalOverrides(NeedSignalOverrideEntry[] source, ref DynamicBuffer<EM_BufferElement_NeedSignalOverride> buffer)
+        {
+            if (source == null)
+                return;
+
+            for (int i = 0; i < source.Length; i++)
+            {
+                if (string.IsNullOrWhiteSpace(source[i].NeedId))
+                    continue;
+
+                EM_BufferElement_NeedSignalOverride entry = new EM_BufferElement_NeedSignalOverride
+                {
+                    NeedId = new FixedString64Bytes(source[i].NeedId),
+                    ValueSignalId = ToFixed(source[i].ValueSignalId),
+                    UrgencySignalId = ToFixed(source[i].UrgencySignalId)
+                };
+
+                buffer.Add(entry);
+            }
+        }
+
         private static FixedString64Bytes ToFixed(string value)
         {
             if (string.IsNullOrWhiteSpace(value))

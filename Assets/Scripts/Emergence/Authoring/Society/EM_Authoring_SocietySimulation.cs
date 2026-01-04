@@ -17,6 +17,19 @@ namespace EmergentMechanics
             [Tooltip("Initial amount stored in the society pool.")]
             public float Amount;
         }
+
+        [Serializable]
+        public struct NeedSignalOverrideEntry
+        {
+            [Tooltip("Need identifier that this override applies to.")]
+            public string NeedId;
+
+            [Tooltip("Signal id emitted with the raw need value. Leave empty to use the default value signal id.")]
+            public string ValueSignalId;
+
+            [Tooltip("Signal id emitted with the normalized need urgency. Leave empty to use the default urgency signal id.")]
+            public string UrgencySignalId;
+        }
         #endregion
 
         #region Fields
@@ -42,6 +55,15 @@ namespace EmergentMechanics
         [Tooltip("Tick rate in Hz for need decay updates.")]
         [Header("Needs")]
         [SerializeField] private float needTickRate = 1f;
+
+        [Tooltip("Default signal id emitted with the raw need value when no override is configured. Leave empty to disable.")]
+        [SerializeField] private string needValueSignalId = "Need.Value";
+
+        [Tooltip("Default signal id emitted with the normalized need urgency when no override is configured. Leave empty to disable.")]
+        [SerializeField] private string needUrgencySignalId = "Need.Urgency";
+
+        [Tooltip("Per-need overrides for emitted signal ids. Leave ids empty to use the defaults.")]
+        [SerializeField] private NeedSignalOverrideEntry[] needSignalOverrides = new NeedSignalOverrideEntry[0];
         #endregion
 
         #region Trade
@@ -56,12 +78,6 @@ namespace EmergentMechanics
         [Tooltip("Multiplier applied to affinity when computing acceptance.")]
         [SerializeField] private float tradeAffinityWeight = 0.5f;
 
-        [Tooltip("Affinity delta applied after a successful trade.")]
-        [SerializeField] private float affinityChangeOnSuccess = 0.05f;
-
-        [Tooltip("Affinity delta applied after a failed trade.")]
-        [SerializeField] private float affinityChangeOnFail = -0.05f;
-
         [Tooltip("Signal emitted on trade success.")]
         [SerializeField] private string tradeSuccessSignalId = "Trade.Success";
 
@@ -69,20 +85,6 @@ namespace EmergentMechanics
         [SerializeField] private string tradeFailSignalId = "Trade.Fail";
         #endregion
 
-        #region Resource Distribution
-        [Tooltip("Tick rate in Hz for society resource distribution to members.")]
-        [Header("Resource Distribution")]
-        [SerializeField] private float distributionTickRate = 0.5f;
-
-        [Tooltip("Max number of transfers per member on each distribution tick.")]
-        [SerializeField] private int distributionMaxTransfersPerMember = 1;
-
-        [Tooltip("Fallback transfer amount when a need rule does not specify one.")]
-        [SerializeField] private float distributionDefaultTransferAmount = 1f;
-
-        [Tooltip("Fallback need satisfaction when a need rule does not specify one.")]
-        [SerializeField] private float distributionDefaultNeedSatisfaction = 1f;
-        #endregion
         #endregion
 
         #endregion
@@ -106,6 +108,12 @@ namespace EmergentMechanics
                     TickRate = authoring.needTickRate
                 };
 
+                EM_Component_NeedSignalSettings needSignalSettings = new EM_Component_NeedSignalSettings
+                {
+                    NeedValueSignalId = ToFixed(authoring.needValueSignalId),
+                    NeedUrgencySignalId = ToFixed(authoring.needUrgencySignalId)
+                };
+
                 EM_Component_NeedTickState needState = new EM_Component_NeedTickState
                 {
                     NextTick = 0d
@@ -116,8 +124,6 @@ namespace EmergentMechanics
                     TradeTickRate = authoring.tradeTickRate,
                     BaseAcceptance = authoring.tradeBaseAcceptance,
                     AffinityWeight = authoring.tradeAffinityWeight,
-                    AffinityChangeOnSuccess = authoring.affinityChangeOnSuccess,
-                    AffinityChangeOnFail = authoring.affinityChangeOnFail,
                     TradeSuccessSignalId = ToFixed(authoring.tradeSuccessSignalId),
                     TradeFailSignalId = ToFixed(authoring.tradeFailSignalId)
                 };
@@ -127,29 +133,17 @@ namespace EmergentMechanics
                     NextTick = 0d
                 };
 
-                EM_Component_SocietyResourceDistributionSettings distributionSettings = new EM_Component_SocietyResourceDistributionSettings
-                {
-                    DistributionTickRate = authoring.distributionTickRate,
-                    MaxTransfersPerMember = authoring.distributionMaxTransfersPerMember,
-                    DefaultTransferAmount = authoring.distributionDefaultTransferAmount,
-                    DefaultNeedSatisfaction = authoring.distributionDefaultNeedSatisfaction
-                };
-
-                EM_Component_SocietyResourceDistributionState distributionState = new EM_Component_SocietyResourceDistributionState
-                {
-                    NextTick = 0d
-                };
-
                 AddComponent(entity, clock);
                 AddComponent(entity, needSettings);
+                AddComponent(entity, needSignalSettings);
                 AddComponent(entity, needState);
                 AddComponent(entity, tradeSettings);
                 AddComponent(entity, tradeState);
-                AddComponent(entity, distributionSettings);
-                AddComponent(entity, distributionState);
                 AddComponent<EM_Component_SignalEmitter>(entity);
                 AddBuffer<EM_BufferElement_SignalEvent>(entity);
+                DynamicBuffer<EM_BufferElement_NeedSignalOverride> needSignalBuffer = AddBuffer<EM_BufferElement_NeedSignalOverride>(entity);
                 DynamicBuffer<EM_BufferElement_Resource> societyResourceBuffer = AddBuffer<EM_BufferElement_Resource>(entity);
+                AddNeedSignalOverrides(authoring.needSignalOverrides, ref needSignalBuffer);
                 AddSocietyResources(authoring.societyResources, ref societyResourceBuffer);
             }
         }

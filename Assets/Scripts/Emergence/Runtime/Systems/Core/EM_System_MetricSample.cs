@@ -22,11 +22,17 @@ namespace EmergentMechanics
         private ComponentLookup<EM_Component_SocietyRoot> rootLookup;
         private ComponentLookup<EM_Component_SocietyProfileReference> profileLookup;
         private BufferLookup<EM_BufferElement_Need> needLookup;
+        private BufferLookup<EM_BufferElement_NeedSetting> needSettingLookup;
         private BufferLookup<EM_BufferElement_Resource> resourceLookup;
+        private BufferLookup<EM_BufferElement_Relationship> relationshipLookup;
+        private BufferLookup<EM_BufferElement_RelationshipType> relationshipTypeLookup;
+        private ComponentLookup<EM_Component_NpcType> npcTypeLookup;
         private ComponentLookup<EM_Component_Reputation> reputationLookup;
         private ComponentLookup<EM_Component_Cohesion> cohesionLookup;
         private ComponentLookup<EM_Component_NpcSchedule> scheduleLookup;
         private ComponentLookup<EM_Component_NpcScheduleOverride> scheduleOverrideLookup;
+        private BufferLookup<EM_BufferElement_Intent> intentLookup;
+        private BufferLookup<EM_BufferElement_SignalEvent> signalLookup;
         #endregion
         #endregion
 
@@ -41,11 +47,17 @@ namespace EmergentMechanics
             rootLookup = state.GetComponentLookup<EM_Component_SocietyRoot>(true);
             profileLookup = state.GetComponentLookup<EM_Component_SocietyProfileReference>(true);
             needLookup = state.GetBufferLookup<EM_BufferElement_Need>(false);
+            needSettingLookup = state.GetBufferLookup<EM_BufferElement_NeedSetting>(true);
             resourceLookup = state.GetBufferLookup<EM_BufferElement_Resource>(false);
+            relationshipLookup = state.GetBufferLookup<EM_BufferElement_Relationship>(false);
+            relationshipTypeLookup = state.GetBufferLookup<EM_BufferElement_RelationshipType>(true);
+            npcTypeLookup = state.GetComponentLookup<EM_Component_NpcType>(true);
             reputationLookup = state.GetComponentLookup<EM_Component_Reputation>(false);
             cohesionLookup = state.GetComponentLookup<EM_Component_Cohesion>(false);
             scheduleLookup = state.GetComponentLookup<EM_Component_NpcSchedule>(true);
             scheduleOverrideLookup = state.GetComponentLookup<EM_Component_NpcScheduleOverride>(false);
+            intentLookup = state.GetBufferLookup<EM_BufferElement_Intent>(false);
+            signalLookup = state.GetBufferLookup<EM_BufferElement_SignalEvent>(false);
         }
 
         // Dispose persistent caches when the system is destroyed.
@@ -74,6 +86,14 @@ namespace EmergentMechanics
 
             double time = SystemAPI.Time.ElapsedTime;
             bool hasSampleBuffer = SystemAPI.TryGetSingletonBuffer(out DynamicBuffer<EM_BufferElement_MetricSample> sampleBuffer);
+            bool hasDebugBuffer = SystemAPI.TryGetSingletonBuffer(out DynamicBuffer<EM_Component_Event> debugBuffer);
+            int maxEntries = 0;
+
+            if (hasDebugBuffer)
+            {
+                EM_Component_Log debugLog = SystemAPI.GetSingleton<EM_Component_Log>();
+                maxEntries = debugLog.MaxEntries;
+            }
 
             cooldownLookup.Update(ref state);
             randomLookup.Update(ref state);
@@ -81,11 +101,37 @@ namespace EmergentMechanics
             rootLookup.Update(ref state);
             profileLookup.Update(ref state);
             needLookup.Update(ref state);
+            needSettingLookup.Update(ref state);
             resourceLookup.Update(ref state);
+            relationshipLookup.Update(ref state);
+            relationshipTypeLookup.Update(ref state);
+            npcTypeLookup.Update(ref state);
             reputationLookup.Update(ref state);
             cohesionLookup.Update(ref state);
             scheduleLookup.Update(ref state);
             scheduleOverrideLookup.Update(ref state);
+            intentLookup.Update(ref state);
+            signalLookup.Update(ref state);
+
+            EM_RuleEvaluationLookups evaluationLookups = new EM_RuleEvaluationLookups
+            {
+                CooldownLookup = cooldownLookup,
+                RandomLookup = randomLookup,
+                MemberLookup = memberLookup,
+                RootLookup = rootLookup,
+                NeedLookup = needLookup,
+                NeedSettingLookup = needSettingLookup,
+                ResourceLookup = resourceLookup,
+                RelationshipLookup = relationshipLookup,
+                RelationshipTypeLookup = relationshipTypeLookup,
+                NpcTypeLookup = npcTypeLookup,
+                ReputationLookup = reputationLookup,
+                CohesionLookup = cohesionLookup,
+                ScheduleLookup = scheduleLookup,
+                ScheduleOverrideLookup = scheduleOverrideLookup,
+                IntentLookup = intentLookup,
+                SignalLookup = signalLookup
+            };
 
             foreach ((DynamicBuffer<EM_BufferElement_MetricAccumulator> accumulators,
                 DynamicBuffer<EM_BufferElement_MetricTimer> timers,
@@ -102,7 +148,7 @@ namespace EmergentMechanics
                     continue;
 
                 Entity societyRoot = ResolveSocietyRoot(subject, memberLookup, rootLookup);
-                bool hasProfile = TryGetProfileReference(subject, societyRoot, profileLookup, out BlobAssetReference<EM_Blob_SocietyProfile> profileBlob);
+                bool hasProfile = EM_Utility_SocietyProfile.TryGetProfileReference(subject, societyRoot, profileLookup, out BlobAssetReference<EM_Blob_SocietyProfile> profileBlob);
 
                 for (int i = 0; i < entryCount; i++)
                 {
@@ -118,9 +164,9 @@ namespace EmergentMechanics
                         continue;
 
                     EM_Blob_Metric metric = metrics[timer.MetricIndex];
-                    float interval = GetInterval(metric.SampleInterval);
+                    float interval = EM_Utility_Metric.GetInterval(metric.SampleInterval);
                     float value = SampleAccumulator(metric, accumulator, interval);
-                    float normalized = Normalize(metric.Normalization, value);
+                    float normalized = EM_Utility_Metric.Normalize(metric.Normalization, value);
 
                     timer.NextSampleTime = time + interval;
                     timerBuffer[i] = timer;
@@ -130,10 +176,9 @@ namespace EmergentMechanics
                     if (hasSampleBuffer)
                         AppendSample(sampleBuffer, metric.MetricId, value, normalized, time, subject, societyRoot);
 
-                    if (!randomLookup.HasComponent(subject))
-                        continue;
-
-                    if (!TryEvaluateRules(ref libraryBlob, timer.MetricIndex, normalized, time, subject, societyRoot, hasProfile, profileBlob))
+                    if (!EM_RuleEvaluation.TryEvaluateRules(ref libraryBlob, ref ruleGroupLookup, timer.MetricIndex, normalized, time,
+                        subject, societyRoot, Entity.Null, default, hasProfile, profileBlob, ref evaluationLookups,
+                        hasDebugBuffer, debugBuffer, maxEntries))
                         continue;
                 }
             }

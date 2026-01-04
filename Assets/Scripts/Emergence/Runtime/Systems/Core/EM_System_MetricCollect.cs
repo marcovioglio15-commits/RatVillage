@@ -6,6 +6,7 @@ namespace EmergentMechanics
 {
     [UpdateInGroup(typeof(SimulationSystemGroup))]
     [UpdateAfter(typeof(EM_System_Trade))]
+    [UpdateAfter(typeof(EM_System_NeedUpdate))]
     [UpdateAfter(typeof(EM_System_NpcSchedule))]
     public partial struct EM_System_MetricCollect : ISystem
     {
@@ -17,8 +18,10 @@ namespace EmergentMechanics
         private NativeParallelHashMap<int, int> metricGroupLookup;
         private bool metricGroupLookupReady;
         private BufferLookup<EM_BufferElement_MetricAccumulator> accumulatorLookup;
+        private BufferLookup<EM_BufferElement_MetricEventSample> eventSampleLookup;
         private ComponentLookup<EM_Component_SocietyMember> memberLookup;
         private ComponentLookup<EM_Component_SocietyRoot> rootLookup;
+        private ComponentLookup<EM_Component_SocietyProfileReference> profileLookup;
         #endregion
         #endregion
 
@@ -28,8 +31,10 @@ namespace EmergentMechanics
         {
             state.RequireForUpdate<EM_Component_LibraryReference>();
             accumulatorLookup = state.GetBufferLookup<EM_BufferElement_MetricAccumulator>(false);
+            eventSampleLookup = state.GetBufferLookup<EM_BufferElement_MetricEventSample>(false);
             memberLookup = state.GetComponentLookup<EM_Component_SocietyMember>(true);
             rootLookup = state.GetComponentLookup<EM_Component_SocietyRoot>(true);
+            profileLookup = state.GetComponentLookup<EM_Component_SocietyProfileReference>(true);
         }
 
         // Dispose persistent hash maps.
@@ -62,8 +67,10 @@ namespace EmergentMechanics
             EnsureMetricGroupLookup(ref libraryBlob);
 
             accumulatorLookup.Update(ref state);
+            eventSampleLookup.Update(ref state);
             memberLookup.Update(ref state);
             rootLookup.Update(ref state);
+            profileLookup.Update(ref state);
 
             foreach (DynamicBuffer<EM_BufferElement_SignalEvent> emitterBuffer in SystemAPI.Query<DynamicBuffer<EM_BufferElement_SignalEvent>>()
                 .WithAll<EM_Component_SignalEmitter>())
@@ -96,6 +103,8 @@ namespace EmergentMechanics
                         continue;
 
                     Entity societyRoot = ResolveSocietyRoot(signalEvent.Subject, signalEvent.SocietyRoot, memberLookup, rootLookup);
+                    BlobAssetReference<EM_Blob_SocietyProfile> profileBlob;
+                    bool hasProfile = EM_Utility_SocietyProfile.TryGetProfileReference(signalEvent.Subject, societyRoot, profileLookup, out profileBlob);
                     EM_Blob_MetricGroup group = metricGroups[groupIndex];
                     int groupEnd = group.StartIndex + group.Length;
 
@@ -110,6 +119,42 @@ namespace EmergentMechanics
                             continue;
 
                         EM_Blob_Metric metric = metrics[metricIndex];
+
+                        if (hasProfile)
+                        {
+                            ref BlobArray<byte> metricMask = ref profileBlob.Value.MetricMask;
+
+                            if (metricIndex < metricMask.Length && metricMask[metricIndex] == 0)
+                                continue;
+                        }
+
+                        if (metric.SamplingMode == EmergenceMetricSamplingMode.Event)
+                        {
+                            Entity sampleTarget = metric.Scope == EmergenceMetricScope.Member ? signalEvent.Subject : societyRoot;
+
+                            if (sampleTarget == Entity.Null)
+                                continue;
+
+                            if (!eventSampleLookup.HasBuffer(sampleTarget))
+                                continue;
+
+                            float normalized = EM_Utility_Metric.Normalize(metric.Normalization, signalEvent.Value);
+                            DynamicBuffer<EM_BufferElement_MetricEventSample> eventBuffer = eventSampleLookup[sampleTarget];
+
+                            eventBuffer.Add(new EM_BufferElement_MetricEventSample
+                            {
+                                MetricIndex = metricIndex,
+                                Value = signalEvent.Value,
+                                NormalizedValue = normalized,
+                                Time = signalEvent.Time,
+                                Subject = signalEvent.Subject,
+                                Target = signalEvent.Target,
+                                SocietyRoot = societyRoot,
+                                ContextId = signalEvent.ContextId
+                            });
+
+                            continue;
+                        }
 
                         if (metric.Scope == EmergenceMetricScope.Member)
                             UpdateAccumulator(signalEvent.Subject, metricIndex, signalEvent.Value);

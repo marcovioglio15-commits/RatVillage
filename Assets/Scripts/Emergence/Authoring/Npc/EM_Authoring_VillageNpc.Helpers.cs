@@ -100,36 +100,8 @@ namespace EmergentMechanics
 
         // Need and resource buffers initialization.
         #region NeedsAndResources
-        // Need rate curve sampling for decay rules.
-        #region NeedRateCurves
-        // FixedList128Bytes<float> capacity is 31 samples.
-        private const int NeedRateCurveSamples = 31;
-
-        private static FixedList128Bytes<float> BuildNeedRateSamples(AnimationCurve curve)
-        {
-            FixedList128Bytes<float> samples = new FixedList128Bytes<float>();
-            int sampleCount = NeedRateCurveSamples;
-
-            for (int sampleIndex = 0; sampleIndex < sampleCount; sampleIndex++)
-            {
-                float t = sampleCount > 1 ? (float)sampleIndex / (sampleCount - 1) : 0f;
-                float value = EvaluateNeedRateCurve(curve, t);
-                samples.Add(value);
-            }
-
-            return samples;
-        }
-
-        private static float EvaluateNeedRateCurve(AnimationCurve curve, float t)
-        {
-            if (curve == null || curve.length == 0)
-                return 0f;
-
-            return curve.Evaluate(t);
-        }
-        #endregion
-
-        private static void AddNeeds(NeedEntry[] source, ref DynamicBuffer<EM_BufferElement_Need> buffer)
+        private static void AddNeedProfiles(NeedProfileEntry[] source, ref DynamicBuffer<EM_BufferElement_Need> needs,
+            ref DynamicBuffer<EM_BufferElement_NeedSetting> needSettings, ref DynamicBuffer<EM_BufferElement_NeedActivityRate> activityRates)
         {
             if (source == null)
                 return;
@@ -139,50 +111,35 @@ namespace EmergentMechanics
                 if (string.IsNullOrWhiteSpace(source[i].NeedId))
                     continue;
 
+                NeedActivityRateEntry[] rateEntries = source[i].ActivityRates;
+                FixedString64Bytes needId = new FixedString64Bytes(source[i].NeedId);
                 EM_BufferElement_Need need = new EM_BufferElement_Need
                 {
-                    NeedId = new FixedString64Bytes(source[i].NeedId),
-                    Value = source[i].Value
+                    NeedId = needId,
+                    Value = source[i].InitialValue
                 };
 
-                buffer.Add(need);
-            }
-        }
+                needs.Add(need);
 
-        private static void AddNeedRules(NeedRuleEntry[] source, ref DynamicBuffer<EM_BufferElement_NeedRule> ruleBuffer,
-            ref DynamicBuffer<EM_BufferElement_NeedResolutionState> stateBuffer)
-        {
-            if (source == null)
-                return;
+                FixedString64Bytes resourceId = default;
 
-            for (int i = 0; i < source.Length; i++)
-            {
-                if (string.IsNullOrWhiteSpace(source[i].NeedId))
-                    continue;
+                if (!string.IsNullOrWhiteSpace(source[i].ResourceId))
+                    resourceId = new FixedString64Bytes(source[i].ResourceId);
 
-                EM_BufferElement_NeedRule rule = new EM_BufferElement_NeedRule
+                FixedList128Bytes<float> defaultRateSamples = ResolveDefaultRateSamples(rateEntries);
+                EM_BufferElement_NeedSetting setting = new EM_BufferElement_NeedSetting
                 {
-                    NeedId = new FixedString64Bytes(source[i].NeedId),
-                    ResourceId = new FixedString64Bytes(source[i].ResourceId),
-                    RatePerHourSamples = BuildNeedRateSamples(source[i].RatePerHour),
+                    NeedId = needId,
+                    ResourceId = resourceId,
+                    RatePerHourSamples = defaultRateSamples,
                     MinValue = source[i].MinValue,
                     MaxValue = source[i].MaxValue,
-                    StartThreshold = source[i].StartThreshold,
-                    MaxProbability = source[i].MaxProbability,
-                    ProbabilityExponent = source[i].ProbabilityExponent,
-                    CooldownSeconds = source[i].CooldownSeconds,
-                    ResourceTransferAmount = source[i].ResourceTransferAmount,
-                    NeedSatisfactionAmount = source[i].NeedSatisfactionAmount
+                    RequestAmount = source[i].RequestAmount,
+                    NeedSatisfactionPerUnit = source[i].NeedSatisfactionPerUnit
                 };
 
-                EM_BufferElement_NeedResolutionState state = new EM_BufferElement_NeedResolutionState
-                {
-                    NeedId = rule.NeedId,
-                    NextAttemptTime = 0d
-                };
-
-                ruleBuffer.Add(rule);
-                stateBuffer.Add(state);
+                needSettings.Add(setting);
+                AddNeedActivityRates(needId, rateEntries, ref activityRates);
             }
         }
 
@@ -267,10 +224,10 @@ namespace EmergentMechanics
             return new FixedString64Bytes(value);
         }
 
-        private static uint GetSeed(uint seed, string name)
+        private static uint GetStableSeed(string name)
         {
-            if (seed != 0u)
-                return seed;
+            if (string.IsNullOrWhiteSpace(name))
+                return 1u;
 
             FixedString64Bytes fixedName = new FixedString64Bytes(name);
             uint hashed = (uint)fixedName.GetHashCode();

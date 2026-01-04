@@ -1,6 +1,7 @@
 using System;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace EmergentMechanics
@@ -11,13 +12,41 @@ namespace EmergentMechanics
         #region Nested Types
         // Serialized data blocks for NPC setup.
         [Serializable]
-        public struct NeedEntry
+        public struct NeedActivityRateEntry
+        {
+            [Tooltip("Activity identifier matched against the current schedule activity. Leave empty to use as the default rate when no activity-specific entry matches.")]
+            public string ActivityId;
+
+            [Tooltip("Need rate curve for this activity (X: normalized need 0-1 between MinValue and MaxValue, Y: rate per hour). Sampled into 31 points at bake time.")]
+            public AnimationCurve RatePerHour;
+        }
+
+        [Serializable]
+        public struct NeedProfileEntry
         {
             [Tooltip("Need identifier matching Emergence need definitions.")]
             public string NeedId;
 
             [Tooltip("Initial need value.")]
-            public float Value;
+            public float InitialValue;
+
+            [Tooltip("Minimum clamp value for the need.")]
+            public float MinValue;
+
+            [Tooltip("Maximum clamp value for the need.")]
+            public float MaxValue;
+
+            [Tooltip("Per-activity need rate curves. Add one entry with an empty ActivityId to act as the default rate.")]
+            public NeedActivityRateEntry[] ActivityRates;
+
+            [Tooltip("Resource identifier used to satisfy the need.")]
+            public string ResourceId;
+
+            [Tooltip("Base resource amount requested when resolving this need.")]
+            public float RequestAmount;
+
+            [Tooltip("Need reduction applied per resource unit transferred.")]
+            public float NeedSatisfactionPerUnit;
         }
 
         [Serializable]
@@ -28,43 +57,6 @@ namespace EmergentMechanics
 
             [Tooltip("Initial resource amount.")]
             public float Amount;
-        }
-
-        [Serializable]
-        public struct NeedRuleEntry
-        {
-            [Tooltip("Need identifier controlled by this rule.")]
-            public string NeedId;
-
-            [Tooltip("Resource identifier used to satisfy the need.")]
-            public string ResourceId;
-
-            [Tooltip("Need increase rate curve (X: normalized need 0-1 between MinValue and MaxValue, Y: rate per hour). Sampled into 31 points at bake time.")]
-            public AnimationCurve RatePerHour;
-
-            [Tooltip("Minimum clamp value for the need.")]
-            public float MinValue;
-
-            [Tooltip("Maximum clamp value for the need.")]
-            public float MaxValue;
-
-            [Tooltip("Need value at which resolution probability starts.")]
-            public float StartThreshold;
-
-            [Tooltip("Maximum resolution probability.")]
-            public float MaxProbability;
-
-            [Tooltip("Exponent applied to probability growth.")]
-            public float ProbabilityExponent;
-
-            [Tooltip("Cooldown in seconds between trade attempts.")]
-            public float CooldownSeconds;
-
-            [Tooltip("Resource amount transferred on successful trade.")]
-            public float ResourceTransferAmount;
-
-            [Tooltip("Need reduction applied on successful trade.")]
-            public float NeedSatisfactionAmount;
         }
 
         [Serializable]
@@ -98,17 +90,14 @@ namespace EmergentMechanics
         [Header("Identity")]
         [SerializeField] private GameObject societyRoot;
 
-        [Tooltip("LOD tier for this NPC.")]
-        [SerializeField] private EmergenceLodTier lodTier = EmergenceLodTier.Full;
-
         [Tooltip("Initial reputation value.")]
         [SerializeField] private float initialReputation;
 
-        [Tooltip("Random seed (0 to auto-generate).")]
-        [SerializeField] private uint randomSeed;
-
         [Tooltip("NPC type identifier used for relationship defaults and grouping.")]
         [SerializeField] private string npcTypeId;
+
+        [Tooltip("Color used to format this NPC's log messages in the debug HUD.")]
+        [SerializeField] private Color logMessageColor = Color.white;
         #endregion
 
         #region Schedule
@@ -118,12 +107,9 @@ namespace EmergentMechanics
         #endregion
 
         #region Needs
-        [Tooltip("Initial need values for this NPC.")]
+        [Tooltip("Need profiles defining initial values and simulation settings.")]
         [Header("Needs")]
-        [SerializeField] private NeedEntry[] needs = new NeedEntry[0];
-
-        [Tooltip("Need rules used by trade and decay systems.")]
-        [SerializeField] private NeedRuleEntry[] needRules = new NeedRuleEntry[0];
+        [SerializeField] private NeedProfileEntry[] needs = new NeedProfileEntry[0];
         #endregion
 
         #region Resources
@@ -133,13 +119,21 @@ namespace EmergentMechanics
         #endregion
 
         #region Relationships
-        [Tooltip("Initial relationships for this NPC.")]
-        [Header("Relationships")]
-        [SerializeField] private RelationshipEntry[] relationships = new RelationshipEntry[0];
-
         [Tooltip("Initial affinity seeds against NPC types.")]
         [Header("Relationship Types")]
         [SerializeField] private RelationshipTypeEntry[] relationshipTypes = new RelationshipTypeEntry[0];
+        #endregion
+
+        #region Trade Preferences
+        [Tooltip("Affinity multiplier curve for resource transfers from this NPC to a requester. X is provider->requester affinity mapped to 0-1, Y is the transfer multiplier.")]
+        [Header("Trade Preferences")]
+        [SerializeField] private AnimationCurve affinityTransferMultiplier = AnimationCurve.Linear(0f, 0.5f, 1f, 1.5f);
+
+        [Tooltip("Minimum clamp for the affinity-based transfer multiplier.")]
+        [SerializeField] private float affinityMultiplierMin = 0f;
+
+        [Tooltip("Maximum clamp for the affinity-based transfer multiplier.")]
+        [SerializeField] private float affinityMultiplierMax = 2f;
         #endregion
         #endregion
         #endregion
@@ -157,13 +151,17 @@ namespace EmergentMechanics
                     rootEntity = GetEntity(authoring.societyRoot, TransformUsageFlags.None);
 
                 AddComponent(entity, new EM_Component_SocietyMember { SocietyRoot = rootEntity });
-                AddComponent(entity, new EM_Component_SocietyLod { Tier = authoring.lodTier });
                 AddComponent(entity, new EM_Component_Reputation { Value = authoring.initialReputation });
-                AddComponent(entity, new EM_Component_RandomSeed { Value = GetSeed(authoring.randomSeed, authoring.name) });
+                AddComponent(entity, new EM_Component_LogColor
+                {
+                    Value = new float4(authoring.logMessageColor.r, authoring.logMessageColor.g, authoring.logMessageColor.b, authoring.logMessageColor.a)
+                });
+                AddComponent(entity, new EM_Component_RandomSeed { Value = GetStableSeed(authoring.name) });
                 AddComponent<EM_Component_SignalEmitter>(entity);
                 AddBuffer<EM_BufferElement_SignalEvent>(entity);
                 AddBuffer<EM_BufferElement_MetricAccumulator>(entity);
                 AddBuffer<EM_BufferElement_MetricTimer>(entity);
+                AddBuffer<EM_BufferElement_MetricEventSample>(entity);
                 AddBuffer<EM_BufferElement_RuleCooldown>(entity);
 
                 if (!string.IsNullOrWhiteSpace(authoring.npcTypeId))
@@ -199,17 +197,17 @@ namespace EmergentMechanics
                 }
 
                 DynamicBuffer<EM_BufferElement_Need> needBuffer = AddBuffer<EM_BufferElement_Need>(entity);
-                DynamicBuffer<EM_BufferElement_NeedRule> ruleBuffer = AddBuffer<EM_BufferElement_NeedRule>(entity);
-                DynamicBuffer<EM_BufferElement_NeedResolutionState> stateBuffer = AddBuffer<EM_BufferElement_NeedResolutionState>(entity);
+                DynamicBuffer<EM_BufferElement_NeedSetting> ruleBuffer = AddBuffer<EM_BufferElement_NeedSetting>(entity);
+                DynamicBuffer<EM_BufferElement_NeedActivityRate> activityRateBuffer = AddBuffer<EM_BufferElement_NeedActivityRate>(entity);
                 DynamicBuffer<EM_BufferElement_Resource> resourceBuffer = AddBuffer<EM_BufferElement_Resource>(entity);
                 DynamicBuffer<EM_BufferElement_Relationship> relationshipBuffer = AddBuffer<EM_BufferElement_Relationship>(entity);
                 DynamicBuffer<EM_BufferElement_RelationshipType> relationshipTypeBuffer = AddBuffer<EM_BufferElement_RelationshipType>(entity);
+                AddBuffer<EM_BufferElement_Intent>(entity);
 
-                AddNeeds(authoring.needs, ref needBuffer);
-                AddNeedRules(authoring.needRules, ref ruleBuffer, ref stateBuffer);
+                AddNeedProfiles(authoring.needs, ref needBuffer, ref ruleBuffer, ref activityRateBuffer);
                 AddResources(authoring.resources, ref resourceBuffer);
-                AddRelationships(authoring.relationships, ref relationshipBuffer, this);
                 AddRelationshipTypes(authoring.relationshipTypes, ref relationshipTypeBuffer);
+                AddTradePreferences(authoring.affinityTransferMultiplier, authoring.affinityMultiplierMin, authoring.affinityMultiplierMax, entity, this);
             }
         }
         #endregion

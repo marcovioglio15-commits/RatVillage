@@ -31,7 +31,7 @@ namespace EmergentMechanics
             [SerializeField] private string tickSignalId;
 
             [Tooltip("Curve applied across the activity window (0-1 time). Value scales tick signal magnitude.")]
-            [SerializeField] private AnimationCurve activityCurve;
+            [SerializeField] private AnimationCurve tickSignalCurve;
             #endregion
 
             #region Properties
@@ -87,7 +87,7 @@ namespace EmergentMechanics
             {
                 get
                 {
-                    return activityCurve;
+                    return tickSignalCurve;
                 }
             }
             #endregion

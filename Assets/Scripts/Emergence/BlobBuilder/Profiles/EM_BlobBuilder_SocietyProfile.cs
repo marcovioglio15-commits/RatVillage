@@ -259,7 +259,7 @@ namespace EmergentMechanics
                     if (!found)
                         continue;
 
-                    EM_RuleSetDefinition.MetricRuleEntry[] rules = ruleSet.Rules;
+                    EM_RuleSetDefinition.RuleEntry[] rules = ruleSet.Rules;
 
                     if (rules == null)
                         continue;

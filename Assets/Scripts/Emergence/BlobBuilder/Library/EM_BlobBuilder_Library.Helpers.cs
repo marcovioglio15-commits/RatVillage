@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.Collections;
 using UnityEngine;
 
 namespace EmergentMechanics
@@ -13,11 +14,19 @@ namespace EmergentMechanics
         private struct RuleBuildRecord
         {
             public int MetricIndex;
-            public int EffectIndex;
             public int RuleSetIndex;
+            public FixedString64Bytes ContextId;
             public int CurveIndex;
             public float Weight;
             public float CooldownSeconds;
+            public int EffectStartIndex;
+            public int EffectLength;
+        }
+
+        private struct RuleEffectRecord
+        {
+            public int EffectIndex;
+            public float Weight;
         }
 
         private struct MetricGroupRecord
@@ -155,7 +164,7 @@ namespace EmergentMechanics
                 if (metricComparison != 0)
                     return metricComparison;
 
-                return left.EffectIndex.CompareTo(right.EffectIndex);
+                return left.RuleSetIndex.CompareTo(right.RuleSetIndex);
             }
         }
 

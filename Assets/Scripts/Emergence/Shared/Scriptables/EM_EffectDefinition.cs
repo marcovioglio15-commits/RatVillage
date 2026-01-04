@@ -10,9 +10,6 @@ namespace EmergentMechanics
         [Tooltip("Unique key used by rules to reference this effect. Keep stable once used.")]
         [Header("Identity")]
         [SerializeField] private string effectId = "Effect.Id";
-
-        [Tooltip("Designer-facing label shown in tools and inspectors.")]
-        [SerializeField] private string displayName = "Effect";
         #endregion
 
         #region Behavior
@@ -25,6 +22,9 @@ namespace EmergentMechanics
 
         [Tooltip("Optional parameter id, for example Need.Hunger, Resource.Food, or an ActivityId for OverrideSchedule.")]
         [SerializeField] private string parameterId = "";
+
+        [Tooltip("Optional secondary id used by effects that require a second identifier, such as ResourceId for intents or ContextId overrides for emitted signals.")]
+        [SerializeField] private string secondaryId = "";
 
         [Tooltip("Base magnitude applied before rule and signal weighting.")]
         [SerializeField] private float magnitude = 1f;
@@ -52,14 +52,6 @@ namespace EmergentMechanics
             }
         }
 
-        public string DisplayName
-        {
-            get
-            {
-                return displayName;
-            }
-        }
-
         public EmergenceEffectType EffectType
         {
             get
@@ -81,6 +73,14 @@ namespace EmergentMechanics
             get
             {
                 return parameterId;
+            }
+        }
+
+        public string SecondaryId
+        {
+            get
+            {
+                return secondaryId;
             }
         }
 
