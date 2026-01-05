@@ -57,8 +57,13 @@ namespace EmergentMechanics
             [Tooltip("Metric sampled by this rule. Metrics define how signals are aggregated over time.")]
             [SerializeField] private EM_MetricDefinition metric;
 
-            [Tooltip("Optional context id filter. When set, the rule only triggers if the metric sample context matches this id.")]
-            [SerializeField] private string contextIdFilter;
+            [Tooltip("Optional id definition used as a context filter for metric samples.")]
+            [EM_IdSelector(EM_IdCategory.Any)]
+            [SerializeField] private EM_IdDefinition contextIdDefinition;
+
+            [Tooltip("Legacy context id string (auto-migrated when missing an id definition).")]
+            [SerializeField]
+            [HideInInspector] private string contextIdFilter;
 
             [Tooltip("Effects applied when the rule fires. All effects in the list are applied together.")]
             [SerializeField] private RuleEffectEntry[] effects;
@@ -97,7 +102,15 @@ namespace EmergentMechanics
             {
                 get
                 {
-                    return contextIdFilter;
+                    return EM_IdUtility.ResolveId(contextIdDefinition, contextIdFilter);
+                }
+            }
+
+            public EM_IdDefinition ContextIdDefinition
+            {
+                get
+                {
+                    return contextIdDefinition;
                 }
             }
 
@@ -167,9 +180,14 @@ namespace EmergentMechanics
 
 		#region Serialized
 		#region Identity
-		[Tooltip("Unique key referenced by profiles and runtime masks. Keep stable once in use to avoid breaking profile mappings.")]
+		[Tooltip("Id definition that supplies the unique key referenced by profiles and runtime masks.")]
         [Header("Identity")]
-        [SerializeField] private string ruleSetId = "RuleSet.Id";
+        [EM_IdSelector(EM_IdCategory.RuleSet)]
+        [SerializeField] private EM_IdDefinition ruleSetIdDefinition;
+
+        [Tooltip("Legacy rule set id string (auto-migrated when missing an id definition).")]
+        [SerializeField]
+        [HideInInspector] private string ruleSetId = "RuleSet.Id";
         #endregion
 
         #region Rules
@@ -192,7 +210,15 @@ namespace EmergentMechanics
         {
             get
             {
-                return ruleSetId;
+                return EM_IdUtility.ResolveId(ruleSetIdDefinition, ruleSetId);
+            }
+        }
+
+        public EM_IdDefinition RuleSetIdDefinition
+        {
+            get
+            {
+                return ruleSetIdDefinition;
             }
         }
 

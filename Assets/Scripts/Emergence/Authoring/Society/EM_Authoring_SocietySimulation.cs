@@ -11,7 +11,12 @@ namespace EmergentMechanics
         [Serializable]
         public struct ResourceEntry
         {
-            [Tooltip("Resource identifier stored by the society.")]
+            [Tooltip("Id definition for the resource stored by the society.")]
+            [EM_IdSelector(EM_IdCategory.Resource)]
+            public EM_IdDefinition ResourceIdDefinition;
+
+            [Tooltip("Legacy resource id string (auto-migrated when missing an id definition).")]
+            [HideInInspector]
             public string ResourceId;
 
             [Tooltip("Initial amount stored in the society pool.")]
@@ -21,13 +26,28 @@ namespace EmergentMechanics
         [Serializable]
         public struct NeedSignalOverrideEntry
         {
-            [Tooltip("Need identifier that this override applies to.")]
+            [Tooltip("Id definition for the need that this override applies to.")]
+            [EM_IdSelector(EM_IdCategory.Need)]
+            public EM_IdDefinition NeedIdDefinition;
+
+            [Tooltip("Legacy need id string (auto-migrated when missing an id definition).")]
+            [HideInInspector]
             public string NeedId;
 
-            [Tooltip("Signal id emitted with the raw need value. Leave empty to use the default value signal id.")]
+            [Tooltip("Id definition for the signal emitted with the raw need value. Leave empty to use the default value signal id.")]
+            [EM_IdSelector(EM_IdCategory.Signal)]
+            public EM_IdDefinition ValueSignalIdDefinition;
+
+            [Tooltip("Legacy value signal id string (auto-migrated when missing an id definition).")]
+            [HideInInspector]
             public string ValueSignalId;
 
-            [Tooltip("Signal id emitted with the normalized need urgency. Leave empty to use the default urgency signal id.")]
+            [Tooltip("Id definition for the signal emitted with the normalized need urgency. Leave empty to use the default urgency signal id.")]
+            [EM_IdSelector(EM_IdCategory.Signal)]
+            public EM_IdDefinition UrgencySignalIdDefinition;
+
+            [Tooltip("Legacy urgency signal id string (auto-migrated when missing an id definition).")]
+            [HideInInspector]
             public string UrgencySignalId;
         }
         #endregion
@@ -56,11 +76,21 @@ namespace EmergentMechanics
         [Header("Needs")]
         [SerializeField] private float needTickRate = 1f;
 
-        [Tooltip("Default signal id emitted with the raw need value when no override is configured. Leave empty to disable.")]
-        [SerializeField] private string needValueSignalId = "Need.Value";
+        [Tooltip("Id definition for the default signal emitted with the raw need value when no override is configured. Leave empty to disable.")]
+        [EM_IdSelector(EM_IdCategory.Signal)]
+        [SerializeField] private EM_IdDefinition needValueSignalIdDefinition;
 
-        [Tooltip("Default signal id emitted with the normalized need urgency when no override is configured. Leave empty to disable.")]
-        [SerializeField] private string needUrgencySignalId = "Need.Urgency";
+        [Tooltip("Legacy need value signal id string (auto-migrated when missing an id definition).")]
+        [SerializeField]
+        [HideInInspector] private string needValueSignalId = "Need.Value";
+
+        [Tooltip("Id definition for the default signal emitted with the normalized need urgency when no override is configured. Leave empty to disable.")]
+        [EM_IdSelector(EM_IdCategory.Signal)]
+        [SerializeField] private EM_IdDefinition needUrgencySignalIdDefinition;
+
+        [Tooltip("Legacy need urgency signal id string (auto-migrated when missing an id definition).")]
+        [SerializeField]
+        [HideInInspector] private string needUrgencySignalId = "Need.Urgency";
 
         [Tooltip("Per-need overrides for emitted signal ids. Leave ids empty to use the defaults.")]
         [SerializeField] private NeedSignalOverrideEntry[] needSignalOverrides = new NeedSignalOverrideEntry[0];
@@ -78,11 +108,21 @@ namespace EmergentMechanics
         [Tooltip("Multiplier applied to affinity when computing acceptance.")]
         [SerializeField] private float tradeAffinityWeight = 0.5f;
 
-        [Tooltip("Signal emitted on trade success.")]
-        [SerializeField] private string tradeSuccessSignalId = "Trade.Success";
+        [Tooltip("Id definition for the signal emitted on trade success.")]
+        [EM_IdSelector(EM_IdCategory.Signal)]
+        [SerializeField] private EM_IdDefinition tradeSuccessSignalIdDefinition;
 
-        [Tooltip("Signal emitted on trade failure.")]
-        [SerializeField] private string tradeFailSignalId = "Trade.Fail";
+        [Tooltip("Legacy trade success signal id string (auto-migrated when missing an id definition).")]
+        [SerializeField]
+        [HideInInspector] private string tradeSuccessSignalId = "Trade.Success";
+
+        [Tooltip("Id definition for the signal emitted on trade failure.")]
+        [EM_IdSelector(EM_IdCategory.Signal)]
+        [SerializeField] private EM_IdDefinition tradeFailSignalIdDefinition;
+
+        [Tooltip("Legacy trade fail signal id string (auto-migrated when missing an id definition).")]
+        [SerializeField]
+        [HideInInspector] private string tradeFailSignalId = "Trade.Fail";
         #endregion
 
         #endregion
@@ -97,10 +137,13 @@ namespace EmergentMechanics
             {
                 Entity entity = GetEntity(TransformUsageFlags.None);
 
+                float startTime = Mathf.Clamp(authoring.startTimeOfDay, 0f, 24f);
+
                 EM_Component_SocietyClock clock = new EM_Component_SocietyClock
                 {
                     DayLengthSeconds = authoring.dayLengthSeconds,
-                    TimeOfDay = Mathf.Clamp(authoring.startTimeOfDay, 0f, 24f)
+                    TimeOfDay = startTime,
+                    SimulatedTimeSeconds = startTime * 3600d
                 };
 
                 EM_Component_NeedTickSettings needSettings = new EM_Component_NeedTickSettings
@@ -110,8 +153,8 @@ namespace EmergentMechanics
 
                 EM_Component_NeedSignalSettings needSignalSettings = new EM_Component_NeedSignalSettings
                 {
-                    NeedValueSignalId = ToFixed(authoring.needValueSignalId),
-                    NeedUrgencySignalId = ToFixed(authoring.needUrgencySignalId)
+                    NeedValueSignalId = EM_IdUtility.ToFixed(authoring.needValueSignalIdDefinition, authoring.needValueSignalId),
+                    NeedUrgencySignalId = EM_IdUtility.ToFixed(authoring.needUrgencySignalIdDefinition, authoring.needUrgencySignalId)
                 };
 
                 EM_Component_NeedTickState needState = new EM_Component_NeedTickState
@@ -124,8 +167,8 @@ namespace EmergentMechanics
                     TradeTickRate = authoring.tradeTickRate,
                     BaseAcceptance = authoring.tradeBaseAcceptance,
                     AffinityWeight = authoring.tradeAffinityWeight,
-                    TradeSuccessSignalId = ToFixed(authoring.tradeSuccessSignalId),
-                    TradeFailSignalId = ToFixed(authoring.tradeFailSignalId)
+                    TradeSuccessSignalId = EM_IdUtility.ToFixed(authoring.tradeSuccessSignalIdDefinition, authoring.tradeSuccessSignalId),
+                    TradeFailSignalId = EM_IdUtility.ToFixed(authoring.tradeFailSignalIdDefinition, authoring.tradeFailSignalId)
                 };
 
                 EM_Component_TradeTickState tradeState = new EM_Component_TradeTickState

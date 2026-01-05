@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7607d4b6d7c5c6f43911e5943dc50e06, type: 3}
   m_Name: EM_Metric_Need.Urgency
   m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_MetricDefinition
+  metricIdDefinition: {fileID: 11400000, guid: 65b0a986dba09bd48936b67cbf590047, type: 2}
   metricId: Metric.Need.Urgency
   signal: {fileID: 11400000, guid: 00f1be700b8ed7e44bbe375cdbd1a481, type: 2}
   samplingMode: 1

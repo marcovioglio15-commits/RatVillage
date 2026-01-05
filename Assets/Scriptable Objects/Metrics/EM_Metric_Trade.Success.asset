@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7607d4b6d7c5c6f43911e5943dc50e06, type: 3}
   m_Name: EM_Metric_Trade.Success
   m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_MetricDefinition
+  metricIdDefinition: {fileID: 11400000, guid: b68b721125134284a840ed677198c484, type: 2}
   metricId: Metric.Trade.Success
   signal: {fileID: 11400000, guid: a5df4a730cf189d4a93c2c41c0fe4c83, type: 2}
   samplingMode: 1

@@ -42,8 +42,7 @@ namespace EmergentMechanics
 
         public void OnUpdate(ref SystemState state)
         {
-            double time = SystemAPI.Time.ElapsedTime;
-            NativeParallelHashMap<Entity, byte> readyMap = BuildReadyMap(ref state, time);
+            NativeParallelHashMap<Entity, double> readyMap = BuildReadyMap(ref state);
 
             if (readyMap.Count() == 0)
             {
@@ -84,10 +83,10 @@ namespace EmergentMechanics
                     .WithAll<EM_Component_SignalEmitter>()
                     .WithEntityAccess())
             {
-                byte ready;
-                bool isReady = readyMap.TryGetValue(member.SocietyRoot, out ready);
+                double timeSeconds;
+                bool isReady = readyMap.TryGetValue(member.SocietyRoot, out timeSeconds);
 
-                if (!isReady || ready == 0)
+                if (!isReady)
                     continue;
 
                 if (!tradeSettingsLookup.HasComponent(member.SocietyRoot))
@@ -99,7 +98,7 @@ namespace EmergentMechanics
                 EM_Component_TradeSettings tradeSettings = tradeSettingsLookup[member.SocietyRoot];
                 EM_Component_RandomSeed seed = randomLookup[entity];
 
-                TryResolveIntent(entity, member.SocietyRoot, tradeSettings, time, ref seed, intents, needs, settings, resources, signals,
+                TryResolveIntent(entity, member.SocietyRoot, tradeSettings, timeSeconds, ref seed, intents, needs, settings, resources, signals,
                     ref resourceLookup, ref relationshipLookup, ref relationshipTypeLookup, ref npcTypeLookup, ref tradePreferencesLookup,
                     candidates, candidateSocieties, hasDebugBuffer, debugBuffer, maxEntries);
 

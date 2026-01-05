@@ -12,44 +12,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0551ef25dac0f045962a0667f8f483e, type: 3}
   m_Name: EM_RuleSet_Needs.Urgency
   m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_RuleSetDefinition
+  ruleSetIdDefinition: {fileID: 11400000, guid: 80500670a4089f346bbd9c3a5caeca21, type: 2}
   ruleSetId: RuleSet.Needs.Urgency
   rules:
   - metric: {fileID: 11400000, guid: 92ae2373b397d0045a77c1f6eac76079, type: 2}
+    contextIdDefinition: {fileID: 11400000, guid: bb08d13ab847f4e498d901bd00407fc1, type: 2}
     contextIdFilter: Hunger
     effects:
-    - effect: {fileID: 11400000, guid: 0135452cb63ddba46890270d1935f3f1, type: 2}
-      weight: 1
     - effect: {fileID: 11400000, guid: 49ca5ff15f54dae47ada37139e4c7cc6, type: 2}
       weight: 1
+    - effect: {fileID: 11400000, guid: 0135452cb63ddba46890270d1935f3f1, type: 2}
+      weight: 1
     probabilityCurve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
         value: 0
-        inSlope: 0.0022221114
-        outSlope: 0.0022221114
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 0.6114744
-        value: 0.0013587642
-        inSlope: 0.027031243
-        outSlope: 0.027031243
+        inSlope: 0
+        outSlope: 0
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.31102672
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.6
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       - serializedVersion: 3
         time: 1
         value: 1
-        inSlope: 2.5703359
-        outSlope: 2.5703359
-        tangentMode: 34
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
         weightedMode: 0
-        inWeight: 0.33333334
+        inWeight: 0
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -57,11 +59,12 @@ MonoBehaviour:
     weight: 1
     cooldownSeconds: 0
   - metric: {fileID: 11400000, guid: 92ae2373b397d0045a77c1f6eac76079, type: 2}
+    contextIdDefinition: {fileID: 11400000, guid: c4e22a71fca2cba4f846af0b73310230, type: 2}
     contextIdFilter: Sleep
     effects:
-    - effect: {fileID: 11400000, guid: 0135452cb63ddba46890270d1935f3f1, type: 2}
-      weight: 1
     - effect: {fileID: 11400000, guid: 8bb31a6cc38e7b6488a738a6f0ea921b, type: 2}
+      weight: 1
+    - effect: {fileID: 11400000, guid: 0135452cb63ddba46890270d1935f3f1, type: 2}
       weight: 1
     probabilityCurve:
       serializedVersion: 2
@@ -69,29 +72,29 @@ MonoBehaviour:
       - serializedVersion: 3
         time: 0
         value: 0
-        inSlope: 0.0022221114
-        outSlope: 0.0022221114
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 0.6114744
-        value: 0.0013587642
-        inSlope: 0.027031243
-        outSlope: 0.027031243
+        inSlope: 0
+        outSlope: 0
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.31102672
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.6
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       - serializedVersion: 3
         time: 1
         value: 1
-        inSlope: 2.5703359
-        outSlope: 2.5703359
-        tangentMode: 34
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
         weightedMode: 0
-        inWeight: 0.33333334
+        inWeight: 0
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -99,11 +102,12 @@ MonoBehaviour:
     weight: 1
     cooldownSeconds: 0
   - metric: {fileID: 11400000, guid: 92ae2373b397d0045a77c1f6eac76079, type: 2}
+    contextIdDefinition: {fileID: 11400000, guid: e7ca60fafb33e624796c4844bf252696, type: 2}
     contextIdFilter: Water
     effects:
-    - effect: {fileID: 11400000, guid: 0135452cb63ddba46890270d1935f3f1, type: 2}
-      weight: 1
     - effect: {fileID: 11400000, guid: 59d0d6f5fefe1e54f8f99286dc8db18f, type: 2}
+      weight: 1
+    - effect: {fileID: 11400000, guid: 0135452cb63ddba46890270d1935f3f1, type: 2}
       weight: 1
     probabilityCurve:
       serializedVersion: 2
@@ -111,29 +115,29 @@ MonoBehaviour:
       - serializedVersion: 3
         time: 0
         value: 0
-        inSlope: 0.0022221114
-        outSlope: 0.0022221114
-        tangentMode: 34
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 0.6114744
-        value: 0.0013587642
-        inSlope: 0.027031243
-        outSlope: 0.027031243
+        inSlope: 0
+        outSlope: 0
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.31102672
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 0.6
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
       - serializedVersion: 3
         time: 1
         value: 1
-        inSlope: 2.5703359
-        outSlope: 2.5703359
-        tangentMode: 34
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
         weightedMode: 0
-        inWeight: 0.33333334
+        inWeight: 0
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2

@@ -12,10 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42af5827dde31ff4e8f41d79ba4d477c, type: 3}
   m_Name: EM_Effect_Override.SeekWater
   m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_EffectDefinition
+  effectIdDefinition: {fileID: 11400000, guid: 43fc07aa39514ce40897b009dcf5aa39, type: 2}
   effectId: Effect.Override.SeekWater
   effectType: 4
   target: 0
+  parameterIdDefinition: {fileID: 11400000, guid: fff2bcbf7bdcbfe46b66633cd0c08f9e, type: 2}
   parameterId: Override.SeekWater
+  secondaryIdDefinition: {fileID: 11400000, guid: 102c3a71d7b716f48b701df6024f73cb, type: 2}
   secondaryId: Water
   magnitude: 1.5
   useClamp: 0

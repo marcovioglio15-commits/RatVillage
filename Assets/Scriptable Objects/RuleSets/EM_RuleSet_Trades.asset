@@ -12,14 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0551ef25dac0f045962a0667f8f483e, type: 3}
   m_Name: EM_RuleSet_Trades
   m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_RuleSetDefinition
+  ruleSetIdDefinition: {fileID: 11400000, guid: aa6e15929d51229429024865272b1c09, type: 2}
   ruleSetId: RuleSet.Trade.Success
   rules:
   - metric: {fileID: 11400000, guid: 252f71d07056e4d4d93ba6d70411e94c, type: 2}
-    contextIdFilter: Success
+    contextIdDefinition: {fileID: 0}
+    contextIdFilter: 
     effects:
-    - effect: {fileID: 11400000, guid: d290ba476e264774eb81f1f5621fb99f, type: 2}
-      weight: 1
     - effect: {fileID: 11400000, guid: 9201dc23547c02b49a8e68443f087aa7, type: 2}
+      weight: 1
+    - effect: {fileID: 11400000, guid: d290ba476e264774eb81f1f5621fb99f, type: 2}
       weight: 1
     probabilityCurve:
       serializedVersion: 2
@@ -29,7 +31,7 @@ MonoBehaviour:
         value: 1
         inSlope: 0
         outSlope: 0
-        tangentMode: 34
+        tangentMode: 0
         weightedMode: 0
         inWeight: 0
         outWeight: 0
@@ -38,7 +40,7 @@ MonoBehaviour:
         value: 1
         inSlope: 0
         outSlope: 0
-        tangentMode: 34
+        tangentMode: 0
         weightedMode: 0
         inWeight: 0
         outWeight: 0
@@ -48,7 +50,8 @@ MonoBehaviour:
     weight: 1
     cooldownSeconds: 0
   - metric: {fileID: 11400000, guid: b23debb9f2bb11c4888a192e4becf328, type: 2}
-    contextIdFilter: Fail
+    contextIdDefinition: {fileID: 0}
+    contextIdFilter: 
     effects:
     - effect: {fileID: 11400000, guid: ccbbeeec1b7110349a12fc1781490761, type: 2}
       weight: 1
@@ -60,7 +63,7 @@ MonoBehaviour:
         value: 1
         inSlope: 0
         outSlope: 0
-        tangentMode: 34
+        tangentMode: 0
         weightedMode: 0
         inWeight: 0
         outWeight: 0
@@ -69,7 +72,7 @@ MonoBehaviour:
         value: 1
         inSlope: 0
         outSlope: 0
-        tangentMode: 34
+        tangentMode: 0
         weightedMode: 0
         inWeight: 0
         outWeight: 0

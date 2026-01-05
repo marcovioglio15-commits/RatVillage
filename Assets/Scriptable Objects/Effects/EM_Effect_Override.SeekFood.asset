@@ -12,10 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42af5827dde31ff4e8f41d79ba4d477c, type: 3}
   m_Name: EM_Effect_Override.SeekFood
   m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_EffectDefinition
+  effectIdDefinition: {fileID: 11400000, guid: 658fa5782e1eae94e8022dded70465e4, type: 2}
   effectId: Effect.Override.SeekFood
   effectType: 4
   target: 0
+  parameterIdDefinition: {fileID: 11400000, guid: fd2c35d15f57a5742a34c449580d94f3, type: 2}
   parameterId: Override.SeekFood
+  secondaryIdDefinition: {fileID: 11400000, guid: f3c7958a16ce9da4fbdbb82dbad55a8a, type: 2}
   secondaryId: Food
   magnitude: 1.5
   useClamp: 0

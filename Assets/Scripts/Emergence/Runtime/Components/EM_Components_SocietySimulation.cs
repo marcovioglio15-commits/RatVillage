@@ -9,6 +9,7 @@ namespace EmergentMechanics
         #region Data
         public float DayLengthSeconds;
         public float TimeOfDay;
+        public double SimulatedTimeSeconds;
         #endregion
     }
 

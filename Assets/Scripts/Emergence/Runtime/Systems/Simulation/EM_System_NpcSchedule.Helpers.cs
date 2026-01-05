@@ -172,7 +172,7 @@ namespace EmergentMechanics
         }
 
         private static void EmitSignal(FixedString64Bytes signalId, FixedString64Bytes contextId, DynamicBuffer<EM_BufferElement_SignalEvent> signals,
-            Entity subject, Entity societyRoot, float value, bool hasDebugBuffer, DynamicBuffer<EM_Component_Event> debugBuffer, int maxEntries)
+            Entity subject, Entity societyRoot, double timeSeconds, float value, bool hasDebugBuffer, DynamicBuffer<EM_Component_Event> debugBuffer, int maxEntries)
         {
             if (signalId.Length == 0)
                 return;
@@ -185,7 +185,7 @@ namespace EmergentMechanics
                 Target = Entity.Null,
                 SocietyRoot = societyRoot,
                 ContextId = contextId,
-                Time = 0d
+                Time = timeSeconds
             };
 
             signals.Add(signalEvent);

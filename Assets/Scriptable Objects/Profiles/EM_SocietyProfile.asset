@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0da304e75c542e3428d09ebf56eb77d8, type: 3}
   m_Name: EM_SocietyProfile
   m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_SocietyProfile
+  profileIdDefinition: {fileID: 11400000, guid: 33dadb5406e900c48965db9cf26bccde, type: 2}
   profileId: Society.RatVillage
   domains:
   - {fileID: 11400000, guid: c3a29f347474fdb409afae222632cb09, type: 2}

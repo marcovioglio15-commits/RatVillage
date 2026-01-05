@@ -7,9 +7,14 @@ namespace EmergentMechanics
     {
         #region Serialized
         #region Identity
-        [Tooltip("Stable identifier for this profile.")]
+        [Tooltip("Id definition that supplies the stable identifier for this profile.")]
         [Header("Identity")]
-        [SerializeField] private string profileId = "Society.Profile";
+        [EM_IdSelector(EM_IdCategory.Profile)]
+        [SerializeField] private EM_IdDefinition profileIdDefinition;
+
+        [Tooltip("Legacy profile id string (auto-migrated when missing an id definition).")]
+        [SerializeField]
+        [HideInInspector] private string profileId = "Society.Profile";
         #endregion
 
         #region Composition
@@ -31,7 +36,15 @@ namespace EmergentMechanics
         {
             get
             {
-                return profileId;
+                return EM_IdUtility.ResolveId(profileIdDefinition, profileId);
+            }
+        }
+
+        public EM_IdDefinition ProfileIdDefinition
+        {
+            get
+            {
+                return profileIdDefinition;
             }
         }
 

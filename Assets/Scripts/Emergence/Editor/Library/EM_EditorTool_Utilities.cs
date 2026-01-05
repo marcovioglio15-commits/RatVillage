@@ -20,7 +20,12 @@ namespace EmergentMechanics
         #region Public Properties
         public static EM_MechanicLibrary CreateLibraryAsset()
         {
-            string libraryFolder = GetLibraryFolderPath();
+            return CreateLibraryAsset(RootFolder);
+        }
+
+        public static EM_MechanicLibrary CreateLibraryAsset(string rootFolder)
+        {
+            string libraryFolder = GetLibraryFolderPath(rootFolder);
             EnsureFolderExists(libraryFolder);
 
             string assetPath = AssetDatabase.GenerateUniqueAssetPath(libraryFolder + "/EM_MechanicLibrary.asset");
@@ -35,7 +40,12 @@ namespace EmergentMechanics
 
         public static UnityEngine.Object CreateDefinitionAsset(EM_Categories category)
         {
-            string categoryFolder = GetCategoryFolderPath(category);
+            return CreateDefinitionAsset(category, RootFolder);
+        }
+
+        public static UnityEngine.Object CreateDefinitionAsset(EM_Categories category, string rootFolder)
+        {
+            string categoryFolder = GetCategoryFolderPath(category, rootFolder);
             EnsureFolderExists(categoryFolder);
 
             Type assetType = GetAssetType(category);
@@ -100,32 +110,35 @@ namespace EmergentMechanics
             }
         }
 
-        private static string GetLibraryFolderPath()
+        private static string GetLibraryFolderPath(string rootFolder)
         {
-            return RootFolder + "/" + LibraryFolderName;
+            string resolvedRoot = ResolveRootFolder(rootFolder);
+            return resolvedRoot + "/" + LibraryFolderName;
         }
 
-        private static string GetCategoryFolderPath(EM_Categories category)
+        private static string GetCategoryFolderPath(EM_Categories category, string rootFolder)
         {
+            string resolvedRoot = ResolveRootFolder(rootFolder);
+
             if (category == EM_Categories.Signals)
-                return RootFolder + "/Signals";
+                return resolvedRoot + "/Signals";
 
             if (category == EM_Categories.RuleSets)
-                return RootFolder + "/RuleSets";
+                return resolvedRoot + "/RuleSets";
 
             if (category == EM_Categories.Effects)
-                return RootFolder + "/Effects";
+                return resolvedRoot + "/Effects";
 
             if (category == EM_Categories.Metrics)
-                return RootFolder + "/Metrics";
+                return resolvedRoot + "/Metrics";
 
             if (category == EM_Categories.Domains)
-                return RootFolder + "/Domains";
+                return resolvedRoot + "/Domains";
 
             if (category == EM_Categories.Profiles)
-                return RootFolder + "/Profiles";
+                return resolvedRoot + "/Profiles";
 
-            return RootFolder;
+            return resolvedRoot;
         }
 
         private static Type GetAssetType(EM_Categories category)
@@ -195,6 +208,14 @@ namespace EmergentMechanics
                 return "profiles";
 
             return string.Empty;
+        }
+
+        private static string ResolveRootFolder(string rootFolder)
+        {
+            if (string.IsNullOrWhiteSpace(rootFolder))
+                return RootFolder;
+
+            return rootFolder;
         }
         #endregion
 

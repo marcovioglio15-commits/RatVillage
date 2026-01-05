@@ -7,9 +7,14 @@ namespace EmergentMechanics
     {
         #region Serialized
         #region Identity
-        [Tooltip("Unique key for this metric. Used in profiles, dashboards, and sampling.")]
+        [Tooltip("Id definition that supplies the unique key for this metric.")]
         [Header("Identity")]
-        [SerializeField] private string metricId = "Metric.Id";
+        [EM_IdSelector(EM_IdCategory.Metric)]
+        [SerializeField] private EM_IdDefinition metricIdDefinition;
+
+        [Tooltip("Legacy metric id string (auto-migrated when missing an id definition).")]
+        [SerializeField]
+        [HideInInspector] private string metricId = "Metric.Id";
         #endregion
 
         #region Behavior
@@ -40,7 +45,15 @@ namespace EmergentMechanics
         {
             get
             {
-                return metricId;
+                return EM_IdUtility.ResolveId(metricIdDefinition, metricId);
+            }
+        }
+
+        public EM_IdDefinition MetricIdDefinition
+        {
+            get
+            {
+                return metricIdDefinition;
             }
         }
 

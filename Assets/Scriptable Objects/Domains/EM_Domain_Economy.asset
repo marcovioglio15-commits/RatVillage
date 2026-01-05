@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7067dc20c7c949f43bd6948ea376421d, type: 3}
   m_Name: EM_Domain_Economy
   m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_DomainDefinition
-  domainId: Domain.Survival
-  domainColor: {r: 0, g: 1, b: 0.21209884, a: 1}
+  domainIdDefinition: {fileID: 11400000, guid: 9a341826c07c0ef428b82ce7aed8fc22, type: 2}
+  domainId: Domain.Economy
+  domainColor: {r: 0.2, g: 0.6, b: 1, a: 1}
   ruleSets:
   - {fileID: 11400000, guid: 7146c2a35e37060478bb6e69fe0cf663, type: 2}
   description: 

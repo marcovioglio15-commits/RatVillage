@@ -16,7 +16,7 @@ namespace EmergentMechanics
 
         #region IntentResolution
         // Resolve the highest urgency intent for the requester entity.
-        private static void TryResolveIntent(Entity requester, Entity societyRoot, EM_Component_TradeSettings settings, double time,
+        private static void TryResolveIntent(Entity requester, Entity societyRoot, EM_Component_TradeSettings settings, double timeSeconds,
             ref EM_Component_RandomSeed seed, DynamicBuffer<EM_BufferElement_Intent> intents, DynamicBuffer<EM_BufferElement_Need> needs,
             DynamicBuffer<EM_BufferElement_NeedSetting> needSettings, DynamicBuffer<EM_BufferElement_Resource> requesterResources,
             DynamicBuffer<EM_BufferElement_SignalEvent> requesterSignals, ref BufferLookup<EM_BufferElement_Resource> resourceLookup,
@@ -27,7 +27,7 @@ namespace EmergentMechanics
         {
             int intentIndex;
             EM_BufferElement_Intent intent;
-            bool hasIntent = SelectBestIntent(intents, time, out intentIndex, out intent);
+            bool hasIntent = SelectBestIntent(intents, timeSeconds, out intentIndex, out intent);
 
             if (!hasIntent)
             {
@@ -64,7 +64,7 @@ namespace EmergentMechanics
             }
 
             if (TryResolveWithSociety(requester, societyRoot, intentIndex, intents, needData, needs, requesterResources, resourceLookup,
-                requesterSignals, settings, hasDebugBuffer, debugBuffer, maxEntries))
+                requesterSignals, settings, timeSeconds, hasDebugBuffer, debugBuffer, maxEntries))
                 return;
 
             Entity provider;
@@ -75,7 +75,7 @@ namespace EmergentMechanics
 
             if (!found)
             {
-                EmitTradeSignal(requesterSignals, settings.TradeFailSignalId, needData.NeedId, requester, Entity.Null, societyRoot, 0f,
+                EmitTradeSignal(requesterSignals, settings.TradeFailSignalId, needData.NeedId, requester, Entity.Null, societyRoot, timeSeconds, 0f,
                     hasDebugBuffer, debugBuffer, maxEntries);
 
                 if (hasDebugBuffer)
@@ -93,7 +93,7 @@ namespace EmergentMechanics
 
             if (acceptanceRoll > acceptance)
             {
-                EmitTradeSignal(requesterSignals, settings.TradeFailSignalId, needData.NeedId, requester, provider, societyRoot, 0f,
+                EmitTradeSignal(requesterSignals, settings.TradeFailSignalId, needData.NeedId, requester, provider, societyRoot, timeSeconds, 0f,
                     hasDebugBuffer, debugBuffer, maxEntries);
 
                 if (hasDebugBuffer)
@@ -114,7 +114,7 @@ namespace EmergentMechanics
 
             if (transferAmount <= 0f)
             {
-                EmitTradeSignal(requesterSignals, settings.TradeFailSignalId, needData.NeedId, requester, provider, societyRoot, 0f,
+                EmitTradeSignal(requesterSignals, settings.TradeFailSignalId, needData.NeedId, requester, provider, societyRoot, timeSeconds, 0f,
                     hasDebugBuffer, debugBuffer, maxEntries);
 
                 if (hasDebugBuffer)
@@ -131,7 +131,7 @@ namespace EmergentMechanics
             ApplyResourceDelta(resourceLookup[provider], needData.ResourceId, -transferAmount);
             ApplyNeedDelta(needs, needData.NeedId, -transferAmount * needData.NeedSatisfactionPerUnit, needData.MinValue, needData.MaxValue);
 
-            EmitTradeSignal(requesterSignals, settings.TradeSuccessSignalId, needData.NeedId, requester, provider, societyRoot, transferAmount,
+            EmitTradeSignal(requesterSignals, settings.TradeSuccessSignalId, needData.NeedId, requester, provider, societyRoot, timeSeconds, transferAmount,
                 hasDebugBuffer, debugBuffer, maxEntries);
 
             if (hasDebugBuffer)
@@ -148,7 +148,7 @@ namespace EmergentMechanics
         private static bool TryResolveWithSociety(Entity requester, Entity societyRoot, int intentIndex, DynamicBuffer<EM_BufferElement_Intent> intents,
             NeedResolutionData needData, DynamicBuffer<EM_BufferElement_Need> needs,
             DynamicBuffer<EM_BufferElement_Resource> requesterResources, BufferLookup<EM_BufferElement_Resource> resourceLookup,
-            DynamicBuffer<EM_BufferElement_SignalEvent> requesterSignals, EM_Component_TradeSettings settings,
+            DynamicBuffer<EM_BufferElement_SignalEvent> requesterSignals, EM_Component_TradeSettings settings, double timeSeconds,
             bool hasDebugBuffer, DynamicBuffer<EM_Component_Event> debugBuffer, int maxEntries)
         {
             if (societyRoot == Entity.Null)
@@ -173,7 +173,7 @@ namespace EmergentMechanics
             ApplyResourceDelta(societyResources, needData.ResourceId, -transferAmount);
             ApplyNeedDelta(needs, needData.NeedId, -transferAmount * needData.NeedSatisfactionPerUnit, needData.MinValue, needData.MaxValue);
 
-            EmitTradeSignal(requesterSignals, settings.TradeSuccessSignalId, needData.NeedId, requester, societyRoot, societyRoot, transferAmount,
+            EmitTradeSignal(requesterSignals, settings.TradeSuccessSignalId, needData.NeedId, requester, societyRoot, societyRoot, timeSeconds, transferAmount,
                 hasDebugBuffer, debugBuffer, maxEntries);
 
             if (hasDebugBuffer)

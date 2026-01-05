@@ -7,9 +7,14 @@ namespace EmergentMechanics
     {
         #region Serialized
         #region Identity
+        [Tooltip("Id definition that supplies the stable runtime key for this signal.")]
         [Header("Identity")]
-        [Tooltip("Stable runtime key used by emitters and rule sets. Treat this like an API id: keep it stable after it is referenced in rules or profiles to avoid breaking mappings.")]
-        [SerializeField] private string signalId = "Signal.Id";
+        [EM_IdSelector(EM_IdCategory.Signal)]
+        [SerializeField] private EM_IdDefinition signalIdDefinition;
+
+        [Tooltip("Legacy signal id string (auto-migrated when missing an id definition).")]
+        [SerializeField]
+        [HideInInspector] private string signalId = "Signal.Id";
         #endregion
 
         #region Notes
@@ -25,7 +30,15 @@ namespace EmergentMechanics
         {
             get
             {
-                return signalId;
+                return EM_IdUtility.ResolveId(signalIdDefinition, signalId);
+            }
+        }
+
+        public EM_IdDefinition SignalIdDefinition
+        {
+            get
+            {
+                return signalIdDefinition;
             }
         }
         #endregion

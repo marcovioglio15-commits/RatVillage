@@ -12,10 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42af5827dde31ff4e8f41d79ba4d477c, type: 3}
   m_Name: EM_Effect_Relationship.Provider.Down
   m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_EffectDefinition
+  effectIdDefinition: {fileID: 11400000, guid: b06e3f792feb6fd4698ade4d756358e5, type: 2}
   effectId: Effect.Relationship.Provider.Down
   effectType: 5
   target: 2
+  parameterIdDefinition: {fileID: 0}
   parameterId: 
+  secondaryIdDefinition: {fileID: 0}
   secondaryId: 
   magnitude: -0.01
   useClamp: 0

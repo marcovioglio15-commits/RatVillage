@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1201e77ab4cccfb4a86e413d77fbdb9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Emergence.EmergenceLibraryAuthoring
-  library: {fileID: 0}
+  library: {fileID: 11400000, guid: 95bee5170c5e63749a06e60449626e92, type: 2}
 --- !u!4 &1399031818
 Transform:
   m_ObjectHideFlags: 0
@@ -254,20 +254,27 @@ MonoBehaviour:
   dayLengthSeconds: 120
   startTimeOfDay: 6
   societyResources:
-  - ResourceId: Resource.Food
-    Amount: 50
-  - ResourceId: Resource.Water
-    Amount: 50
-  - ResourceId: Resource.Sleep
-    Amount: 50
+  - ResourceIdDefinition: {fileID: 11400000, guid: f3c7958a16ce9da4fbdbb82dbad55a8a, type: 2}
+    ResourceId: Food
+    Amount: 0
+  - ResourceIdDefinition: {fileID: 11400000, guid: 102c3a71d7b716f48b701df6024f73cb, type: 2}
+    ResourceId: Water
+    Amount: 0
+  - ResourceIdDefinition: {fileID: 11400000, guid: 864539d39e094c94a2b38d35bdf26d5b, type: 2}
+    ResourceId: Sleep
+    Amount: 0
   needTickRate: 1
+  needValueSignalIdDefinition: {fileID: 0}
   needValueSignalId: 
+  needUrgencySignalIdDefinition: {fileID: 11400000, guid: f6a20f715f961ac428b1b4ad12a40a36, type: 2}
   needUrgencySignalId: Signal.Need.Urgency
   needSignalOverrides: []
   tradeTickRate: 1
   tradeBaseAcceptance: 0.5
   tradeAffinityWeight: 0.5
+  tradeSuccessSignalIdDefinition: {fileID: 11400000, guid: a3ac1efa163841e4c80f18120ac8c7de, type: 2}
   tradeSuccessSignalId: Signal.Trade.Success
+  tradeFailSignalIdDefinition: {fileID: 11400000, guid: f3b3ff318fe3c44439dae6cb0bfe66e8, type: 2}
   tradeFailSignalId: Signal.Trade.Fail
 --- !u!114 &1984070726
 MonoBehaviour:

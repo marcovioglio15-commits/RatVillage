@@ -7,22 +7,24 @@ namespace EmergentMechanics
     {
         #region Helpers
         // Build the per-society readiness map for trade ticks.
-        private NativeParallelHashMap<Entity, byte> BuildReadyMap(ref SystemState state, double time)
+        private NativeParallelHashMap<Entity, double> BuildReadyMap(ref SystemState state)
         {
-            NativeParallelHashMap<Entity, byte> readyMap = new NativeParallelHashMap<Entity, byte>(8, Allocator.Temp);
+            NativeParallelHashMap<Entity, double> readyMap = new NativeParallelHashMap<Entity, double>(8, Allocator.Temp);
 
-            foreach ((RefRW<EM_Component_TradeTickState> tickState, RefRO<EM_Component_TradeSettings> settings, Entity entity)
-                in SystemAPI.Query<RefRW<EM_Component_TradeTickState>, RefRO<EM_Component_TradeSettings>>()
+            foreach ((RefRW<EM_Component_TradeTickState> tickState, RefRO<EM_Component_TradeSettings> settings,
+                RefRO<EM_Component_SocietyClock> clock, Entity entity)
+                in SystemAPI.Query<RefRW<EM_Component_TradeTickState>, RefRO<EM_Component_TradeSettings>, RefRO<EM_Component_SocietyClock>>()
                     .WithAll<EM_Component_SocietyRoot>()
                     .WithEntityAccess())
             {
+                double timeSeconds = clock.ValueRO.SimulatedTimeSeconds;
                 float intervalSeconds = GetIntervalSeconds(settings.ValueRO.TradeTickRate);
 
-                if (time < tickState.ValueRO.NextTick)
+                if (timeSeconds < tickState.ValueRO.NextTick)
                     continue;
 
-                tickState.ValueRW.NextTick = time + intervalSeconds;
-                readyMap.TryAdd(entity, 1);
+                tickState.ValueRW.NextTick = timeSeconds + intervalSeconds;
+                readyMap.TryAdd(entity, timeSeconds);
             }
 
             return readyMap;

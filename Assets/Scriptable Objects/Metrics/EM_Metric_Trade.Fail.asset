@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7607d4b6d7c5c6f43911e5943dc50e06, type: 3}
   m_Name: EM_Metric_Trade.Fail
   m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_MetricDefinition
+  metricIdDefinition: {fileID: 11400000, guid: c90c889a1a3b77f4f82e337a125a6d4c, type: 2}
   metricId: Metric.Trade.Fail
   signal: {fileID: 11400000, guid: 0b38ce3824f141045b453485e79b0e81, type: 2}
   samplingMode: 1

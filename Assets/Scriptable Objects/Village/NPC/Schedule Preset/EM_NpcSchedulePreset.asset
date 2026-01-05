@@ -14,51 +14,79 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_NpcSchedulePreset
   curveSamples: 32
   entries:
-  - activityId: Override.SeekFood
+  - activityIdDefinition: {fileID: 11400000, guid: fd2c35d15f57a5742a34c449580d94f3, type: 2}
+    activityId: Override.SeekFood
     startHour: 0
     endHour: 0
-    tickIntervalHours: 0
-    startSignalId: 
-    tickSignalId: 
-    activityCurve:
+    useDuration: 0
+    minDurationHours: 0
+    maxDurationHours: 0
+    legacyTickIntervalHours: 0
+    legacyTickSignalCurve:
       serializedVersion: 2
       m_Curve: []
-      m_PreInfinity: 0
-      m_PostInfinity: 0
-      m_RotationOrder: 0
-  - activityId: Override.SeekWater
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    signalEntries: []
+    legacyStartSignalIdDefinition: {fileID: 0}
+    legacyStartSignalId: 
+    legacyTickSignalIdDefinition: {fileID: 0}
+    legacyTickSignalId: 
+  - activityIdDefinition: {fileID: 11400000, guid: fff2bcbf7bdcbfe46b66633cd0c08f9e, type: 2}
+    activityId: Override.SeekWater
     startHour: 0
     endHour: 0
-    tickIntervalHours: 0
-    startSignalId: 
-    tickSignalId: 
-    activityCurve:
+    useDuration: 0
+    minDurationHours: 0
+    maxDurationHours: 0
+    legacyTickIntervalHours: 0
+    legacyTickSignalCurve:
       serializedVersion: 2
       m_Curve: []
-      m_PreInfinity: 0
-      m_PostInfinity: 0
-      m_RotationOrder: 0
-  - activityId: Override.Sleep
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    signalEntries: []
+    legacyStartSignalIdDefinition: {fileID: 0}
+    legacyStartSignalId: 
+    legacyTickSignalIdDefinition: {fileID: 0}
+    legacyTickSignalId: 
+  - activityIdDefinition: {fileID: 11400000, guid: 03476dd9832b06040b063b228e754cb1, type: 2}
+    activityId: Override.Sleep
     startHour: 0
     endHour: 0
-    tickIntervalHours: 0
-    startSignalId: 
-    tickSignalId: 
-    activityCurve:
+    useDuration: 0
+    minDurationHours: 0
+    maxDurationHours: 0
+    legacyTickIntervalHours: 0
+    legacyTickSignalCurve:
       serializedVersion: 2
       m_Curve: []
-      m_PreInfinity: 0
-      m_PostInfinity: 0
-      m_RotationOrder: 0
-  - activityId: Work
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    signalEntries: []
+    legacyStartSignalIdDefinition: {fileID: 0}
+    legacyStartSignalId: 
+    legacyTickSignalIdDefinition: {fileID: 0}
+    legacyTickSignalId: 
+  - activityIdDefinition: {fileID: 11400000, guid: 20e60703ccb2c34448b06b9f8703adcd, type: 2}
+    activityId: Work
     startHour: 6
     endHour: 24
-    tickIntervalHours: 0
-    startSignalId: 
-    tickSignalId: 
-    activityCurve:
+    useDuration: 0
+    minDurationHours: 0
+    maxDurationHours: 0
+    legacyTickIntervalHours: 0
+    legacyTickSignalCurve:
       serializedVersion: 2
       m_Curve: []
-      m_PreInfinity: 0
-      m_PostInfinity: 0
-      m_RotationOrder: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    signalEntries: []
+    legacyStartSignalIdDefinition: {fileID: 0}
+    legacyStartSignalId: 
+    legacyTickSignalIdDefinition: {fileID: 0}
+    legacyTickSignalId: 

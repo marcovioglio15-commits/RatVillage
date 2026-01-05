@@ -24,15 +24,17 @@ namespace EmergentMechanics
             foreach (RefRW<EM_Component_SocietyClock> clock
                 in SystemAPI.Query<RefRW<EM_Component_SocietyClock>>().WithAll<EM_Component_SocietyRoot>())
             {
-                float dayLength = math.max(clock.ValueRO.DayLengthSeconds, 0.01f);
-                float deltaHours = (deltaTime / dayLength) * 24f;
-                float updatedTime = clock.ValueRO.TimeOfDay + deltaHours;
-                float wrappedTime = math.fmod(updatedTime, 24f);
+                float dayLengthSeconds = math.max(clock.ValueRO.DayLengthSeconds, 0.01f);
+                double simulatedDeltaSeconds = deltaTime * 86400d / dayLengthSeconds;
+                double simulatedTimeSeconds = clock.ValueRO.SimulatedTimeSeconds + simulatedDeltaSeconds;
+                double totalHours = simulatedTimeSeconds / 3600d;
+                double wrappedHours = totalHours % 24d;
 
-                if (wrappedTime < 0f)
-                    wrappedTime += 24f;
+                if (wrappedHours < 0d)
+                    wrappedHours += 24d;
 
-                clock.ValueRW.TimeOfDay = wrappedTime;
+                clock.ValueRW.SimulatedTimeSeconds = simulatedTimeSeconds;
+                clock.ValueRW.TimeOfDay = (float)wrappedHours;
             }
         }
         #endregion

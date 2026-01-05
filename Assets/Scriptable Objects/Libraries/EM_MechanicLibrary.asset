@@ -13,14 +13,27 @@ MonoBehaviour:
   m_Name: EM_MechanicLibrary
   m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_MechanicLibrary
   signals:
-  - {fileID: 11400000, guid: bda2391796f6c4e4bb8ea8712bfdb115, type: 2}
   - {fileID: 11400000, guid: 00f1be700b8ed7e44bbe375cdbd1a481, type: 2}
-  - {fileID: 11400000, guid: c99181c846d5a004384217d7de0f2548, type: 2}
-  - {fileID: 11400000, guid: 0b38ce3824f141045b453485e79b0e81, type: 2}
   - {fileID: 11400000, guid: a5df4a730cf189d4a93c2c41c0fe4c83, type: 2}
-  ruleSets: []
-  effects: []
+  - {fileID: 11400000, guid: 0b38ce3824f141045b453485e79b0e81, type: 2}
+  ruleSets:
+  - {fileID: 11400000, guid: 746eff2098a2c44419228ab1fefdc293, type: 2}
+  - {fileID: 11400000, guid: 7146c2a35e37060478bb6e69fe0cf663, type: 2}
+  effects:
+  - {fileID: 11400000, guid: 49ca5ff15f54dae47ada37139e4c7cc6, type: 2}
+  - {fileID: 11400000, guid: 59d0d6f5fefe1e54f8f99286dc8db18f, type: 2}
+  - {fileID: 11400000, guid: 8bb31a6cc38e7b6488a738a6f0ea921b, type: 2}
+  - {fileID: 11400000, guid: 0135452cb63ddba46890270d1935f3f1, type: 2}
+  - {fileID: 11400000, guid: 9201dc23547c02b49a8e68443f087aa7, type: 2}
+  - {fileID: 11400000, guid: 5a7f4b8db1fa0794f8dd7c00f595c836, type: 2}
+  - {fileID: 11400000, guid: d290ba476e264774eb81f1f5621fb99f, type: 2}
+  - {fileID: 11400000, guid: ccbbeeec1b7110349a12fc1781490761, type: 2}
   metrics:
   - {fileID: 11400000, guid: 92ae2373b397d0045a77c1f6eac76079, type: 2}
-  domains: []
-  profiles: []
+  - {fileID: 11400000, guid: 252f71d07056e4d4d93ba6d70411e94c, type: 2}
+  - {fileID: 11400000, guid: b23debb9f2bb11c4888a192e4becf328, type: 2}
+  domains:
+  - {fileID: 11400000, guid: c3a29f347474fdb409afae222632cb09, type: 2}
+  - {fileID: 11400000, guid: a02602e2ce94880448d1fe082518d612, type: 2}
+  profiles:
+  - {fileID: 11400000, guid: d1a8b463e1a0f9b4580e6b8f9eb7a4eb, type: 2}

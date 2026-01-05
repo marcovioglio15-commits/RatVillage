@@ -11,6 +11,7 @@ namespace EmergentMechanics
     {
         #region Fields
         private ComponentLookup<EM_Component_SocietyClock> clockLookup;
+        private ComponentLookup<EM_Component_RandomSeed> randomLookup;
         #endregion
 
         #region Unity Lifecycle
@@ -19,6 +20,7 @@ namespace EmergentMechanics
         {
             state.RequireForUpdate<EM_Component_NpcSchedule>();
             clockLookup = state.GetComponentLookup<EM_Component_SocietyClock>(true);
+            randomLookup = state.GetComponentLookup<EM_Component_RandomSeed>(false);
         }
 
         // Evaluate per-NPC schedules and emit activity signals.
@@ -39,12 +41,15 @@ namespace EmergentMechanics
             }
 
             clockLookup.Update(ref state);
+            randomLookup.Update(ref state);
 
             // Schedule evaluation and signal emission.
             foreach ((RefRO<EM_Component_NpcSchedule> schedule, RefRW<EM_Component_NpcScheduleState> scheduleState,
-                RefRW<EM_Component_NpcScheduleOverride> scheduleOverride, DynamicBuffer<EM_BufferElement_SignalEvent> signals,
+                RefRW<EM_Component_NpcScheduleOverride> scheduleOverride, RefRW<EM_Component_NpcScheduleDuration> scheduleDuration,
+                DynamicBuffer<EM_BufferElement_NpcScheduleSignalState> signalStates, DynamicBuffer<EM_BufferElement_SignalEvent> signals,
                 EM_Component_SocietyMember member, Entity entity)
                 in SystemAPI.Query<RefRO<EM_Component_NpcSchedule>, RefRW<EM_Component_NpcScheduleState>, RefRW<EM_Component_NpcScheduleOverride>,
+                    RefRW<EM_Component_NpcScheduleDuration>, DynamicBuffer<EM_BufferElement_NpcScheduleSignalState>,
                     DynamicBuffer<EM_BufferElement_SignalEvent>, EM_Component_SocietyMember>()
                     .WithAll<EM_Component_SignalEmitter>()
                     .WithEntityAccess())
@@ -61,20 +66,24 @@ namespace EmergentMechanics
                 float dayLength = math.max(clock.DayLengthSeconds, 0.01f);
                 float deltaHours = (deltaTime / dayLength) * 24f;
                 float timeOfDay = clock.TimeOfDay;
+                double timeSeconds = clock.SimulatedTimeSeconds;
 
                 UpdateOverride(scheduleOverride, deltaHours);
                 bool overrideActive = scheduleOverride.ValueRO.RemainingHours > 0f && scheduleOverride.ValueRO.ActivityId.Length > 0;
+
+                UpdateDuration(scheduleDuration, overrideActive ? 0f : deltaHours);
+                bool durationActive = scheduleDuration.ValueRO.RemainingHours > 0f && scheduleDuration.ValueRO.ActivityId.Length > 0;
 
                 ref BlobArray<EM_Blob_NpcScheduleEntry> entries = ref schedule.ValueRO.Schedule.Value.Entries;
 
                 int entryIndex = -1;
                 FixedString64Bytes activityId = default;
-                FixedString64Bytes startSignalId = default;
-                FixedString64Bytes tickSignalId = default;
-                float tickIntervalHours = 0f;
                 float startHour = 0f;
                 float endHour = 0f;
                 bool hasEntryData = false;
+                bool hasStartSignals = false;
+                bool hasTickSignals = false;
+                DynamicBuffer<EM_BufferElement_NpcScheduleSignalState> signalStateBuffer = signalStates;
 
                 if (overrideActive)
                 {
@@ -84,9 +93,19 @@ namespace EmergentMechanics
                     if (entryIndex >= 0 && entryIndex < entries.Length)
                     {
                         ref EM_Blob_NpcScheduleEntry entryData = ref entries[entryIndex];
-                        startSignalId = entryData.StartSignalId;
-                        tickSignalId = entryData.TickSignalId;
-                        tickIntervalHours = entryData.TickIntervalHours;
+                        startHour = entryData.StartHour;
+                        endHour = entryData.EndHour;
+                        hasEntryData = true;
+                    }
+                }
+                else if (durationActive)
+                {
+                    ResolveDurationEntry(scheduleDuration, ref entries, out entryIndex);
+                    activityId = scheduleDuration.ValueRO.ActivityId;
+
+                    if (entryIndex >= 0 && entryIndex < entries.Length)
+                    {
+                        ref EM_Blob_NpcScheduleEntry entryData = ref entries[entryIndex];
                         startHour = entryData.StartHour;
                         endHour = entryData.EndHour;
                         hasEntryData = true;
@@ -100,12 +119,52 @@ namespace EmergentMechanics
                     {
                         ref EM_Blob_NpcScheduleEntry entryData = ref entries[entryIndex];
                         activityId = entryData.ActivityId;
-                        startSignalId = entryData.StartSignalId;
-                        tickSignalId = entryData.TickSignalId;
-                        tickIntervalHours = entryData.TickIntervalHours;
                         startHour = entryData.StartHour;
                         endHour = entryData.EndHour;
                         hasEntryData = true;
+
+                        if (entryData.UseDuration != 0)
+                        {
+                            EM_Component_RandomSeed seed = default;
+                            bool hasRandom = randomLookup.HasComponent(entity);
+
+                            if (hasRandom)
+                                seed = randomLookup[entity];
+
+                            bool seedChanged = false;
+                            float durationHours = ResolveDurationHours(ref entryData, hasRandom, ref seed, out seedChanged);
+
+                            if (durationHours > 0f)
+                            {
+                                scheduleDuration.ValueRW.ActivityId = activityId;
+                                scheduleDuration.ValueRW.RemainingHours = durationHours;
+                                scheduleDuration.ValueRW.DurationHours = durationHours;
+                                scheduleDuration.ValueRW.EntryIndex = entryIndex;
+                                durationActive = true;
+                            }
+
+                            if (seedChanged)
+                                randomLookup[entity] = seed;
+                        }
+                    }
+                }
+
+                if (hasEntryData)
+                {
+                    ref EM_Blob_NpcScheduleEntry entryData = ref entries[entryIndex];
+                    ref BlobArray<EM_Blob_NpcScheduleSignal> signalEntries = ref entryData.Signals;
+
+                    for (int signalIndex = 0; signalIndex < signalEntries.Length; signalIndex++)
+                    {
+                        if (!hasStartSignals && signalEntries[signalIndex].StartSignalId.Length > 0)
+                            hasStartSignals = true;
+
+                        if (!hasTickSignals && signalEntries[signalIndex].TickSignalId.Length > 0 &&
+                            signalEntries[signalIndex].TickIntervalHours > 0f)
+                            hasTickSignals = true;
+
+                        if (hasStartSignals && hasTickSignals)
+                            break;
                     }
                 }
 
@@ -127,10 +186,43 @@ namespace EmergentMechanics
                     scheduleState.ValueRW.CurrentEntryIndex = entryIndex;
                     scheduleState.ValueRW.CurrentActivityId = activityId;
                     scheduleState.ValueRW.IsOverride = overrideFlag;
-                    scheduleState.ValueRW.TickAccumulatorHours = 0f;
 
-                    if (activityId.Length > 0 && startSignalId.Length > 0)
-                        EmitSignal(startSignalId, activityId, signals, entity, societyRoot, 1f, hasDebugBuffer, debugBuffer, maxEntries);
+                    signalStateBuffer.Clear();
+
+                    if (entryIndex >= 0 && entryIndex < entries.Length)
+                    {
+                        ref EM_Blob_NpcScheduleEntry entryData = ref entries[entryIndex];
+                        int signalCount = entryData.Signals.Length;
+
+                        if (signalCount > 0)
+                        {
+                            signalStateBuffer.ResizeUninitialized(signalCount);
+
+                            for (int signalIndex = 0; signalIndex < signalCount; signalIndex++)
+                            {
+                                signalStateBuffer[signalIndex] = new EM_BufferElement_NpcScheduleSignalState
+                                {
+                                    SignalIndex = signalIndex,
+                                    TickAccumulatorHours = 0f
+                                };
+                            }
+                        }
+                    }
+
+                    if (activityId.Length > 0 && hasStartSignals)
+                    {
+                        ref BlobArray<EM_Blob_NpcScheduleSignal> signalEntries = ref entries[entryIndex].Signals;
+
+                        for (int signalIndex = 0; signalIndex < signalEntries.Length; signalIndex++)
+                        {
+                            FixedString64Bytes startSignalId = signalEntries[signalIndex].StartSignalId;
+
+                            if (startSignalId.Length == 0)
+                                continue;
+
+                            EmitSignal(startSignalId, activityId, signals, entity, societyRoot, timeSeconds, 1f, hasDebugBuffer, debugBuffer, maxEntries);
+                        }
+                    }
 
                     if (hasDebugBuffer && activityId.Length > 0)
                     {
@@ -143,29 +235,51 @@ namespace EmergentMechanics
                 if (!hasEntryData || activityId.Length == 0)
                     continue;
 
-                if (tickIntervalHours <= 0f || tickSignalId.Length == 0)
+                if (!hasTickSignals || signalStateBuffer.Length == 0)
                     continue;
-
-                scheduleState.ValueRW.TickAccumulatorHours += deltaHours;
-
-                if (scheduleState.ValueRO.TickAccumulatorHours < tickIntervalHours)
-                    continue;
-
-                scheduleState.ValueRW.TickAccumulatorHours -= tickIntervalHours;
 
                 float progress = overrideActive
                     ? GetOverrideProgress(scheduleOverride.ValueRO)
-                    : GetWindowProgress(timeOfDay, startHour, endHour);
+                    : durationActive
+                        ? GetDurationProgress(scheduleDuration.ValueRO)
+                        : GetWindowProgress(timeOfDay, startHour, endHour);
                 ref EM_Blob_NpcScheduleEntry tickEntry = ref entries[entryIndex];
-                float curveValue = SampleCurve(ref tickEntry.CurveSamples, progress);
+                ref BlobArray<EM_Blob_NpcScheduleSignal> tickSignals = ref tickEntry.Signals;
 
-                EmitSignal(tickSignalId, activityId, signals, entity, societyRoot, curveValue, hasDebugBuffer, debugBuffer, maxEntries);
-
-                if (hasDebugBuffer)
+                for (int stateIndex = 0; stateIndex < signalStateBuffer.Length; stateIndex++)
                 {
-                    EM_Component_Event debugEvent = ScheduleLogEvent(EM_DebugEventType.ScheduleTick, timeOfDay,
-                        societyRoot, entity, activityId, curveValue);
-                    EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, debugEvent);
+                    EM_BufferElement_NpcScheduleSignalState signalState = signalStateBuffer[stateIndex];
+
+                    if (signalState.SignalIndex < 0 || signalState.SignalIndex >= tickSignals.Length)
+                        continue;
+
+                    ref EM_Blob_NpcScheduleSignal tickSignal = ref tickSignals[signalState.SignalIndex];
+                    FixedString64Bytes tickSignalId = tickSignal.TickSignalId;
+
+                    if (tickSignalId.Length == 0 || tickSignal.TickIntervalHours <= 0f)
+                        continue;
+
+                    signalState.TickAccumulatorHours += deltaHours;
+
+                    if (signalState.TickAccumulatorHours < tickSignal.TickIntervalHours)
+                    {
+                        signalStateBuffer[stateIndex] = signalState;
+                        continue;
+                    }
+
+                    signalState.TickAccumulatorHours -= tickSignal.TickIntervalHours;
+                    signalStateBuffer[stateIndex] = signalState;
+
+                    float curveValue = SampleCurve(ref tickSignal.CurveSamples, progress);
+
+                    EmitSignal(tickSignalId, activityId, signals, entity, societyRoot, timeSeconds, curveValue, hasDebugBuffer, debugBuffer, maxEntries);
+
+                    if (hasDebugBuffer)
+                    {
+                        EM_Component_Event debugEvent = ScheduleLogEvent(EM_DebugEventType.ScheduleTick, timeOfDay,
+                            societyRoot, entity, activityId, curveValue);
+                        EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, debugEvent);
+                    }
                 }
             }
         }

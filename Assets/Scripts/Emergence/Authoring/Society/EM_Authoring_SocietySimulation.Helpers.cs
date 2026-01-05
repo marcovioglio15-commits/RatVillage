@@ -13,12 +13,12 @@ namespace EmergentMechanics
 
             for (int i = 0; i < source.Length; i++)
             {
-                if (string.IsNullOrWhiteSpace(source[i].ResourceId))
+                if (!EM_IdUtility.HasId(source[i].ResourceIdDefinition, source[i].ResourceId))
                     continue;
 
                 EM_BufferElement_Resource resource = new EM_BufferElement_Resource
                 {
-                    ResourceId = new FixedString64Bytes(source[i].ResourceId),
+                    ResourceId = EM_IdUtility.ToFixed(source[i].ResourceIdDefinition, source[i].ResourceId),
                     Amount = source[i].Amount
                 };
 
@@ -33,27 +33,20 @@ namespace EmergentMechanics
 
             for (int i = 0; i < source.Length; i++)
             {
-                if (string.IsNullOrWhiteSpace(source[i].NeedId))
+                if (!EM_IdUtility.HasId(source[i].NeedIdDefinition, source[i].NeedId))
                     continue;
 
                 EM_BufferElement_NeedSignalOverride entry = new EM_BufferElement_NeedSignalOverride
                 {
-                    NeedId = new FixedString64Bytes(source[i].NeedId),
-                    ValueSignalId = ToFixed(source[i].ValueSignalId),
-                    UrgencySignalId = ToFixed(source[i].UrgencySignalId)
+                    NeedId = EM_IdUtility.ToFixed(source[i].NeedIdDefinition, source[i].NeedId),
+                    ValueSignalId = EM_IdUtility.ToFixed(source[i].ValueSignalIdDefinition, source[i].ValueSignalId),
+                    UrgencySignalId = EM_IdUtility.ToFixed(source[i].UrgencySignalIdDefinition, source[i].UrgencySignalId)
                 };
 
                 buffer.Add(entry);
             }
         }
 
-        private static FixedString64Bytes ToFixed(string value)
-        {
-            if (string.IsNullOrWhiteSpace(value))
-                return new FixedString64Bytes(string.Empty);
-
-            return new FixedString64Bytes(value);
-        }
         #endregion
     }
 }

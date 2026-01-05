@@ -12,10 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42af5827dde31ff4e8f41d79ba4d477c, type: 3}
   m_Name: EM_Effect_Intent.ResolveNeed
   m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_EffectDefinition
+  effectIdDefinition: {fileID: 11400000, guid: 9a5be39b8cefdd34c911a09f0b17f113, type: 2}
   effectId: Effect.Intent.ResolveNeed
   effectType: 6
   target: 0
+  parameterIdDefinition: {fileID: 11400000, guid: 309470af7c4e33e4cac0b9debfd67019, type: 2}
   parameterId: Intent.ResolveNeed
+  secondaryIdDefinition: {fileID: 0}
   secondaryId: 
   magnitude: 1
   useClamp: 0

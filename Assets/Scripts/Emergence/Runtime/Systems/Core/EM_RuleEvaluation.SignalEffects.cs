@@ -8,7 +8,7 @@ namespace EmergentMechanics
         #region EmitSignal
         // Emit a signal event on the subject buffer.
         private static bool ApplyEmitSignal(Entity subject, Entity signalTarget, FixedString64Bytes signalId, FixedString64Bytes contextOverride,
-            FixedString64Bytes contextId, float value, Entity societyRoot, ref BufferLookup<EM_BufferElement_SignalEvent> signalLookup,
+            FixedString64Bytes contextId, float value, double timeSeconds, Entity societyRoot, ref BufferLookup<EM_BufferElement_SignalEvent> signalLookup,
             out FixedString64Bytes emittedSignalId, out FixedString64Bytes emittedContextId)
         {
             emittedSignalId = signalId;
@@ -33,7 +33,7 @@ namespace EmergentMechanics
                 Target = signalTarget,
                 SocietyRoot = societyRoot,
                 ContextId = emittedContextId,
-                Time = 0d
+                Time = timeSeconds
             });
 
             return true;

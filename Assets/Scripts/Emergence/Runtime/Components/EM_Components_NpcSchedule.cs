@@ -17,7 +17,6 @@ namespace EmergentMechanics
         #region Data
         public int CurrentEntryIndex;
         public FixedString64Bytes CurrentActivityId;
-        public float TickAccumulatorHours;
         public byte IsOverride;
         #endregion
     }
@@ -31,10 +30,38 @@ namespace EmergentMechanics
         public int EntryIndex;
         #endregion
     }
+
+    public struct EM_Component_NpcScheduleDuration : IComponentData
+    {
+        #region Data
+        public FixedString64Bytes ActivityId;
+        public float RemainingHours;
+        public float DurationHours;
+        public int EntryIndex;
+        #endregion
+    }
+
+    public struct EM_BufferElement_NpcScheduleSignalState : IBufferElementData
+    {
+        #region Data
+        public int SignalIndex;
+        public float TickAccumulatorHours;
+        #endregion
+    }
     #endregion
 
     // Blob data layout for schedule presets.
     #region Blobs
+    public struct EM_Blob_NpcScheduleSignal
+    {
+        #region Data
+        public FixedString64Bytes StartSignalId;
+        public FixedString64Bytes TickSignalId;
+        public float TickIntervalHours;
+        public BlobArray<float> CurveSamples;
+        #endregion
+    }
+
     public struct EM_BlobDefinition_NpcSchedule
     {
         #region Data
@@ -48,10 +75,10 @@ namespace EmergentMechanics
         public FixedString64Bytes ActivityId;
         public float StartHour;
         public float EndHour;
-        public float TickIntervalHours;
-        public FixedString64Bytes StartSignalId;
-        public FixedString64Bytes TickSignalId;
-        public BlobArray<float> CurveSamples;
+        public byte UseDuration;
+        public float MinDurationHours;
+        public float MaxDurationHours;
+        public BlobArray<EM_Blob_NpcScheduleSignal> Signals;
         #endregion
     }
     #endregion

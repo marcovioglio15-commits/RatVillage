@@ -33,6 +33,7 @@ namespace EmergentMechanics
         private ComponentLookup<EM_Component_NpcScheduleOverride> scheduleOverrideLookup;
         private BufferLookup<EM_BufferElement_Intent> intentLookup;
         private BufferLookup<EM_BufferElement_SignalEvent> signalLookup;
+        private ComponentLookup<EM_Component_SocietyClock> clockLookup;
         #endregion
         #endregion
 
@@ -58,6 +59,7 @@ namespace EmergentMechanics
             scheduleOverrideLookup = state.GetComponentLookup<EM_Component_NpcScheduleOverride>(false);
             intentLookup = state.GetBufferLookup<EM_BufferElement_Intent>(false);
             signalLookup = state.GetBufferLookup<EM_BufferElement_SignalEvent>(false);
+            clockLookup = state.GetComponentLookup<EM_Component_SocietyClock>(true);
         }
 
         // Dispose persistent caches when the system is destroyed.
@@ -84,7 +86,6 @@ namespace EmergentMechanics
 
             EnsureRuleGroupLookup(ref libraryBlob);
 
-            double time = SystemAPI.Time.ElapsedTime;
             bool hasSampleBuffer = SystemAPI.TryGetSingletonBuffer(out DynamicBuffer<EM_BufferElement_MetricSample> sampleBuffer);
             bool hasDebugBuffer = SystemAPI.TryGetSingletonBuffer(out DynamicBuffer<EM_Component_Event> debugBuffer);
             int maxEntries = 0;
@@ -112,6 +113,7 @@ namespace EmergentMechanics
             scheduleOverrideLookup.Update(ref state);
             intentLookup.Update(ref state);
             signalLookup.Update(ref state);
+            clockLookup.Update(ref state);
 
             EM_RuleEvaluationLookups evaluationLookups = new EM_RuleEvaluationLookups
             {
@@ -148,13 +150,21 @@ namespace EmergentMechanics
                     continue;
 
                 Entity societyRoot = ResolveSocietyRoot(subject, memberLookup, rootLookup);
+
+                if (societyRoot == Entity.Null)
+                    continue;
+
+                if (!clockLookup.HasComponent(societyRoot))
+                    continue;
+
+                double timeSeconds = clockLookup[societyRoot].SimulatedTimeSeconds;
                 bool hasProfile = EM_Utility_SocietyProfile.TryGetProfileReference(subject, societyRoot, profileLookup, out BlobAssetReference<EM_Blob_SocietyProfile> profileBlob);
 
                 for (int i = 0; i < entryCount; i++)
                 {
                     EM_BufferElement_MetricTimer timer = timerBuffer[i];
 
-                    if (time < timer.NextSampleTime)
+                    if (timeSeconds < timer.NextSampleTime)
                         continue;
 
                     if (timer.MetricIndex < 0 || timer.MetricIndex >= metrics.Length)
@@ -168,15 +178,15 @@ namespace EmergentMechanics
                     float value = SampleAccumulator(metric, accumulator, interval);
                     float normalized = EM_Utility_Metric.Normalize(metric.Normalization, value);
 
-                    timer.NextSampleTime = time + interval;
+                    timer.NextSampleTime = timeSeconds + interval;
                     timerBuffer[i] = timer;
 
                     ResetAccumulator(accumulatorIndex, accumulatorBuffer);
 
                     if (hasSampleBuffer)
-                        AppendSample(sampleBuffer, metric.MetricId, value, normalized, time, subject, societyRoot);
+                        AppendSample(sampleBuffer, metric.MetricId, value, normalized, timeSeconds, subject, societyRoot);
 
-                    if (!EM_RuleEvaluation.TryEvaluateRules(ref libraryBlob, ref ruleGroupLookup, timer.MetricIndex, normalized, time,
+                    if (!EM_RuleEvaluation.TryEvaluateRules(ref libraryBlob, ref ruleGroupLookup, timer.MetricIndex, normalized, timeSeconds,
                         subject, societyRoot, Entity.Null, default, hasProfile, profileBlob, ref evaluationLookups,
                         hasDebugBuffer, debugBuffer, maxEntries))
                         continue;

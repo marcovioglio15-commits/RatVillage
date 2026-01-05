@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 451ae7ecba0b84e48ac5c523c8f45025, type: 3}
   m_Name: EM_Signal_Need.Urgency
   m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_SignalDefinition
+  signalIdDefinition: {fileID: 11400000, guid: f6a20f715f961ac428b1b4ad12a40a36, type: 2}
   signalId: Signal.Need.Urgency
-  description: 
+  description: Emitted when a need urgency value changes.

@@ -115,7 +115,7 @@ namespace EmergentMechanics
                     if (effect.UseClamp != 0)
                         magnitude = math.clamp(magnitude, effect.MinValue, effect.MaxValue);
 
-                    bool applied = ApplyEffect(effect, magnitude, resolvedTarget, subject, signalTarget, societyRoot, contextId,
+                    bool applied = ApplyEffect(effect, magnitude, resolvedTarget, subject, signalTarget, societyRoot, contextId, time,
                         ref lookups, hasDebugBuffer, debugBuffer, maxEntries);
 
                     if (applied)

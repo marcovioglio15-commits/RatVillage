@@ -47,7 +47,7 @@ namespace EmergentMechanics
 
             for (int i = 0; i < entries.Length; i++)
             {
-                if (!string.IsNullOrWhiteSpace(entries[i].ActivityId))
+                if (EM_IdUtility.HasId(entries[i].ActivityIdDefinition, entries[i].ActivityId))
                     continue;
 
                 samples = BuildNeedRateSamples(entries[i].RatePerHour);
@@ -65,10 +65,10 @@ namespace EmergentMechanics
 
             for (int i = 0; i < entries.Length; i++)
             {
-                if (string.IsNullOrWhiteSpace(entries[i].ActivityId))
+                if (!EM_IdUtility.HasId(entries[i].ActivityIdDefinition, entries[i].ActivityId))
                     continue;
 
-                FixedString64Bytes activityId = new FixedString64Bytes(entries[i].ActivityId);
+                FixedString64Bytes activityId = EM_IdUtility.ToFixed(entries[i].ActivityIdDefinition, entries[i].ActivityId);
                 FixedList128Bytes<float> samples = BuildNeedRateSamples(entries[i].RatePerHour);
                 int existingIndex = FindNeedActivityRateIndex(needId, activityId, activityRates);
 

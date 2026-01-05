@@ -9,7 +9,7 @@ namespace EmergentMechanics
         #region Effects
         // Applies a single effect and writes debug events when enabled.
         public static bool ApplyEffect(EM_Blob_Effect effect, float magnitude, Entity target, Entity subject, Entity signalTarget,
-            Entity societyRoot, FixedString64Bytes contextId, ref EM_RuleEvaluationLookups lookups,
+            Entity societyRoot, FixedString64Bytes contextId, double timeSeconds, ref EM_RuleEvaluationLookups lookups,
             bool hasDebugBuffer, DynamicBuffer<EM_Component_Event> debugBuffer, int maxEntries)
         {
             if (target == Entity.Null)
@@ -60,7 +60,7 @@ namespace EmergentMechanics
                 FixedString64Bytes resourceId;
                 float desiredAmount;
 
-                applied = ApplyIntent(target, effect.ParameterId, effect.SecondaryId, contextId, magnitude, ref lookups.IntentLookup,
+                applied = ApplyIntent(target, effect.ParameterId, effect.SecondaryId, contextId, magnitude, timeSeconds, ref lookups.IntentLookup,
                     ref lookups.NeedSettingLookup, out before, out after, out created, out needId, out resourceId, out desiredAmount);
                 delta = after - before;
 
@@ -76,7 +76,7 @@ namespace EmergentMechanics
                 FixedString64Bytes emittedSignalId;
                 FixedString64Bytes emittedContextId;
 
-                applied = ApplyEmitSignal(target, signalTarget, effect.ParameterId, effect.SecondaryId, contextId, magnitude,
+                applied = ApplyEmitSignal(target, signalTarget, effect.ParameterId, effect.SecondaryId, contextId, magnitude, timeSeconds,
                     societyRoot, ref lookups.SignalLookup, out emittedSignalId, out emittedContextId);
                 delta = magnitude;
 

@@ -35,23 +35,51 @@ namespace EmergentMechanics
             {
                 EM_NpcSchedulePreset.ScheduleEntry entry = entries[i];
 
-                if (string.IsNullOrWhiteSpace(entry.ActivityId))
+                string activityId = EM_IdUtility.ResolveId(entry.ActivityIdDefinition, entry.ActivityId);
+
+                if (string.IsNullOrWhiteSpace(activityId))
                     continue;
 
                 ref EM_Blob_NpcScheduleEntry blobEntry = ref blobEntries[writeIndex];
-                blobEntry.ActivityId = new FixedString64Bytes(entry.ActivityId);
+                blobEntry.ActivityId = new FixedString64Bytes(activityId);
                 blobEntry.StartHour = entry.StartHour;
                 blobEntry.EndHour = entry.EndHour;
-                blobEntry.TickIntervalHours = entry.TickIntervalHours;
-                blobEntry.StartSignalId = ToFixed(entry.StartSignalId);
-                blobEntry.TickSignalId = ToFixed(entry.TickSignalId);
+                blobEntry.UseDuration = (byte)(entry.UseDuration ? 1 : 0);
+                blobEntry.MinDurationHours = entry.MinDurationHours;
+                blobEntry.MaxDurationHours = entry.MaxDurationHours;
 
-                BlobBuilderArray<float> curveSamples = builder.Allocate(ref blobEntry.CurveSamples, sampleCount);
+                EM_NpcSchedulePreset.ScheduleSignalEntry[] signalEntries = entry.SignalEntries;
+                int signalCount = CountValidSignalEntries(signalEntries);
+                BlobBuilderArray<EM_Blob_NpcScheduleSignal> blobSignals = builder.Allocate(ref blobEntry.Signals, signalCount);
+                int signalWriteIndex = 0;
 
-                for (int sampleIndex = 0; sampleIndex < sampleCount; sampleIndex++)
+                if (signalEntries != null)
                 {
-                    float t = sampleCount > 1 ? (float)sampleIndex / (sampleCount - 1) : 0f;
-                    curveSamples[sampleIndex] = EvaluateCurve(entry.ActivityCurve, t);
+                    for (int signalIndex = 0; signalIndex < signalEntries.Length; signalIndex++)
+                    {
+                        EM_NpcSchedulePreset.ScheduleSignalEntry signalEntry = signalEntries[signalIndex];
+                        bool hasStart = EM_IdUtility.HasId(signalEntry.StartSignalIdDefinition, signalEntry.StartSignalId);
+                        bool hasTick = EM_IdUtility.HasId(signalEntry.TickSignalIdDefinition, signalEntry.TickSignalId);
+
+                        if (!hasStart && !hasTick)
+                            continue;
+
+                        ref EM_Blob_NpcScheduleSignal blobSignal = ref blobSignals[signalWriteIndex];
+                        blobSignal.StartSignalId = EM_IdUtility.ToFixed(signalEntry.StartSignalIdDefinition, signalEntry.StartSignalId);
+                        blobSignal.TickSignalId = EM_IdUtility.ToFixed(signalEntry.TickSignalIdDefinition, signalEntry.TickSignalId);
+                        blobSignal.TickIntervalHours = signalEntry.TickIntervalHours;
+
+                        int curveSampleCount = hasTick && signalEntry.TickIntervalHours > 0f ? sampleCount : 0;
+                        BlobBuilderArray<float> curveSamples = builder.Allocate(ref blobSignal.CurveSamples, curveSampleCount);
+
+                        for (int sampleIndex = 0; sampleIndex < curveSampleCount; sampleIndex++)
+                        {
+                            float t = curveSampleCount > 1 ? (float)sampleIndex / (curveSampleCount - 1) : 0f;
+                            curveSamples[sampleIndex] = EvaluateCurve(signalEntry.TickSignalCurve, t);
+                        }
+
+                        signalWriteIndex++;
+                    }
                 }
 
                 writeIndex++;
@@ -69,7 +97,28 @@ namespace EmergentMechanics
 
             for (int i = 0; i < entries.Length; i++)
             {
-                if (string.IsNullOrWhiteSpace(entries[i].ActivityId))
+                if (!EM_IdUtility.HasId(entries[i].ActivityIdDefinition, entries[i].ActivityId))
+                    continue;
+
+                count++;
+            }
+
+            return count;
+        }
+
+        private static int CountValidSignalEntries(EM_NpcSchedulePreset.ScheduleSignalEntry[] entries)
+        {
+            if (entries == null)
+                return 0;
+
+            int count = 0;
+
+            for (int i = 0; i < entries.Length; i++)
+            {
+                bool hasStart = EM_IdUtility.HasId(entries[i].StartSignalIdDefinition, entries[i].StartSignalId);
+                bool hasTick = EM_IdUtility.HasId(entries[i].TickSignalIdDefinition, entries[i].TickSignalId);
+
+                if (!hasStart && !hasTick)
                     continue;
 
                 count++;
@@ -108,11 +157,11 @@ namespace EmergentMechanics
 
             for (int i = 0; i < source.Length; i++)
             {
-                if (string.IsNullOrWhiteSpace(source[i].NeedId))
+                if (!EM_IdUtility.HasId(source[i].NeedIdDefinition, source[i].NeedId))
                     continue;
 
                 NeedActivityRateEntry[] rateEntries = source[i].ActivityRates;
-                FixedString64Bytes needId = new FixedString64Bytes(source[i].NeedId);
+                FixedString64Bytes needId = EM_IdUtility.ToFixed(source[i].NeedIdDefinition, source[i].NeedId);
                 EM_BufferElement_Need need = new EM_BufferElement_Need
                 {
                     NeedId = needId,
@@ -123,8 +172,8 @@ namespace EmergentMechanics
 
                 FixedString64Bytes resourceId = default;
 
-                if (!string.IsNullOrWhiteSpace(source[i].ResourceId))
-                    resourceId = new FixedString64Bytes(source[i].ResourceId);
+                if (EM_IdUtility.HasId(source[i].ResourceIdDefinition, source[i].ResourceId))
+                    resourceId = EM_IdUtility.ToFixed(source[i].ResourceIdDefinition, source[i].ResourceId);
 
                 FixedList128Bytes<float> defaultRateSamples = ResolveDefaultRateSamples(rateEntries);
                 EM_BufferElement_NeedSetting setting = new EM_BufferElement_NeedSetting
@@ -150,12 +199,12 @@ namespace EmergentMechanics
 
             for (int i = 0; i < source.Length; i++)
             {
-                if (string.IsNullOrWhiteSpace(source[i].ResourceId))
+                if (!EM_IdUtility.HasId(source[i].ResourceIdDefinition, source[i].ResourceId))
                     continue;
 
                 EM_BufferElement_Resource resource = new EM_BufferElement_Resource
                 {
-                    ResourceId = new FixedString64Bytes(source[i].ResourceId),
+                    ResourceId = EM_IdUtility.ToFixed(source[i].ResourceIdDefinition, source[i].ResourceId),
                     Amount = source[i].Amount
                 };
 
@@ -199,12 +248,12 @@ namespace EmergentMechanics
 
             for (int i = 0; i < source.Length; i++)
             {
-                if (string.IsNullOrWhiteSpace(source[i].TargetTypeId))
+                if (!EM_IdUtility.HasId(source[i].TargetTypeIdDefinition, source[i].TargetTypeId))
                     continue;
 
                 EM_BufferElement_RelationshipType relationship = new EM_BufferElement_RelationshipType
                 {
-                    TypeId = new FixedString64Bytes(source[i].TargetTypeId),
+                    TypeId = EM_IdUtility.ToFixed(source[i].TargetTypeIdDefinition, source[i].TargetTypeId),
                     Affinity = math.clamp(source[i].Affinity, -1f, 1f)
                 };
 
@@ -216,14 +265,6 @@ namespace EmergentMechanics
 
         // Generic utility helpers.
         #region Utility
-        private static FixedString64Bytes ToFixed(string value)
-        {
-            if (string.IsNullOrWhiteSpace(value))
-                return new FixedString64Bytes(string.Empty);
-
-            return new FixedString64Bytes(value);
-        }
-
         private static uint GetStableSeed(string name)
         {
             if (string.IsNullOrWhiteSpace(name))

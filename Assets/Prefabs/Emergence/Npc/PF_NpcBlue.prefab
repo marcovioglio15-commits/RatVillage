@@ -47,49 +47,130 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Emergence.EmergenceNpcAuthoring
   societyRoot: {fileID: 0}
-  initialReputation: 0
-  npcTypeId: Gianni The Rat
+  initialReputation: 1
+  npcTypeIdDefinition: {fileID: 11400000, guid: 005951d83abc21f408f679be6a14c93b, type: 2}
+  npcTypeId: Blue
   logMessageColor: {r: 0, g: 0.101481915, b: 1, a: 1}
   schedulePreset: {fileID: 11400000, guid: 6b3b6f92814ddc54e91cfccfd7e4db5a, type: 2}
   needs:
-  - NeedId: Need.Hunger
-    InitialValue: 0
+  - NeedIdDefinition: {fileID: 11400000, guid: bb08d13ab847f4e498d901bd00407fc1, type: 2}
+    NeedId: Hunger
+    InitialValue: 0.2
     MinValue: 0
-    MaxValue: 0
+    MaxValue: 1
     ActivityRates:
-    - ActivityId: Work
+    - ActivityIdDefinition: {fileID: 11400000, guid: 20e60703ccb2c34448b06b9f8703adcd, type: 2}
+      ActivityId: 
       RatePerHour:
         serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 0
-        m_PostInfinity: 0
-        m_RotationOrder: 0
-    ResourceId: Resource.Food
-    RequestAmount: 0
-    NeedSatisfactionPerUnit: 0
-  - NeedId: Need.Thirst
-    InitialValue: 0
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 1
+          outSlope: 1
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 1
+          outSlope: 1
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+    ResourceIdDefinition: {fileID: 11400000, guid: f3c7958a16ce9da4fbdbb82dbad55a8a, type: 2}
+    ResourceId: Food
+    RequestAmount: 1
+    NeedSatisfactionPerUnit: 0.6
+  - NeedIdDefinition: {fileID: 11400000, guid: e7ca60fafb33e624796c4844bf252696, type: 2}
+    NeedId: Water
+    InitialValue: 0.35
     MinValue: 0
-    MaxValue: 0
-    ActivityRates: []
-    ResourceId: Resource.Water
-    RequestAmount: 0
-    NeedSatisfactionPerUnit: 0
-  - NeedId: Need.Sleep
-    InitialValue: 0
+    MaxValue: 1
+    ActivityRates:
+    - ActivityIdDefinition: {fileID: 11400000, guid: 20e60703ccb2c34448b06b9f8703adcd, type: 2}
+      ActivityId: 
+      RatePerHour:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 1
+          outSlope: 1
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 1
+          outSlope: 1
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+    ResourceIdDefinition: {fileID: 11400000, guid: 102c3a71d7b716f48b701df6024f73cb, type: 2}
+    ResourceId: Water
+    RequestAmount: 1
+    NeedSatisfactionPerUnit: 0.6
+  - NeedIdDefinition: {fileID: 11400000, guid: c4e22a71fca2cba4f846af0b73310230, type: 2}
+    NeedId: Sleep
+    InitialValue: 0.25
     MinValue: 0
-    MaxValue: 0
-    ActivityRates: []
-    ResourceId: Resource.Cotton
-    RequestAmount: 0
-    NeedSatisfactionPerUnit: 0
+    MaxValue: 1
+    ActivityRates:
+    - ActivityIdDefinition: {fileID: 11400000, guid: 20e60703ccb2c34448b06b9f8703adcd, type: 2}
+      ActivityId: 
+      RatePerHour:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 1
+          outSlope: 1
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 1
+          outSlope: 1
+          tangentMode: 34
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+    ResourceIdDefinition: {fileID: 11400000, guid: 864539d39e094c94a2b38d35bdf26d5b, type: 2}
+    ResourceId: Sleep
+    RequestAmount: 1
+    NeedSatisfactionPerUnit: 0.6
   resources:
-  - ResourceId: Resource.Food
-    Amount: 0
-  - ResourceId: Resource.Water
-    Amount: 0
-  - ResourceId: Resource.Cotton
-    Amount: 0
+  - ResourceIdDefinition: {fileID: 11400000, guid: f3c7958a16ce9da4fbdbb82dbad55a8a, type: 2}
+    ResourceId: Food
+    Amount: 3
+  - ResourceIdDefinition: {fileID: 11400000, guid: 102c3a71d7b716f48b701df6024f73cb, type: 2}
+    ResourceId: Water
+    Amount: 10
+  - ResourceIdDefinition: {fileID: 11400000, guid: 864539d39e094c94a2b38d35bdf26d5b, type: 2}
+    ResourceId: Sleep
+    Amount: 2
   relationshipTypes: []
   affinityTransferMultiplier:
     serializedVersion: 2

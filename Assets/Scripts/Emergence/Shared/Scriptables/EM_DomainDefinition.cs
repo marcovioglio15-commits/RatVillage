@@ -7,9 +7,14 @@ namespace EmergentMechanics
     {
         #region Serialized
         #region Identity
-        [Tooltip("Unique key used to group signals and rule sets. Treat as a stable category id so profiles and masks remain valid.")]
+        [Tooltip("Id definition that supplies the unique key used to group signals and rule sets.")]
         [Header("Identity")]
-        [SerializeField] private string domainId = "Domain.Id";
+        [EM_IdSelector(EM_IdCategory.Domain)]
+        [SerializeField] private EM_IdDefinition domainIdDefinition;
+
+        [Tooltip("Legacy domain id string (auto-migrated when missing an id definition).")]
+        [SerializeField]
+        [HideInInspector] private string domainId = "Domain.Id";
         #endregion
 
         #region Visualization
@@ -37,7 +42,15 @@ namespace EmergentMechanics
         {
             get
             {
-                return domainId;
+                return EM_IdUtility.ResolveId(domainIdDefinition, domainId);
+            }
+        }
+
+        public EM_IdDefinition DomainIdDefinition
+        {
+            get
+            {
+                return domainIdDefinition;
             }
         }
 

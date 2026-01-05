@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 451ae7ecba0b84e48ac5c523c8f45025, type: 3}
   m_Name: EM_Signal_Trade.Success
   m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_SignalDefinition
+  signalIdDefinition: {fileID: 11400000, guid: a3ac1efa163841e4c80f18120ac8c7de, type: 2}
   signalId: Signal.Trade.Success
-  description: 
+  description: Emitted when a trade succeeds.

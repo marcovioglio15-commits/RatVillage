@@ -7,9 +7,14 @@ namespace EmergentMechanics
     {
         #region Serialized
         #region Identity
-        [Tooltip("Unique key used by rules to reference this effect. Keep stable once used.")]
+        [Tooltip("Id definition that supplies the unique key for this effect.")]
         [Header("Identity")]
-        [SerializeField] private string effectId = "Effect.Id";
+        [EM_IdSelector(EM_IdCategory.Effect)]
+        [SerializeField] private EM_IdDefinition effectIdDefinition;
+
+        [Tooltip("Legacy effect id string (auto-migrated when missing an id definition).")]
+        [SerializeField]
+        [HideInInspector] private string effectId = "Effect.Id";
         #endregion
 
         #region Behavior
@@ -20,11 +25,21 @@ namespace EmergentMechanics
         [Tooltip("Target scope for the effect, such as event target or society root.")]
         [SerializeField] private EmergenceEffectTarget target = EmergenceEffectTarget.EventTarget;
 
-        [Tooltip("Optional parameter id, for example Need.Hunger, Resource.Food, or an ActivityId for OverrideSchedule.")]
-        [SerializeField] private string parameterId = "";
+        [Tooltip("Optional id definition used as the primary parameter for this effect (need, resource, activity, intent, signal, context).")]
+        [EM_IdSelector(EM_IdCategory.Any)]
+        [SerializeField] private EM_IdDefinition parameterIdDefinition;
 
-        [Tooltip("Optional secondary id used by effects that require a second identifier, such as ResourceId for intents or ContextId overrides for emitted signals.")]
-        [SerializeField] private string secondaryId = "";
+        [Tooltip("Legacy parameter id string (auto-migrated when missing an id definition).")]
+        [SerializeField]
+        [HideInInspector] private string parameterId = "";
+
+        [Tooltip("Optional id definition used as a secondary parameter for this effect (resource or context overrides).")]
+        [EM_IdSelector(EM_IdCategory.Any)]
+        [SerializeField] private EM_IdDefinition secondaryIdDefinition;
+
+        [Tooltip("Legacy secondary id string (auto-migrated when missing an id definition).")]
+        [SerializeField]
+        [HideInInspector] private string secondaryId = "";
 
         [Tooltip("Base magnitude applied before rule and signal weighting.")]
         [SerializeField] private float magnitude = 1f;
@@ -48,7 +63,15 @@ namespace EmergentMechanics
         {
             get
             {
-                return effectId;
+                return EM_IdUtility.ResolveId(effectIdDefinition, effectId);
+            }
+        }
+
+        public EM_IdDefinition EffectIdDefinition
+        {
+            get
+            {
+                return effectIdDefinition;
             }
         }
 
@@ -72,7 +95,7 @@ namespace EmergentMechanics
         {
             get
             {
-                return parameterId;
+                return EM_IdUtility.ResolveId(parameterIdDefinition, parameterId);
             }
         }
 
@@ -80,7 +103,23 @@ namespace EmergentMechanics
         {
             get
             {
-                return secondaryId;
+                return EM_IdUtility.ResolveId(secondaryIdDefinition, secondaryId);
+            }
+        }
+
+        public EM_IdDefinition ParameterIdDefinition
+        {
+            get
+            {
+                return parameterIdDefinition;
+            }
+        }
+
+        public EM_IdDefinition SecondaryIdDefinition
+        {
+            get
+            {
+                return secondaryIdDefinition;
             }
         }
 

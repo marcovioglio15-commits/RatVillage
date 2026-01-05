@@ -29,8 +29,7 @@ namespace EmergentMechanics
 
         public void OnUpdate(ref SystemState state)
         {
-            double time = SystemAPI.Time.ElapsedTime;
-            NativeParallelHashMap<Entity, float> deltaHoursMap = BuildDeltaHoursMap(ref state, time);
+            NativeParallelHashMap<Entity, NeedTickData> deltaHoursMap = BuildDeltaHoursMap(ref state);
 
             if (deltaHoursMap.Count() == 0)
             {
@@ -59,8 +58,8 @@ namespace EmergentMechanics
                     .WithAll<EM_Component_SignalEmitter>()
                     .WithEntityAccess())
             {
-                float deltaHours;
-                bool found = deltaHoursMap.TryGetValue(member.SocietyRoot, out deltaHours);
+                NeedTickData tickData;
+                bool found = deltaHoursMap.TryGetValue(member.SocietyRoot, out tickData);
 
                 if (!found)
                     continue;
@@ -88,9 +87,9 @@ namespace EmergentMechanics
                 if (hasActivityRates)
                     activityRates = needActivityRateLookup[entity];
 
-                ApplyNeedSettings(needs, settings, deltaHours, activityId, activityRates, hasActivityRates,
+                ApplyNeedSettings(needs, settings, tickData.DeltaHours, activityId, activityRates, hasActivityRates,
                     signalSettings, hasSignalSettings, overrides, hasOverrides,
-                    signals, entity, member.SocietyRoot, hasDebugBuffer, debugBuffer, maxEntries);
+                    signals, entity, member.SocietyRoot, tickData.TimeSeconds, hasDebugBuffer, debugBuffer, maxEntries);
             }
 
             deltaHoursMap.Dispose();
@@ -99,22 +98,28 @@ namespace EmergentMechanics
 
         #region Helpers
         // Compute per-society delta hours based on tick settings.
-        private NativeParallelHashMap<Entity, float> BuildDeltaHoursMap(ref SystemState state, double time)
+        private NativeParallelHashMap<Entity, NeedTickData> BuildDeltaHoursMap(ref SystemState state)
         {
-            NativeParallelHashMap<Entity, float> deltaHoursMap = new NativeParallelHashMap<Entity, float>(8, Allocator.Temp);
+            NativeParallelHashMap<Entity, NeedTickData> deltaHoursMap = new NativeParallelHashMap<Entity, NeedTickData>(8, Allocator.Temp);
 
-            foreach ((RefRW<EM_Component_NeedTickState> tickState, RefRO<EM_Component_NeedTickSettings> settings, Entity entity)
-                in SystemAPI.Query<RefRW<EM_Component_NeedTickState>, RefRO<EM_Component_NeedTickSettings>>()
+            foreach ((RefRW<EM_Component_NeedTickState> tickState, RefRO<EM_Component_NeedTickSettings> settings,
+                RefRO<EM_Component_SocietyClock> clock, Entity entity)
+                in SystemAPI.Query<RefRW<EM_Component_NeedTickState>, RefRO<EM_Component_NeedTickSettings>, RefRO<EM_Component_SocietyClock>>()
                     .WithAll<EM_Component_SocietyRoot>()
                     .WithEntityAccess())
             {
                 float intervalSeconds = GetIntervalSeconds(settings.ValueRO.TickRate);
+                double timeSeconds = clock.ValueRO.SimulatedTimeSeconds;
 
-                if (time < tickState.ValueRO.NextTick)
+                if (timeSeconds < tickState.ValueRO.NextTick)
                     continue;
 
-                tickState.ValueRW.NextTick = time + intervalSeconds;
-                deltaHoursMap.TryAdd(entity, intervalSeconds / 3600f);
+                tickState.ValueRW.NextTick = timeSeconds + intervalSeconds;
+                deltaHoursMap.TryAdd(entity, new NeedTickData
+                {
+                    DeltaHours = intervalSeconds / 3600f,
+                    TimeSeconds = timeSeconds
+                });
             }
 
             return deltaHoursMap;
@@ -133,7 +138,7 @@ namespace EmergentMechanics
             float deltaHours, FixedString64Bytes activityId, DynamicBuffer<EM_BufferElement_NeedActivityRate> activityRates, bool hasActivityRates,
             EM_Component_NeedSignalSettings signalSettings, bool hasSignalSettings,
             DynamicBuffer<EM_BufferElement_NeedSignalOverride> overrides, bool hasOverrides,
-            DynamicBuffer<EM_BufferElement_SignalEvent> signals, Entity subject, Entity societyRoot,
+            DynamicBuffer<EM_BufferElement_SignalEvent> signals, Entity subject, Entity societyRoot, double timeSeconds,
             bool hasDebugBuffer, DynamicBuffer<EM_Component_Event> debugBuffer, int maxEntries)
         {
             for (int i = 0; i < settings.Length; i++)
@@ -200,10 +205,10 @@ namespace EmergentMechanics
                     out valueSignalId, out urgencySignalId);
 
                 EmitNeedSignal(valueSignalId, updatedValue, setting.NeedId,
-                    signals, subject, societyRoot, hasDebugBuffer, debugBuffer, maxEntries);
+                    signals, subject, societyRoot, timeSeconds, hasDebugBuffer, debugBuffer, maxEntries);
 
                 EmitNeedSignal(urgencySignalId, urgency, setting.NeedId,
-                    signals, subject, societyRoot, hasDebugBuffer, debugBuffer, maxEntries);
+                    signals, subject, societyRoot, timeSeconds, hasDebugBuffer, debugBuffer, maxEntries);
             }
         }
 
@@ -233,8 +238,26 @@ namespace EmergentMechanics
             }
         }
 
+        /// <summary>
+        /// Emits a signal event with the specified identifier, value, and context to the provided signal buffer.
+        /// </summary>
+        /// <remarks>If <paramref name="signalId"/> is empty, no signal or debug event is emitted. When
+        /// <paramref name="hasDebugBuffer"/> is <see langword="true"/>, a debug event corresponding to the signal is
+        /// also appended to <paramref name="debugBuffer"/>, subject to the specified <paramref
+        /// name="maxEntries"/>.</remarks>
+        /// <param name="signalId">The unique identifier for the signal to emit. Must not be empty.</param>
+        /// <param name="value">The value associated with the signal event.</param>
+        /// <param name="contextId">The identifier representing the context in which the signal is emitted.</param>
+        /// <param name="signals">The dynamic buffer to which the signal event will be added.</param>
+        /// <param name="subject">The entity that is the subject of the signal event.</param>
+        /// <param name="societyRoot">The root entity representing the society context for the signal event.</param>
+        /// <param name="hasDebugBuffer"><see langword="true"/> to emit a corresponding debug event to the debug buffer; otherwise, <see
+        /// langword="false"/>.</param>
+        /// <param name="debugBuffer">The dynamic buffer to which debug events are appended, if <paramref name="hasDebugBuffer"/> is <see
+        /// langword="true"/>.</param>
+        /// <param name="maxEntries">The maximum number of entries allowed in the debug buffer.</param>
         private static void EmitNeedSignal(FixedString64Bytes signalId, float value, FixedString64Bytes contextId,
-            DynamicBuffer<EM_BufferElement_SignalEvent> signals, Entity subject, Entity societyRoot,
+            DynamicBuffer<EM_BufferElement_SignalEvent> signals, Entity subject, Entity societyRoot, double timeSeconds,
             bool hasDebugBuffer, DynamicBuffer<EM_Component_Event> debugBuffer, int maxEntries)
         {
             if (signalId.Length == 0)
@@ -248,7 +271,7 @@ namespace EmergentMechanics
                 Target = Entity.Null,
                 SocietyRoot = societyRoot,
                 ContextId = contextId,
-                Time = 0d
+                Time = timeSeconds
             };
 
             signals.Add(signalEvent);
@@ -291,6 +314,12 @@ namespace EmergentMechanics
             }
 
             return -1;
+        }
+
+        private struct NeedTickData
+        {
+            public float DeltaHours;
+            public double TimeSeconds;
         }
         #endregion
     }

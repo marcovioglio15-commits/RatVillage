@@ -45,9 +45,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Emergence.EmergenceNpcSpawnerAuthoring
   npcPrefab: {fileID: 3413567824012304399, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
+  spawnEntries:
+  - Prefab: {fileID: 3413567824012304399, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
+    Weight: 1
+  - Prefab: {fileID: 3413567824012304399, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
+    Weight: 1
+  - Prefab: {fileID: 3413567824012304399, guid: 936c1d72502bd9e47a5fad73f454eaa8, type: 3}
+    Weight: 1
   societyRoot: {fileID: 0}
   count: 12
   radius: 12
   height: 0
-  randomSeed: 0
-  debugNamePrefix: Blue
+  LogNamePrefix: 

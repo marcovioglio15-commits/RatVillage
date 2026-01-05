@@ -14,7 +14,12 @@ namespace EmergentMechanics
         [Serializable]
         public struct NeedActivityRateEntry
         {
-            [Tooltip("Activity identifier matched against the current schedule activity. Leave empty to use as the default rate when no activity-specific entry matches.")]
+            [Tooltip("Id definition matched against the current schedule activity. Leave empty to use as the default rate when no activity-specific entry matches.")]
+            [EM_IdSelector(EM_IdCategory.Activity)]
+            public EM_IdDefinition ActivityIdDefinition;
+
+            [Tooltip("Legacy activity id string (auto-migrated when missing an id definition).")]
+            [HideInInspector]
             public string ActivityId;
 
             [Tooltip("Need rate curve for this activity (X: normalized need 0-1 between MinValue and MaxValue, Y: rate per hour). Sampled into 31 points at bake time.")]
@@ -24,7 +29,12 @@ namespace EmergentMechanics
         [Serializable]
         public struct NeedProfileEntry
         {
-            [Tooltip("Need identifier matching Emergence need definitions.")]
+            [Tooltip("Id definition for the need matching Emergence need definitions.")]
+            [EM_IdSelector(EM_IdCategory.Need)]
+            public EM_IdDefinition NeedIdDefinition;
+
+            [Tooltip("Legacy need id string (auto-migrated when missing an id definition).")]
+            [HideInInspector]
             public string NeedId;
 
             [Tooltip("Initial need value.")]
@@ -39,7 +49,12 @@ namespace EmergentMechanics
             [Tooltip("Per-activity need rate curves. Add one entry with an empty ActivityId to act as the default rate.")]
             public NeedActivityRateEntry[] ActivityRates;
 
-            [Tooltip("Resource identifier used to satisfy the need.")]
+            [Tooltip("Id definition for the resource used to satisfy the need.")]
+            [EM_IdSelector(EM_IdCategory.Resource)]
+            public EM_IdDefinition ResourceIdDefinition;
+
+            [Tooltip("Legacy resource id string (auto-migrated when missing an id definition).")]
+            [HideInInspector]
             public string ResourceId;
 
             [Tooltip("Base resource amount requested when resolving this need.")]
@@ -52,7 +67,12 @@ namespace EmergentMechanics
         [Serializable]
         public struct ResourceEntry
         {
-            [Tooltip("Resource identifier used for trade and consumption.")]
+            [Tooltip("Id definition for the resource used for trade and consumption.")]
+            [EM_IdSelector(EM_IdCategory.Resource)]
+            public EM_IdDefinition ResourceIdDefinition;
+
+            [Tooltip("Legacy resource id string (auto-migrated when missing an id definition).")]
+            [HideInInspector]
             public string ResourceId;
 
             [Tooltip("Initial resource amount.")]
@@ -73,7 +93,12 @@ namespace EmergentMechanics
         [Serializable]
         public struct RelationshipTypeEntry
         {
-            [Tooltip("Target NPC type identifier for the affinity seed.")]
+            [Tooltip("Id definition for the target NPC type used for affinity seeds.")]
+            [EM_IdSelector(EM_IdCategory.NpcType)]
+            public EM_IdDefinition TargetTypeIdDefinition;
+
+            [Tooltip("Legacy NPC type id string (auto-migrated when missing an id definition).")]
+            [HideInInspector]
             public string TargetTypeId;
 
             [Tooltip("Initial affinity from -1 (hostile) to 1 (friendly).")]
@@ -93,8 +118,13 @@ namespace EmergentMechanics
         [Tooltip("Initial reputation value.")]
         [SerializeField] private float initialReputation;
 
-        [Tooltip("NPC type identifier used for relationship defaults and grouping.")]
-        [SerializeField] private string npcTypeId;
+        [Tooltip("Id definition for the NPC type used for relationship defaults and grouping.")]
+        [EM_IdSelector(EM_IdCategory.NpcType)]
+        [SerializeField] private EM_IdDefinition npcTypeIdDefinition;
+
+        [Tooltip("Legacy NPC type id string (auto-migrated when missing an id definition).")]
+        [SerializeField]
+        [HideInInspector] private string npcTypeId;
 
         [Tooltip("Color used to format this NPC's log messages in the debug HUD.")]
         [SerializeField] private Color logMessageColor = Color.white;
@@ -164,11 +194,13 @@ namespace EmergentMechanics
                 AddBuffer<EM_BufferElement_MetricEventSample>(entity);
                 AddBuffer<EM_BufferElement_RuleCooldown>(entity);
 
-                if (!string.IsNullOrWhiteSpace(authoring.npcTypeId))
+                string npcTypeIdValue = EM_IdUtility.ResolveId(authoring.npcTypeIdDefinition, authoring.npcTypeId);
+
+                if (!string.IsNullOrWhiteSpace(npcTypeIdValue))
                 {
                     EM_Component_NpcType npcType = new EM_Component_NpcType
                     {
-                        TypeId = new FixedString64Bytes(authoring.npcTypeId)
+                        TypeId = new FixedString64Bytes(npcTypeIdValue)
                     };
 
                     AddComponent(entity, npcType);
@@ -184,7 +216,6 @@ namespace EmergentMechanics
                     {
                         CurrentEntryIndex = -1,
                         CurrentActivityId = default,
-                        TickAccumulatorHours = 0f,
                         IsOverride = 0
                     });
                     AddComponent(entity, new EM_Component_NpcScheduleOverride
@@ -194,6 +225,14 @@ namespace EmergentMechanics
                         DurationHours = 0f,
                         EntryIndex = -1
                     });
+                    AddComponent(entity, new EM_Component_NpcScheduleDuration
+                    {
+                        ActivityId = default,
+                        RemainingHours = 0f,
+                        DurationHours = 0f,
+                        EntryIndex = -1
+                    });
+                    AddBuffer<EM_BufferElement_NpcScheduleSignalState>(entity);
                 }
 
                 DynamicBuffer<EM_BufferElement_Need> needBuffer = AddBuffer<EM_BufferElement_Need>(entity);

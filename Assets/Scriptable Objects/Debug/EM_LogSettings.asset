@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef8b57d796c699f488be8d632e7b26fd, type: 3}
-  m_Name: EM_DebugLogSettings
+  m_Name: EM_LogSettings
   m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_DebugLogSettings
-  filterMode: 0
-  includeSignals: 1
+  filterMode: 2
+  includeSignals: 0
   needSignalPrefix: Need.
-  includeNeedSignals: 1
+  includeNeedSignals: 0
   tradeSignalPrefix: Trade.
-  includeTradeSignals: 1
-  includeOtherSignals: 1
+  includeTradeSignals: 0
+  includeOtherSignals: 0
   includeIntents: 1
   includeEffects: 1
   includeInteractionAttempts: 1

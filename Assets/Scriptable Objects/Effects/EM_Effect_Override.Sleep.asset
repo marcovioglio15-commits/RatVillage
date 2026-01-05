@@ -12,10 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42af5827dde31ff4e8f41d79ba4d477c, type: 3}
   m_Name: EM_Effect_Override.Sleep
   m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_EffectDefinition
+  effectIdDefinition: {fileID: 11400000, guid: fb1b53895a6a74e4c8326a8a104dda9f, type: 2}
   effectId: Effect.Override.Sleep
   effectType: 4
   target: 0
+  parameterIdDefinition: {fileID: 11400000, guid: 03476dd9832b06040b063b228e754cb1, type: 2}
   parameterId: Override.Sleep
+  secondaryIdDefinition: {fileID: 11400000, guid: c4e22a71fca2cba4f846af0b73310230, type: 2}
   secondaryId: Sleep
   magnitude: 6
   useClamp: 0

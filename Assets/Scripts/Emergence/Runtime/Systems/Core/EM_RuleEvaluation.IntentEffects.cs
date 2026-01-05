@@ -9,7 +9,7 @@ namespace EmergentMechanics
         #region Intent
         // Add or update an intent buffer entry for the target.
         private static bool ApplyIntent(Entity target, FixedString64Bytes intentId, FixedString64Bytes resourceOverride,
-            FixedString64Bytes contextId, float urgencyDelta, ref BufferLookup<EM_BufferElement_Intent> intentLookup,
+            FixedString64Bytes contextId, float urgencyDelta, double timeSeconds, ref BufferLookup<EM_BufferElement_Intent> intentLookup,
             ref BufferLookup<EM_BufferElement_NeedSetting> settingLookup, out float before, out float after,
             out bool created, out FixedString64Bytes needId, out FixedString64Bytes resourceId, out float desiredAmount)
         {
@@ -71,8 +71,8 @@ namespace EmergentMechanics
                 ResourceId = resourceId,
                 Urgency = math.max(0f, urgencyDelta),
                 DesiredAmount = desiredAmount,
-                CreatedTime = 0d,
-                NextAttemptTime = 0d,
+                CreatedTime = timeSeconds,
+                NextAttemptTime = timeSeconds,
                 PreferredTarget = Entity.Null
             };
 

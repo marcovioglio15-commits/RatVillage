@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -8,41 +7,24 @@ namespace EmergentMechanics
 {
     public sealed partial class EM_EditorTool_StudioWindow : EditorWindow
     {
-        #region Fields
-
-        #region Constants
-        private const string WindowTitle = "Emergence Studio";
-        private const float LeftPaneWidth = 320f;
-        #endregion
-
-        #region Lookup
-        private EM_MechanicLibrary library;
-        private EM_Categories selectedCategory = EM_Categories.Signals;
-        private readonly List<Object> items = new List<Object>();
-        #endregion
-
-        #endregion
-
-        #region Methods
-
         #region Menu
         [MenuItem("Tools/Emergence/Studio")]
         public static void OpenWindow()
         {
             EM_EditorTool_StudioWindow window = GetWindow<EM_EditorTool_StudioWindow>();
             window.titleContent = new GUIContent(WindowTitle);
-            window.minSize = new Vector2(900f, 600f);
+            window.minSize = new Vector2(960f, 640f);
             window.Show();
         }
         #endregion
 
-        #region Unity LyfeCycle Lifecycle
+        #region Unity Lifecycle
         private void OnEnable()
         {
-            if (library != null)
-                return;
+            LoadPreferences();
 
-            library = FindFirstLibrary();
+            if (library == null)
+                library = FindFirstLibrary(rootFolder);
         }
 
         public void CreateGUI()
@@ -55,17 +37,17 @@ namespace EmergentMechanics
             rootVisualElement.style.paddingBottom = 6f;
 
             Toolbar toolbar = BuildToolbar();
-            TwoPaneSplitView splitView = BuildSplitView();
+            Toolbar tabBar = BuildTabBar();
+            VisualElement tabContainer = BuildTabContainer();
             VisualElement statusBar = BuildStatusBar();
 
             rootVisualElement.Add(toolbar);
-            rootVisualElement.Add(splitView);
+            rootVisualElement.Add(tabBar);
+            rootVisualElement.Add(tabContainer);
             rootVisualElement.Add(statusBar);
 
-            RefreshLibrary();
+            RefreshAll();
         }
-        #endregion
-
         #endregion
     }
 }
