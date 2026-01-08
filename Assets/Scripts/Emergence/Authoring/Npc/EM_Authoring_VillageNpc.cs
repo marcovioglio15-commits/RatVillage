@@ -22,7 +22,7 @@ namespace EmergentMechanics
             [HideInInspector]
             public string ActivityId;
 
-            [Tooltip("Need rate curve for this activity (X: normalized need 0-1 between MinValue and MaxValue, Y: rate per hour). Sampled into 31 points at bake time.")]
+            [Tooltip("Need rate curve for this activity (X: normalized activity time 0-1 from activity start to max duration, Y: rate per hour). Sampled into 31 points at bake time.")]
             public AnimationCurve RatePerHour;
         }
 
@@ -224,6 +224,12 @@ namespace EmergentMechanics
                         RemainingHours = 0f,
                         DurationHours = 0f,
                         EntryIndex = -1
+                    });
+                    AddComponent(entity, new EM_Component_NpcScheduleOverrideGate
+                    {
+                        LastOverrideTimeSeconds = -1d,
+                        LastOverridePriority = -1f,
+                        LastOverrideActivityId = default
                     });
                     AddComponent(entity, new EM_Component_NpcScheduleDuration
                     {

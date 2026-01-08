@@ -33,10 +33,13 @@ namespace EmergentMechanics
 
             bool hasDebugBuffer = SystemAPI.TryGetSingletonBuffer(out DynamicBuffer<EM_Component_Event> debugBuffer);
             int maxEntries = 0;
+            EM_Component_Log debugLog = default;
+            RefRW<EM_Component_Log> debugLogRef = default;
 
             if (hasDebugBuffer)
             {
-                EM_Component_Log debugLog = SystemAPI.GetSingleton<EM_Component_Log>();
+                debugLogRef = SystemAPI.GetSingletonRW<EM_Component_Log>();
+                debugLog = debugLogRef.ValueRO;
                 maxEntries = debugLog.MaxEntries;
             }
 
@@ -64,7 +67,9 @@ namespace EmergentMechanics
 
                 EM_Component_SocietyClock clock = clockLookup[societyRoot];
                 float dayLength = math.max(clock.DayLengthSeconds, 0.01f);
-                float deltaHours = (deltaTime / dayLength) * 24f;
+                float speed = math.max(0f, clock.BaseSimulationSpeed * clock.SimulationSpeedMultiplier);
+                double simulatedDeltaSeconds = deltaTime * 86400d / dayLength * speed;
+                float deltaHours = (float)(simulatedDeltaSeconds / 3600d);
                 float timeOfDay = clock.TimeOfDay;
                 double timeSeconds = clock.SimulatedTimeSeconds;
 
@@ -180,7 +185,7 @@ namespace EmergentMechanics
                     {
                         EM_Component_Event debugEvent = ScheduleLogEvent(EM_DebugEventType.ScheduleEnd, timeOfDay,
                             societyRoot, entity, previousActivityId, 0f);
-                        EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, debugEvent);
+                        EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, debugEvent);
                     }
 
                     scheduleState.ValueRW.CurrentEntryIndex = entryIndex;
@@ -220,7 +225,8 @@ namespace EmergentMechanics
                             if (startSignalId.Length == 0)
                                 continue;
 
-                            EmitSignal(startSignalId, activityId, signals, entity, societyRoot, timeSeconds, 1f, hasDebugBuffer, debugBuffer, maxEntries);
+                            EmitSignal(startSignalId, activityId, signals, entity, societyRoot, timeSeconds, 1f, hasDebugBuffer, debugBuffer,
+                                maxEntries, ref debugLog);
                         }
                     }
 
@@ -228,7 +234,7 @@ namespace EmergentMechanics
                     {
                         EM_Component_Event debugEvent = ScheduleLogEvent(EM_DebugEventType.ScheduleWindow, timeOfDay,
                             societyRoot, entity, activityId, 1f);
-                        EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, debugEvent);
+                        EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, debugEvent);
                     }
                 }
 
@@ -272,16 +278,20 @@ namespace EmergentMechanics
 
                     float curveValue = SampleCurve(ref tickSignal.CurveSamples, progress);
 
-                    EmitSignal(tickSignalId, activityId, signals, entity, societyRoot, timeSeconds, curveValue, hasDebugBuffer, debugBuffer, maxEntries);
+                    EmitSignal(tickSignalId, activityId, signals, entity, societyRoot, timeSeconds, curveValue, hasDebugBuffer, debugBuffer,
+                        maxEntries, ref debugLog);
 
                     if (hasDebugBuffer)
                     {
                         EM_Component_Event debugEvent = ScheduleLogEvent(EM_DebugEventType.ScheduleTick, timeOfDay,
                             societyRoot, entity, activityId, curveValue);
-                        EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, debugEvent);
+                        EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, debugEvent);
                     }
                 }
             }
+
+            if (hasDebugBuffer)
+                debugLogRef.ValueRW = debugLog;
         }
         #endregion
     }

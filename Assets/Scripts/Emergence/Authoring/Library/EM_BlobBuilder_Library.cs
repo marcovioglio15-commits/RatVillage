@@ -100,7 +100,7 @@ namespace EmergentMechanics
                 {
                     MetricId = new FixedString64Bytes(metric.MetricId),
                     SignalIndex = signalIndex,
-                    SampleInterval = metric.SampleInterval,
+                    SampleInterval = metric.SampleIntervalSeconds,
                     SamplingMode = metric.SamplingMode,
                     Scope = metric.Scope,
                     Aggregation = metric.Aggregation,

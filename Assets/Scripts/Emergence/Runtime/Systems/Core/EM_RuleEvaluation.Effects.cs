@@ -8,9 +8,9 @@ namespace EmergentMechanics
     {
         #region Effects
         // Applies a single effect and writes debug events when enabled.
-        public static bool ApplyEffect(EM_Blob_Effect effect, float magnitude, Entity target, Entity subject, Entity signalTarget,
+        public static bool ApplyEffect(EM_Blob_Effect effect, float magnitude, float rulePriority, Entity target, Entity subject, Entity signalTarget,
             Entity societyRoot, FixedString64Bytes contextId, double timeSeconds, ref EM_RuleEvaluationLookups lookups,
-            bool hasDebugBuffer, DynamicBuffer<EM_Component_Event> debugBuffer, int maxEntries)
+            bool hasDebugBuffer, DynamicBuffer<EM_Component_Event> debugBuffer, int maxEntries, ref EM_Component_Log debugLog)
         {
             if (target == Entity.Null)
                 return false;
@@ -42,8 +42,9 @@ namespace EmergentMechanics
             }
             else if (effect.EffectType == EmergenceEffectType.OverrideSchedule)
             {
-                applied = ApplyScheduleOverride(target, effect.ParameterId, magnitude, ref lookups.ScheduleLookup, ref lookups.ScheduleOverrideLookup,
-                    out before, out after);
+                applied = ApplyScheduleOverride(target, effect.ParameterId, magnitude, timeSeconds, rulePriority, societyRoot,
+                    ref lookups.MemberLookup, ref lookups.ScheduleOverrideSettingsLookup, ref lookups.ScheduleLookup,
+                    ref lookups.ScheduleOverrideLookup, ref lookups.ScheduleOverrideGateLookup, out before, out after);
                 delta = after - before;
             }
             else if (effect.EffectType == EmergenceEffectType.ModifyRelationship)
@@ -68,7 +69,7 @@ namespace EmergentMechanics
                 {
                     EM_Component_Event intentEvent = EM_Utility_LogEvent.BuildIntentEvent(effect.ParameterId, needId, resourceId, desiredAmount,
                         after, subject, target, societyRoot);
-                    EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, intentEvent);
+                    EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, intentEvent);
                 }
             }
             else if (effect.EffectType == EmergenceEffectType.EmitSignal)
@@ -84,7 +85,7 @@ namespace EmergentMechanics
                 {
                     EM_Component_Event signalEvent = EM_Utility_LogEvent.BuildSignalEvent(emittedSignalId, magnitude, emittedContextId,
                         target, signalTarget, societyRoot);
-                    EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, signalEvent);
+                    EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, signalEvent);
                 }
             }
 
@@ -93,7 +94,7 @@ namespace EmergentMechanics
 
             EM_Component_Event effectEvent = EM_Utility_LogEvent.BuildEffectEvent(effect.EffectType, effect.ParameterId, contextId,
                 delta, before, after, subject, target, societyRoot);
-            EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, effectEvent);
+            EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, effectEvent);
             return applied;
         }
 

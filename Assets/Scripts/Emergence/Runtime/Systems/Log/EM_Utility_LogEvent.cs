@@ -6,7 +6,7 @@ namespace EmergentMechanics
     internal static class EM_Utility_LogEvent
     {
         #region Public Properties
-        public static void AppendEvent(DynamicBuffer<EM_Component_Event> buffer, int maxEntries, EM_Component_Event entry)
+        public static void AppendEvent(DynamicBuffer<EM_Component_Event> buffer, int maxEntries, ref EM_Component_Log log, EM_Component_Event entry)
         {
             if (maxEntries <= 0)
                 return;
@@ -23,6 +23,12 @@ namespace EmergentMechanics
                 if (removeCount > 0)
                     buffer.RemoveRange(0, removeCount);
             }
+
+            if (log.NextSequence == 0)
+                log.NextSequence = 1;
+
+            entry.Sequence = log.NextSequence;
+            log.NextSequence++;
 
             buffer.Add(entry);
         }

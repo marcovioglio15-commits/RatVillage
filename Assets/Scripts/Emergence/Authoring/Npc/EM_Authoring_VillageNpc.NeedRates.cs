@@ -7,7 +7,7 @@ namespace EmergentMechanics
     public sealed partial class EM_Authoring_VillageNpc
     {
         #region NeedRates
-        // Need rate curve sampling for decay rules.
+        // Need rate curve sampling for activity time rules.
         #region RateSampling
         // FixedList128Bytes<float> capacity is 31 samples.
         private const int NeedRateCurveSamples = 31;

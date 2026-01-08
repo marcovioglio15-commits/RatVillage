@@ -11,6 +11,7 @@ namespace EmergentMechanics
         public ComponentLookup<EM_Component_RandomSeed> RandomLookup;
         public ComponentLookup<EM_Component_SocietyMember> MemberLookup;
         public ComponentLookup<EM_Component_SocietyRoot> RootLookup;
+        public ComponentLookup<EM_Component_ScheduleOverrideSettings> ScheduleOverrideSettingsLookup;
         public BufferLookup<EM_BufferElement_Need> NeedLookup;
         public BufferLookup<EM_BufferElement_NeedSetting> NeedSettingLookup;
         public BufferLookup<EM_BufferElement_Resource> ResourceLookup;
@@ -21,6 +22,7 @@ namespace EmergentMechanics
         public ComponentLookup<EM_Component_Cohesion> CohesionLookup;
         public ComponentLookup<EM_Component_NpcSchedule> ScheduleLookup;
         public ComponentLookup<EM_Component_NpcScheduleOverride> ScheduleOverrideLookup;
+        public ComponentLookup<EM_Component_NpcScheduleOverrideGate> ScheduleOverrideGateLookup;
         public BufferLookup<EM_BufferElement_Intent> IntentLookup;
         public BufferLookup<EM_BufferElement_SignalEvent> SignalLookup;
         #endregion
@@ -33,7 +35,7 @@ namespace EmergentMechanics
         public static bool TryEvaluateRules(ref EM_Blob_Library libraryBlob, ref NativeParallelHashMap<int, int> ruleGroupLookup,
             int metricIndex, float normalized, double time, Entity subject, Entity societyRoot, Entity signalTarget, FixedString64Bytes contextId,
             bool hasProfile, BlobAssetReference<EM_Blob_SocietyProfile> profileBlob, ref EM_RuleEvaluationLookups lookups,
-            bool hasDebugBuffer, DynamicBuffer<EM_Component_Event> debugBuffer, int maxEntries)
+            bool hasDebugBuffer, DynamicBuffer<EM_Component_Event> debugBuffer, int maxEntries, ref EM_Component_Log debugLog)
         {
             if (!hasProfile)
                 return false;
@@ -91,6 +93,7 @@ namespace EmergentMechanics
                 if (!TryConsumeCooldown(cooldownTarget, r, rule.CooldownSeconds, time, ref lookups.CooldownLookup))
                     continue;
 
+                float overrideCooldownSeconds = 0f;
                 int effectStart = rule.EffectStartIndex;
                 int effectEnd = rule.EffectStartIndex + rule.EffectLength;
 
@@ -115,12 +118,25 @@ namespace EmergentMechanics
                     if (effect.UseClamp != 0)
                         magnitude = math.clamp(magnitude, effect.MinValue, effect.MaxValue);
 
-                    bool applied = ApplyEffect(effect, magnitude, resolvedTarget, subject, signalTarget, societyRoot, contextId, time,
-                        ref lookups, hasDebugBuffer, debugBuffer, maxEntries);
+                    bool applied = ApplyEffect(effect, magnitude, normalized, resolvedTarget, subject, signalTarget, societyRoot, contextId, time,
+                        ref lookups, hasDebugBuffer, debugBuffer, maxEntries, ref debugLog);
 
                     if (applied)
+                    {
                         triggered = true;
+
+                        if (effect.EffectType == EmergenceEffectType.OverrideSchedule && magnitude > 0f)
+                        {
+                            float durationSeconds = magnitude * 3600f;
+
+                            if (durationSeconds > overrideCooldownSeconds)
+                                overrideCooldownSeconds = durationSeconds;
+                        }
+                    }
                 }
+
+                if (overrideCooldownSeconds > 0f)
+                    ExtendCooldown(cooldownTarget, r, time, overrideCooldownSeconds, ref lookups.CooldownLookup);
             }
 
             lookups.RandomLookup[subject] = seed;
@@ -165,6 +181,44 @@ namespace EmergentMechanics
             });
 
             return true;
+        }
+
+        private static void ExtendCooldown(Entity target, int ruleIndex, double time, float cooldownSeconds,
+            ref BufferLookup<EM_BufferElement_RuleCooldown> cooldownLookup)
+        {
+            if (cooldownSeconds <= 0f)
+                return;
+
+            if (target == Entity.Null)
+                return;
+
+            if (!cooldownLookup.HasBuffer(target))
+                return;
+
+            double nextAllowed = time + cooldownSeconds;
+            DynamicBuffer<EM_BufferElement_RuleCooldown> cooldowns = cooldownLookup[target];
+
+            for (int i = 0; i < cooldowns.Length; i++)
+            {
+                if (cooldowns[i].RuleIndex != ruleIndex)
+                    continue;
+
+                EM_BufferElement_RuleCooldown entry = cooldowns[i];
+
+                if (nextAllowed > entry.NextAllowedTime)
+                {
+                    entry.NextAllowedTime = nextAllowed;
+                    cooldowns[i] = entry;
+                }
+
+                return;
+            }
+
+            cooldowns.Add(new EM_BufferElement_RuleCooldown
+            {
+                RuleIndex = ruleIndex,
+                NextAllowedTime = nextAllowed
+            });
         }
         #endregion
 

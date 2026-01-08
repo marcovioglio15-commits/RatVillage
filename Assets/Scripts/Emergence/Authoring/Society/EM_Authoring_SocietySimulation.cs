@@ -63,6 +63,9 @@ namespace EmergentMechanics
 
         [Tooltip("Initial time of day in hours (0-24). Used to align schedules at startup.")]
         [SerializeField] private float startTimeOfDay = 6f;
+
+        [Tooltip("Base simulation speed multiplier applied to the clock. Use the runtime slider to scale this value.")]
+        [SerializeField] private float simulationSpeed = 1f;
         #endregion
 
         #region Society Resources
@@ -72,9 +75,9 @@ namespace EmergentMechanics
         #endregion
 
         #region Needs
-        [Tooltip("Tick rate in Hz for need decay updates.")]
+        [Tooltip("Tick interval in simulated hours for need decay updates.")]
         [Header("Needs")]
-        [SerializeField] private float needTickRate = 1f;
+        [SerializeField] private float needTickIntervalHours = 0.5f;
 
         [Tooltip("Id definition for the default signal emitted with the raw need value when no override is configured. Leave empty to disable.")]
         [EM_IdSelector(EM_IdCategory.Signal)]
@@ -97,9 +100,9 @@ namespace EmergentMechanics
         #endregion
 
         #region Trade
-        [Tooltip("Tick rate in Hz for trade evaluation.")]
+        [Tooltip("Tick interval in simulated hours for trade evaluation.")]
         [Header("Trade")]
-        [SerializeField] private float tradeTickRate = 1f;
+        [SerializeField] private float tradeTickIntervalHours = 0.5f;
 
         [Tooltip("Base acceptance probability for trade.")]
         [Range(0f, 1f)]
@@ -125,6 +128,12 @@ namespace EmergentMechanics
         [HideInInspector] private string tradeFailSignalId = "Trade.Fail";
         #endregion
 
+        #region Schedule Overrides
+        [Tooltip("When enabled, schedule overrides can only start if the NPC is not already in an override activity.")]
+        [Header("Schedule Overrides")]
+        [SerializeField] private bool blockOverrideWhileOverridden = true;
+        #endregion
+
         #endregion
 
         #endregion
@@ -143,12 +152,14 @@ namespace EmergentMechanics
                 {
                     DayLengthSeconds = authoring.dayLengthSeconds,
                     TimeOfDay = startTime,
-                    SimulatedTimeSeconds = startTime * 3600d
+                    SimulatedTimeSeconds = startTime * 3600d,
+                    BaseSimulationSpeed = Mathf.Max(0f, authoring.simulationSpeed),
+                    SimulationSpeedMultiplier = 1f
                 };
 
                 EM_Component_NeedTickSettings needSettings = new EM_Component_NeedTickSettings
                 {
-                    TickRate = authoring.needTickRate
+                    TickIntervalHours = authoring.needTickIntervalHours
                 };
 
                 EM_Component_NeedSignalSettings needSignalSettings = new EM_Component_NeedSignalSettings
@@ -164,11 +175,16 @@ namespace EmergentMechanics
 
                 EM_Component_TradeSettings tradeSettings = new EM_Component_TradeSettings
                 {
-                    TradeTickRate = authoring.tradeTickRate,
+                    TradeTickIntervalHours = authoring.tradeTickIntervalHours,
                     BaseAcceptance = authoring.tradeBaseAcceptance,
                     AffinityWeight = authoring.tradeAffinityWeight,
                     TradeSuccessSignalId = EM_IdUtility.ToFixed(authoring.tradeSuccessSignalIdDefinition, authoring.tradeSuccessSignalId),
                     TradeFailSignalId = EM_IdUtility.ToFixed(authoring.tradeFailSignalIdDefinition, authoring.tradeFailSignalId)
+                };
+
+                EM_Component_ScheduleOverrideSettings scheduleOverrideSettings = new EM_Component_ScheduleOverrideSettings
+                {
+                    BlockOverrideWhileOverridden = (byte)(authoring.blockOverrideWhileOverridden ? 1 : 0)
                 };
 
                 EM_Component_TradeTickState tradeState = new EM_Component_TradeTickState
@@ -181,6 +197,7 @@ namespace EmergentMechanics
                 AddComponent(entity, needSignalSettings);
                 AddComponent(entity, needState);
                 AddComponent(entity, tradeSettings);
+                AddComponent(entity, scheduleOverrideSettings);
                 AddComponent(entity, tradeState);
                 AddComponent<EM_Component_SignalEmitter>(entity);
                 AddBuffer<EM_BufferElement_SignalEvent>(entity);

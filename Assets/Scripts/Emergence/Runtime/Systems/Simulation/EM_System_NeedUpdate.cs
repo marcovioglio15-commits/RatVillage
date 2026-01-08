@@ -13,6 +13,9 @@ namespace EmergentMechanics
         private ComponentLookup<EM_Component_NeedSignalSettings> signalSettingsLookup;
         private BufferLookup<EM_BufferElement_NeedSignalOverride> needSignalOverrideLookup;
         private BufferLookup<EM_BufferElement_NeedActivityRate> needActivityRateLookup;
+        private ComponentLookup<EM_Component_NpcSchedule> scheduleLookup;
+        private ComponentLookup<EM_Component_NpcScheduleOverride> scheduleOverrideLookup;
+        private ComponentLookup<EM_Component_NpcScheduleDuration> scheduleDurationLookup;
         private ComponentLookup<EM_Component_NpcScheduleState> scheduleStateLookup;
         #endregion
 
@@ -24,6 +27,9 @@ namespace EmergentMechanics
             signalSettingsLookup = state.GetComponentLookup<EM_Component_NeedSignalSettings>(true);
             needSignalOverrideLookup = state.GetBufferLookup<EM_BufferElement_NeedSignalOverride>(true);
             needActivityRateLookup = state.GetBufferLookup<EM_BufferElement_NeedActivityRate>(true);
+            scheduleLookup = state.GetComponentLookup<EM_Component_NpcSchedule>(true);
+            scheduleOverrideLookup = state.GetComponentLookup<EM_Component_NpcScheduleOverride>(true);
+            scheduleDurationLookup = state.GetComponentLookup<EM_Component_NpcScheduleDuration>(true);
             scheduleStateLookup = state.GetComponentLookup<EM_Component_NpcScheduleState>(true);
         }
 
@@ -39,16 +45,22 @@ namespace EmergentMechanics
 
             bool hasDebugBuffer = SystemAPI.TryGetSingletonBuffer(out DynamicBuffer<EM_Component_Event> debugBuffer);
             int maxEntries = 0;
+            EM_Component_Log debugLog = default;
+            RefRW<EM_Component_Log> debugLogRef = default;
 
             if (hasDebugBuffer)
             {
-                EM_Component_Log debugLog = SystemAPI.GetSingleton<EM_Component_Log>();
+                debugLogRef = SystemAPI.GetSingletonRW<EM_Component_Log>();
+                debugLog = debugLogRef.ValueRO;
                 maxEntries = debugLog.MaxEntries;
             }
 
             signalSettingsLookup.Update(ref state);
             needSignalOverrideLookup.Update(ref state);
             needActivityRateLookup.Update(ref state);
+            scheduleLookup.Update(ref state);
+            scheduleOverrideLookup.Update(ref state);
+            scheduleDurationLookup.Update(ref state);
             scheduleStateLookup.Update(ref state);
 
             foreach ((DynamicBuffer<EM_BufferElement_Need> needs, DynamicBuffer<EM_BufferElement_NeedSetting> settings,
@@ -75,11 +87,39 @@ namespace EmergentMechanics
                 if (hasOverrides)
                     overrides = needSignalOverrideLookup[member.SocietyRoot];
 
+                EM_Component_NpcScheduleState scheduleState = default;
                 FixedString64Bytes activityId = default;
                 bool hasScheduleState = scheduleStateLookup.HasComponent(entity);
 
                 if (hasScheduleState)
-                    activityId = scheduleStateLookup[entity].CurrentActivityId;
+                {
+                    scheduleState = scheduleStateLookup[entity];
+                    activityId = scheduleState.CurrentActivityId;
+                }
+
+                float activityNormalizedTime = 0f;
+
+                if (hasScheduleState && activityId.Length > 0)
+                {
+                    EM_Component_NpcSchedule schedule = default;
+                    EM_Component_NpcScheduleOverride scheduleOverride = default;
+                    EM_Component_NpcScheduleDuration scheduleDuration = default;
+                    bool hasSchedule = scheduleLookup.HasComponent(entity);
+                    bool hasScheduleOverride = scheduleOverrideLookup.HasComponent(entity);
+                    bool hasScheduleDuration = scheduleDurationLookup.HasComponent(entity);
+
+                    if (hasSchedule)
+                        schedule = scheduleLookup[entity];
+
+                    if (hasScheduleOverride)
+                        scheduleOverride = scheduleOverrideLookup[entity];
+
+                    if (hasScheduleDuration)
+                        scheduleDuration = scheduleDurationLookup[entity];
+
+                    activityNormalizedTime = ResolveActivityNormalizedTime(activityId, scheduleState.CurrentEntryIndex, scheduleState.IsOverride,
+                        tickData.TimeOfDay, schedule, hasSchedule, scheduleOverride, hasScheduleOverride, scheduleDuration, hasScheduleDuration);
+                }
 
                 DynamicBuffer<EM_BufferElement_NeedActivityRate> activityRates = default;
                 bool hasActivityRates = needActivityRateLookup.HasBuffer(entity);
@@ -87,10 +127,13 @@ namespace EmergentMechanics
                 if (hasActivityRates)
                     activityRates = needActivityRateLookup[entity];
 
-                ApplyNeedSettings(needs, settings, tickData.DeltaHours, activityId, activityRates, hasActivityRates,
+                ApplyNeedSettings(needs, settings, tickData.DeltaHours, activityId, activityRates, hasActivityRates, activityNormalizedTime,
                     signalSettings, hasSignalSettings, overrides, hasOverrides,
-                    signals, entity, member.SocietyRoot, tickData.TimeSeconds, hasDebugBuffer, debugBuffer, maxEntries);
+                    signals, entity, member.SocietyRoot, tickData.TimeSeconds, hasDebugBuffer, debugBuffer, maxEntries, ref debugLog);
             }
+
+            if (hasDebugBuffer)
+                debugLogRef.ValueRW = debugLog;
 
             deltaHoursMap.Dispose();
         }
@@ -108,38 +151,35 @@ namespace EmergentMechanics
                     .WithAll<EM_Component_SocietyRoot>()
                     .WithEntityAccess())
             {
-                float intervalSeconds = GetIntervalSeconds(settings.ValueRO.TickRate);
+                float intervalSeconds = GetIntervalSeconds(settings.ValueRO.TickIntervalHours);
                 double timeSeconds = clock.ValueRO.SimulatedTimeSeconds;
 
                 if (timeSeconds < tickState.ValueRO.NextTick)
                     continue;
 
                 tickState.ValueRW.NextTick = timeSeconds + intervalSeconds;
-                deltaHoursMap.TryAdd(entity, new NeedTickData
-                {
-                    DeltaHours = intervalSeconds / 3600f,
-                    TimeSeconds = timeSeconds
-                });
+                deltaHoursMap.TryAdd(entity, new NeedTickData(intervalSeconds / 3600f, timeSeconds, clock.ValueRO.TimeOfDay));
             }
 
             return deltaHoursMap;
         }
 
-        private static float GetIntervalSeconds(float tickRate)
+        private static float GetIntervalSeconds(float intervalHours)
         {
-            if (tickRate <= 0f)
+            if (intervalHours <= 0f)
                 return 1f;
 
-            return 1f / tickRate;
+            return intervalHours * 3600f;
         }
 
         // Apply decay curves and emit need signals.
         private static void ApplyNeedSettings(DynamicBuffer<EM_BufferElement_Need> needs, DynamicBuffer<EM_BufferElement_NeedSetting> settings,
             float deltaHours, FixedString64Bytes activityId, DynamicBuffer<EM_BufferElement_NeedActivityRate> activityRates, bool hasActivityRates,
+            float activityNormalizedTime,
             EM_Component_NeedSignalSettings signalSettings, bool hasSignalSettings,
             DynamicBuffer<EM_BufferElement_NeedSignalOverride> overrides, bool hasOverrides,
             DynamicBuffer<EM_BufferElement_SignalEvent> signals, Entity subject, Entity societyRoot, double timeSeconds,
-            bool hasDebugBuffer, DynamicBuffer<EM_Component_Event> debugBuffer, int maxEntries)
+            bool hasDebugBuffer, DynamicBuffer<EM_Component_Event> debugBuffer, int maxEntries, ref EM_Component_Log debugLog)
         {
             for (int i = 0; i < settings.Length; i++)
             {
@@ -158,11 +198,6 @@ namespace EmergentMechanics
                 if (needIndex >= 0)
                     currentValue = needs[needIndex].Value;
 
-                float normalized = 0f;
-
-                if (range > 0f)
-                    normalized = math.saturate((currentValue - minValue) / range);
-
                 FixedList128Bytes<float> rateSamples = setting.RatePerHourSamples;
 
                 if (activityId.Length > 0 && hasActivityRates)
@@ -174,7 +209,7 @@ namespace EmergentMechanics
                         rateSamples = activitySamples;
                 }
 
-                float ratePerHour = SampleRatePerHour(in rateSamples, normalized);
+                float ratePerHour = SampleRatePerHour(in rateSamples, activityNormalizedTime);
                 float delta = ratePerHour * deltaHours;
                 float updatedValue = math.clamp(currentValue + delta, minValue, maxValue);
 
@@ -205,10 +240,10 @@ namespace EmergentMechanics
                     out valueSignalId, out urgencySignalId);
 
                 EmitNeedSignal(valueSignalId, updatedValue, setting.NeedId,
-                    signals, subject, societyRoot, timeSeconds, hasDebugBuffer, debugBuffer, maxEntries);
+                    signals, subject, societyRoot, timeSeconds, hasDebugBuffer, debugBuffer, maxEntries, ref debugLog);
 
                 EmitNeedSignal(urgencySignalId, urgency, setting.NeedId,
-                    signals, subject, societyRoot, timeSeconds, hasDebugBuffer, debugBuffer, maxEntries);
+                    signals, subject, societyRoot, timeSeconds, hasDebugBuffer, debugBuffer, maxEntries, ref debugLog);
             }
         }
 
@@ -238,88 +273,18 @@ namespace EmergentMechanics
             }
         }
 
-        /// <summary>
-        /// Emits a signal event with the specified identifier, value, and context to the provided signal buffer.
-        /// </summary>
-        /// <remarks>If <paramref name="signalId"/> is empty, no signal or debug event is emitted. When
-        /// <paramref name="hasDebugBuffer"/> is <see langword="true"/>, a debug event corresponding to the signal is
-        /// also appended to <paramref name="debugBuffer"/>, subject to the specified <paramref
-        /// name="maxEntries"/>.</remarks>
-        /// <param name="signalId">The unique identifier for the signal to emit. Must not be empty.</param>
-        /// <param name="value">The value associated with the signal event.</param>
-        /// <param name="contextId">The identifier representing the context in which the signal is emitted.</param>
-        /// <param name="signals">The dynamic buffer to which the signal event will be added.</param>
-        /// <param name="subject">The entity that is the subject of the signal event.</param>
-        /// <param name="societyRoot">The root entity representing the society context for the signal event.</param>
-        /// <param name="hasDebugBuffer"><see langword="true"/> to emit a corresponding debug event to the debug buffer; otherwise, <see
-        /// langword="false"/>.</param>
-        /// <param name="debugBuffer">The dynamic buffer to which debug events are appended, if <paramref name="hasDebugBuffer"/> is <see
-        /// langword="true"/>.</param>
-        /// <param name="maxEntries">The maximum number of entries allowed in the debug buffer.</param>
-        private static void EmitNeedSignal(FixedString64Bytes signalId, float value, FixedString64Bytes contextId,
-            DynamicBuffer<EM_BufferElement_SignalEvent> signals, Entity subject, Entity societyRoot, double timeSeconds,
-            bool hasDebugBuffer, DynamicBuffer<EM_Component_Event> debugBuffer, int maxEntries)
+        private readonly struct NeedTickData
         {
-            if (signalId.Length == 0)
-                return;
+            public readonly float DeltaHours;
+            public readonly double TimeSeconds;
+            public readonly float TimeOfDay;
 
-            EM_BufferElement_SignalEvent signalEvent = new EM_BufferElement_SignalEvent
+            public NeedTickData(float deltaHours, double timeSeconds, float timeOfDay)
             {
-                SignalId = signalId,
-                Value = value,
-                Subject = subject,
-                Target = Entity.Null,
-                SocietyRoot = societyRoot,
-                ContextId = contextId,
-                Time = timeSeconds
-            };
-
-            signals.Add(signalEvent);
-
-            if (!hasDebugBuffer)
-                return;
-
-            EM_Component_Event debugEvent = EM_Utility_LogEvent.BuildSignalEvent(signalId, value, contextId, subject, Entity.Null, societyRoot);
-            EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, debugEvent);
-        }
-
-        // Need rate curve sampling for decay.
-        private static float SampleRatePerHour(in FixedList128Bytes<float> samples, float normalized)
-        {
-            int count = samples.Length;
-
-            if (count <= 0)
-                return 0f;
-
-            if (count == 1)
-                return samples[0];
-
-            float t = normalized;
-            float scaled = t * (count - 1);
-            int index = (int)math.floor(scaled);
-            int nextIndex = math.min(index + 1, count - 1);
-            float lerp = scaled - index;
-
-            return math.lerp(samples[index], samples[nextIndex], lerp);
-        }
-
-        private static int FindNeedIndex(DynamicBuffer<EM_BufferElement_Need> needs, FixedString64Bytes needId)
-        {
-            for (int i = 0; i < needs.Length; i++)
-            {
-                if (!needs[i].NeedId.Equals(needId))
-                    continue;
-
-                return i;
+                DeltaHours = deltaHours;
+                TimeSeconds = timeSeconds;
+                TimeOfDay = timeOfDay;
             }
-
-            return -1;
-        }
-
-        private struct NeedTickData
-        {
-            public float DeltaHours;
-            public double TimeSeconds;
         }
         #endregion
     }

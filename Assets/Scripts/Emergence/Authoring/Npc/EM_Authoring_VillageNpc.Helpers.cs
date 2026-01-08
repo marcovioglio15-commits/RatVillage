@@ -47,6 +47,26 @@ namespace EmergentMechanics
                 blobEntry.UseDuration = (byte)(entry.UseDuration ? 1 : 0);
                 blobEntry.MinDurationHours = entry.MinDurationHours;
                 blobEntry.MaxDurationHours = entry.MaxDurationHours;
+                blobEntry.TradePolicy = (byte)entry.TradePolicy;
+
+                EM_NpcSchedulePreset.ScheduleTradeNeedEntry[] tradeNeeds = entry.AllowedTradeNeeds;
+                int tradeNeedCount = CountValidTradeNeedEntries(tradeNeeds);
+                BlobBuilderArray<FixedString64Bytes> tradeNeedIds = builder.Allocate(ref blobEntry.AllowedTradeNeedIds, tradeNeedCount);
+                int tradeNeedWriteIndex = 0;
+
+                if (tradeNeeds != null)
+                {
+                    for (int tradeNeedIndex = 0; tradeNeedIndex < tradeNeeds.Length; tradeNeedIndex++)
+                    {
+                        EM_NpcSchedulePreset.ScheduleTradeNeedEntry tradeNeed = tradeNeeds[tradeNeedIndex];
+
+                        if (!EM_IdUtility.HasId(tradeNeed.NeedIdDefinition, tradeNeed.NeedId))
+                            continue;
+
+                        tradeNeedIds[tradeNeedWriteIndex] = EM_IdUtility.ToFixed(tradeNeed.NeedIdDefinition, tradeNeed.NeedId);
+                        tradeNeedWriteIndex++;
+                    }
+                }
 
                 EM_NpcSchedulePreset.ScheduleSignalEntry[] signalEntries = entry.SignalEntries;
                 int signalCount = CountValidSignalEntries(signalEntries);
@@ -119,6 +139,24 @@ namespace EmergentMechanics
                 bool hasTick = EM_IdUtility.HasId(entries[i].TickSignalIdDefinition, entries[i].TickSignalId);
 
                 if (!hasStart && !hasTick)
+                    continue;
+
+                count++;
+            }
+
+            return count;
+        }
+
+        private static int CountValidTradeNeedEntries(EM_NpcSchedulePreset.ScheduleTradeNeedEntry[] entries)
+        {
+            if (entries == null)
+                return 0;
+
+            int count = 0;
+
+            for (int i = 0; i < entries.Length; i++)
+            {
+                if (!EM_IdUtility.HasId(entries[i].NeedIdDefinition, entries[i].NeedId))
                     continue;
 
                 count++;

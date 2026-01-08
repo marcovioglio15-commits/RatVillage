@@ -16,8 +16,8 @@ MonoBehaviour:
   signalEmittedTemplate: '[{time}] {subject} emitted {signal} ({context}) value {value}.'
   intentCreatedTemplate: '[{time}] {subject} created intent {intent} for {need} ({resource})
     amount {value} urgency {delta}.'
-  effectAppliedTemplate: '[{time}] {subject} applied {effect} on {target} ({parameter}/{context})
-    delta {delta} (from {before} to {after}).'
+  effectAppliedTemplate: '[{time}] {subject} applied {effect} on {target} (param:
+    {parameter}, context: {context}) delta {delta} (from {before} to {after}).'
   interactionAttemptTemplate: '[{time}] {subject} attempts to resolve {need} using
     {resource}.'
   interactionSuccessTemplate: '[{time}] {subject} obtained {resource} from {target}

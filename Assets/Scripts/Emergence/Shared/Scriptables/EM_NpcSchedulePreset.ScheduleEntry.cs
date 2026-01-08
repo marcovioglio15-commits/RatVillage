@@ -7,6 +7,39 @@ namespace EmergentMechanics
     public sealed partial class EM_NpcSchedulePreset
     {
         #region Nested Types
+        // Serialized definition of a trade-allowed need for an activity.
+        [Serializable]
+        public struct ScheduleTradeNeedEntry
+        {
+            #region Data
+            [Tooltip("Id definition for the need that can be resolved via trade during this activity.")]
+            [EM_IdSelector(EM_IdCategory.Need)]
+            [SerializeField] private EM_IdDefinition needIdDefinition;
+
+            [Tooltip("Legacy need id string (auto-migrated when missing an id definition).")]
+            [SerializeField]
+            [HideInInspector] private string needId;
+            #endregion
+
+            #region Properties
+            public string NeedId
+            {
+                get
+                {
+                    return EM_IdUtility.ResolveId(needIdDefinition, needId);
+                }
+            }
+
+            public EM_IdDefinition NeedIdDefinition
+            {
+                get
+                {
+                    return needIdDefinition;
+                }
+            }
+            #endregion
+        }
+
         // Serialized definition of a schedule activity window.
         [Serializable]
         public struct ScheduleEntry
@@ -47,6 +80,12 @@ namespace EmergentMechanics
 
             [Tooltip("Optional signals emitted for this activity. Each entry can define a start and/or tick signal.")]
             [SerializeField] private ScheduleSignalEntry[] signalEntries;
+
+            [Tooltip("Trade policy for this activity.")]
+            [SerializeField] private EM_ScheduleTradePolicy tradePolicy;
+
+            [Tooltip("Needs allowed for trade when policy is AllowOnlyListed.")]
+            [SerializeField] private ScheduleTradeNeedEntry[] allowedTradeNeeds;
 
             [Tooltip("Legacy start signal id definition (auto-migrated into signal entries).")]
             [FormerlySerializedAs("startSignalIdDefinition")]
@@ -110,6 +149,22 @@ namespace EmergentMechanics
                 }
             }
 
+            public EM_ScheduleTradePolicy TradePolicy
+            {
+                get
+                {
+                    return tradePolicy;
+                }
+            }
+
+            public ScheduleTradeNeedEntry[] AllowedTradeNeeds
+            {
+                get
+                {
+                    return allowedTradeNeeds;
+                }
+            }
+
             public bool UseDuration
             {
                 get
@@ -143,6 +198,12 @@ namespace EmergentMechanics
                 if (signalEntries == null)
                 {
                     signalEntries = new ScheduleSignalEntry[0];
+                    updated = true;
+                }
+
+                if (allowedTradeNeeds == null)
+                {
+                    allowedTradeNeeds = new ScheduleTradeNeedEntry[0];
                     updated = true;
                 }
 

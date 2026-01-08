@@ -21,6 +21,7 @@ namespace EmergentMechanics
         private ComponentLookup<EM_Component_SocietyMember> memberLookup;
         private ComponentLookup<EM_Component_SocietyRoot> rootLookup;
         private ComponentLookup<EM_Component_SocietyProfileReference> profileLookup;
+        private ComponentLookup<EM_Component_ScheduleOverrideSettings> scheduleOverrideSettingsLookup;
         private BufferLookup<EM_BufferElement_Need> needLookup;
         private BufferLookup<EM_BufferElement_NeedSetting> needSettingLookup;
         private BufferLookup<EM_BufferElement_Resource> resourceLookup;
@@ -31,6 +32,7 @@ namespace EmergentMechanics
         private ComponentLookup<EM_Component_Cohesion> cohesionLookup;
         private ComponentLookup<EM_Component_NpcSchedule> scheduleLookup;
         private ComponentLookup<EM_Component_NpcScheduleOverride> scheduleOverrideLookup;
+        private ComponentLookup<EM_Component_NpcScheduleOverrideGate> scheduleOverrideGateLookup;
         private BufferLookup<EM_BufferElement_Intent> intentLookup;
         private BufferLookup<EM_BufferElement_SignalEvent> signalLookup;
         private ComponentLookup<EM_Component_SocietyClock> clockLookup;
@@ -47,6 +49,7 @@ namespace EmergentMechanics
             memberLookup = state.GetComponentLookup<EM_Component_SocietyMember>(true);
             rootLookup = state.GetComponentLookup<EM_Component_SocietyRoot>(true);
             profileLookup = state.GetComponentLookup<EM_Component_SocietyProfileReference>(true);
+            scheduleOverrideSettingsLookup = state.GetComponentLookup<EM_Component_ScheduleOverrideSettings>(true);
             needLookup = state.GetBufferLookup<EM_BufferElement_Need>(false);
             needSettingLookup = state.GetBufferLookup<EM_BufferElement_NeedSetting>(true);
             resourceLookup = state.GetBufferLookup<EM_BufferElement_Resource>(false);
@@ -57,6 +60,7 @@ namespace EmergentMechanics
             cohesionLookup = state.GetComponentLookup<EM_Component_Cohesion>(false);
             scheduleLookup = state.GetComponentLookup<EM_Component_NpcSchedule>(true);
             scheduleOverrideLookup = state.GetComponentLookup<EM_Component_NpcScheduleOverride>(false);
+            scheduleOverrideGateLookup = state.GetComponentLookup<EM_Component_NpcScheduleOverrideGate>(false);
             intentLookup = state.GetBufferLookup<EM_BufferElement_Intent>(false);
             signalLookup = state.GetBufferLookup<EM_BufferElement_SignalEvent>(false);
             clockLookup = state.GetComponentLookup<EM_Component_SocietyClock>(true);
@@ -89,10 +93,13 @@ namespace EmergentMechanics
             bool hasSampleBuffer = SystemAPI.TryGetSingletonBuffer(out DynamicBuffer<EM_BufferElement_MetricSample> sampleBuffer);
             bool hasDebugBuffer = SystemAPI.TryGetSingletonBuffer(out DynamicBuffer<EM_Component_Event> debugBuffer);
             int maxEntries = 0;
+            EM_Component_Log debugLog = default;
+            RefRW<EM_Component_Log> debugLogRef = default;
 
             if (hasDebugBuffer)
             {
-                EM_Component_Log debugLog = SystemAPI.GetSingleton<EM_Component_Log>();
+                debugLogRef = SystemAPI.GetSingletonRW<EM_Component_Log>();
+                debugLog = debugLogRef.ValueRO;
                 maxEntries = debugLog.MaxEntries;
             }
 
@@ -101,6 +108,7 @@ namespace EmergentMechanics
             memberLookup.Update(ref state);
             rootLookup.Update(ref state);
             profileLookup.Update(ref state);
+            scheduleOverrideSettingsLookup.Update(ref state);
             needLookup.Update(ref state);
             needSettingLookup.Update(ref state);
             resourceLookup.Update(ref state);
@@ -111,6 +119,7 @@ namespace EmergentMechanics
             cohesionLookup.Update(ref state);
             scheduleLookup.Update(ref state);
             scheduleOverrideLookup.Update(ref state);
+            scheduleOverrideGateLookup.Update(ref state);
             intentLookup.Update(ref state);
             signalLookup.Update(ref state);
             clockLookup.Update(ref state);
@@ -121,6 +130,7 @@ namespace EmergentMechanics
                 RandomLookup = randomLookup,
                 MemberLookup = memberLookup,
                 RootLookup = rootLookup,
+                ScheduleOverrideSettingsLookup = scheduleOverrideSettingsLookup,
                 NeedLookup = needLookup,
                 NeedSettingLookup = needSettingLookup,
                 ResourceLookup = resourceLookup,
@@ -131,6 +141,7 @@ namespace EmergentMechanics
                 CohesionLookup = cohesionLookup,
                 ScheduleLookup = scheduleLookup,
                 ScheduleOverrideLookup = scheduleOverrideLookup,
+                ScheduleOverrideGateLookup = scheduleOverrideGateLookup,
                 IntentLookup = intentLookup,
                 SignalLookup = signalLookup
             };
@@ -186,12 +197,18 @@ namespace EmergentMechanics
                     if (hasSampleBuffer)
                         AppendSample(sampleBuffer, metric.MetricId, value, normalized, timeSeconds, subject, societyRoot);
 
+                    if (accumulator.Count <= 0)
+                        continue;
+
                     if (!EM_RuleEvaluation.TryEvaluateRules(ref libraryBlob, ref ruleGroupLookup, timer.MetricIndex, normalized, timeSeconds,
                         subject, societyRoot, Entity.Null, default, hasProfile, profileBlob, ref evaluationLookups,
-                        hasDebugBuffer, debugBuffer, maxEntries))
+                        hasDebugBuffer, debugBuffer, maxEntries, ref debugLog))
                         continue;
                 }
             }
+
+            if (hasDebugBuffer)
+                debugLogRef.ValueRW = debugLog;
         }
         #endregion
     }

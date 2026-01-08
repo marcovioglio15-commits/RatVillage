@@ -67,7 +67,7 @@ namespace EmergentMechanics
             SerializedProperty effectsProperty = ruleProperty.FindPropertyRelative("effects");
             SerializedProperty curveProperty = ruleProperty.FindPropertyRelative("probabilityCurve");
             SerializedProperty weightProperty = ruleProperty.FindPropertyRelative("weight");
-            SerializedProperty cooldownProperty = ruleProperty.FindPropertyRelative("cooldownSeconds");
+            SerializedProperty cooldownProperty = ruleProperty.FindPropertyRelative("cooldownHours");
 
             metricProperty.objectReferenceValue = metric;
             contextDefinitionProperty.objectReferenceValue = contextIdDefinition;

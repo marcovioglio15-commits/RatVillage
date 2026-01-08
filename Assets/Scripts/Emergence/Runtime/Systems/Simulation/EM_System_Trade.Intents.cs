@@ -8,36 +8,74 @@ namespace EmergentMechanics
     {
         #region Constants
         // Reason keys used in interaction debug events.
-        private static readonly FixedString64Bytes ReasonNoIntent = new FixedString64Bytes("NoIntent");
         private static readonly FixedString64Bytes ReasonNoResource = new FixedString64Bytes("NoResource");
         private static readonly FixedString64Bytes ReasonNoPartner = new FixedString64Bytes("NoPartner");
         private static readonly FixedString64Bytes ReasonRejected = new FixedString64Bytes("Rejected");
         #endregion
 
         #region IntentResolution
+        private static bool TryGetTradeEntry(Entity entity, ref ComponentLookup<EM_Component_NpcSchedule> scheduleLookup,
+            ref ComponentLookup<EM_Component_NpcScheduleState> scheduleStateLookup,
+            out BlobAssetReference<EM_BlobDefinition_NpcSchedule> schedule, out int entryIndex)
+        {
+            schedule = default;
+            entryIndex = -1;
+
+            if (!scheduleLookup.HasComponent(entity) || !scheduleStateLookup.HasComponent(entity))
+                return false;
+
+            EM_Component_NpcSchedule scheduleComponent = scheduleLookup[entity];
+
+            if (!scheduleComponent.Schedule.IsCreated)
+                return false;
+
+            schedule = scheduleComponent.Schedule;
+            ref BlobArray<EM_Blob_NpcScheduleEntry> entries = ref schedule.Value.Entries;
+
+            if (entries.Length == 0)
+                return false;
+
+            EM_Component_NpcScheduleState scheduleState = scheduleStateLookup[entity];
+
+            if (scheduleState.CurrentActivityId.Length == 0)
+                return false;
+
+            entryIndex = scheduleState.CurrentEntryIndex;
+
+            if (entryIndex >= 0 && entryIndex < entries.Length)
+            {
+                ref EM_Blob_NpcScheduleEntry entry = ref entries[entryIndex];
+
+                if (entry.ActivityId.Equals(scheduleState.CurrentActivityId))
+                    return true;
+            }
+
+            int resolvedIndex = FindEntryByActivityId(ref entries, scheduleState.CurrentActivityId);
+
+            if (resolvedIndex < 0)
+                return false;
+
+            entryIndex = resolvedIndex;
+            return true;
+        }
+
         // Resolve the highest urgency intent for the requester entity.
         private static void TryResolveIntent(Entity requester, Entity societyRoot, EM_Component_TradeSettings settings, double timeSeconds,
-            ref EM_Component_RandomSeed seed, DynamicBuffer<EM_BufferElement_Intent> intents, DynamicBuffer<EM_BufferElement_Need> needs,
+            ref EM_Blob_NpcScheduleEntry tradeEntry, ref EM_Component_RandomSeed seed, DynamicBuffer<EM_BufferElement_Intent> intents,
+            DynamicBuffer<EM_BufferElement_Need> needs,
             DynamicBuffer<EM_BufferElement_NeedSetting> needSettings, DynamicBuffer<EM_BufferElement_Resource> requesterResources,
             DynamicBuffer<EM_BufferElement_SignalEvent> requesterSignals, ref BufferLookup<EM_BufferElement_Resource> resourceLookup,
             ref BufferLookup<EM_BufferElement_Relationship> relationshipLookup, ref BufferLookup<EM_BufferElement_RelationshipType> relationshipTypeLookup,
             ref ComponentLookup<EM_Component_NpcType> npcTypeLookup, ref ComponentLookup<EM_Component_NpcTradePreferences> tradePreferencesLookup,
             NativeList<Entity> candidates, NativeList<Entity> candidateSocieties,
-            bool hasDebugBuffer, DynamicBuffer<EM_Component_Event> debugBuffer, int maxEntries)
+            bool hasDebugBuffer, DynamicBuffer<EM_Component_Event> debugBuffer, int maxEntries, ref EM_Component_Log debugLog)
         {
             int intentIndex;
             EM_BufferElement_Intent intent;
-            bool hasIntent = SelectBestIntent(intents, timeSeconds, out intentIndex, out intent);
+            bool hasIntent = SelectBestIntent(intents, timeSeconds, ref tradeEntry, out intentIndex, out intent);
 
             if (!hasIntent)
             {
-                if (hasDebugBuffer)
-                {
-                    EM_Component_Event debugEvent = EM_Utility_LogEvent.BuildInteractionEvent(EM_DebugEventType.InteractionFail, ReasonNoIntent,
-                        requester, Entity.Null, societyRoot, default, default, 0f);
-                    EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, debugEvent);
-                }
-
                 return;
             }
 
@@ -50,7 +88,7 @@ namespace EmergentMechanics
                 {
                     EM_Component_Event debugEvent = EM_Utility_LogEvent.BuildInteractionEvent(EM_DebugEventType.InteractionFail, ReasonNoResource,
                         requester, Entity.Null, societyRoot, intent.NeedId, intent.ResourceId, 0f);
-                    EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, debugEvent);
+                    EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, debugEvent);
                 }
 
                 return;
@@ -60,11 +98,11 @@ namespace EmergentMechanics
             {
                 EM_Component_Event attemptEvent = EM_Utility_LogEvent.BuildInteractionEvent(EM_DebugEventType.InteractionAttempt, default,
                     requester, Entity.Null, societyRoot, needData.NeedId, needData.ResourceId, intent.Urgency);
-                EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, attemptEvent);
+                EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, attemptEvent);
             }
 
             if (TryResolveWithSociety(requester, societyRoot, intentIndex, intents, needData, needs, requesterResources, resourceLookup,
-                requesterSignals, settings, timeSeconds, hasDebugBuffer, debugBuffer, maxEntries))
+                requesterSignals, settings, timeSeconds, hasDebugBuffer, debugBuffer, maxEntries, ref debugLog))
                 return;
 
             Entity provider;
@@ -76,13 +114,13 @@ namespace EmergentMechanics
             if (!found)
             {
                 EmitTradeSignal(requesterSignals, settings.TradeFailSignalId, needData.NeedId, requester, Entity.Null, societyRoot, timeSeconds, 0f,
-                    hasDebugBuffer, debugBuffer, maxEntries);
+                    hasDebugBuffer, debugBuffer, maxEntries, ref debugLog);
 
                 if (hasDebugBuffer)
                 {
                     EM_Component_Event failEvent = EM_Utility_LogEvent.BuildInteractionEvent(EM_DebugEventType.InteractionFail, ReasonNoPartner,
                         requester, Entity.Null, societyRoot, needData.NeedId, needData.ResourceId, 0f);
-                    EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, failEvent);
+                    EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, failEvent);
                 }
 
                 return;
@@ -94,13 +132,13 @@ namespace EmergentMechanics
             if (acceptanceRoll > acceptance)
             {
                 EmitTradeSignal(requesterSignals, settings.TradeFailSignalId, needData.NeedId, requester, provider, societyRoot, timeSeconds, 0f,
-                    hasDebugBuffer, debugBuffer, maxEntries);
+                    hasDebugBuffer, debugBuffer, maxEntries, ref debugLog);
 
                 if (hasDebugBuffer)
                 {
                     EM_Component_Event failEvent = EM_Utility_LogEvent.BuildInteractionEvent(EM_DebugEventType.InteractionFail, ReasonRejected,
                         requester, provider, societyRoot, needData.NeedId, needData.ResourceId, 0f);
-                    EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, failEvent);
+                    EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, failEvent);
                 }
 
                 return;
@@ -115,13 +153,13 @@ namespace EmergentMechanics
             if (transferAmount <= 0f)
             {
                 EmitTradeSignal(requesterSignals, settings.TradeFailSignalId, needData.NeedId, requester, provider, societyRoot, timeSeconds, 0f,
-                    hasDebugBuffer, debugBuffer, maxEntries);
+                    hasDebugBuffer, debugBuffer, maxEntries, ref debugLog);
 
                 if (hasDebugBuffer)
                 {
                     EM_Component_Event failEvent = EM_Utility_LogEvent.BuildInteractionEvent(EM_DebugEventType.InteractionFail, ReasonNoResource,
                         requester, provider, societyRoot, needData.NeedId, needData.ResourceId, 0f);
-                    EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, failEvent);
+                    EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, failEvent);
                 }
 
                 return;
@@ -132,13 +170,13 @@ namespace EmergentMechanics
             ApplyNeedDelta(needs, needData.NeedId, -transferAmount * needData.NeedSatisfactionPerUnit, needData.MinValue, needData.MaxValue);
 
             EmitTradeSignal(requesterSignals, settings.TradeSuccessSignalId, needData.NeedId, requester, provider, societyRoot, timeSeconds, transferAmount,
-                hasDebugBuffer, debugBuffer, maxEntries);
+                hasDebugBuffer, debugBuffer, maxEntries, ref debugLog);
 
             if (hasDebugBuffer)
             {
                 EM_Component_Event successEvent = EM_Utility_LogEvent.BuildInteractionEvent(EM_DebugEventType.InteractionSuccess, default,
                     requester, provider, societyRoot, needData.NeedId, needData.ResourceId, transferAmount);
-                EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, successEvent);
+                EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, successEvent);
             }
 
             intents.RemoveAt(intentIndex);
@@ -149,7 +187,7 @@ namespace EmergentMechanics
             NeedResolutionData needData, DynamicBuffer<EM_BufferElement_Need> needs,
             DynamicBuffer<EM_BufferElement_Resource> requesterResources, BufferLookup<EM_BufferElement_Resource> resourceLookup,
             DynamicBuffer<EM_BufferElement_SignalEvent> requesterSignals, EM_Component_TradeSettings settings, double timeSeconds,
-            bool hasDebugBuffer, DynamicBuffer<EM_Component_Event> debugBuffer, int maxEntries)
+            bool hasDebugBuffer, DynamicBuffer<EM_Component_Event> debugBuffer, int maxEntries, ref EM_Component_Log debugLog)
         {
             if (societyRoot == Entity.Null)
                 return false;
@@ -174,13 +212,13 @@ namespace EmergentMechanics
             ApplyNeedDelta(needs, needData.NeedId, -transferAmount * needData.NeedSatisfactionPerUnit, needData.MinValue, needData.MaxValue);
 
             EmitTradeSignal(requesterSignals, settings.TradeSuccessSignalId, needData.NeedId, requester, societyRoot, societyRoot, timeSeconds, transferAmount,
-                hasDebugBuffer, debugBuffer, maxEntries);
+                hasDebugBuffer, debugBuffer, maxEntries, ref debugLog);
 
             if (hasDebugBuffer)
             {
                 EM_Component_Event successEvent = EM_Utility_LogEvent.BuildInteractionEvent(EM_DebugEventType.InteractionSuccess, default,
                     requester, societyRoot, societyRoot, needData.NeedId, needData.ResourceId, transferAmount);
-                EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, successEvent);
+                EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, successEvent);
             }
 
             intents.RemoveAt(intentIndex);
@@ -189,17 +227,28 @@ namespace EmergentMechanics
 
         // Select the highest urgency intent that is ready to be attempted.
         private static bool SelectBestIntent(DynamicBuffer<EM_BufferElement_Intent> intents, double time,
-            out int intentIndex, out EM_BufferElement_Intent intent)
+            ref EM_Blob_NpcScheduleEntry tradeEntry, out int intentIndex, out EM_BufferElement_Intent intent)
         {
             intentIndex = -1;
             intent = default;
             float bestUrgency = 0f;
+            EM_ScheduleTradePolicy policy = (EM_ScheduleTradePolicy)tradeEntry.TradePolicy;
+
+            if (policy == EM_ScheduleTradePolicy.BlockAll)
+                return false;
 
             for (int i = 0; i < intents.Length; i++)
             {
                 EM_BufferElement_Intent current = intents[i];
 
                 if (time < current.NextAttemptTime)
+                    continue;
+
+                if (current.NeedId.Length == 0)
+                    continue;
+
+                if (policy == EM_ScheduleTradePolicy.AllowOnlyListed &&
+                    !IsNeedAllowed(current.NeedId, ref tradeEntry.AllowedTradeNeedIds))
                     continue;
 
                 if (current.Urgency <= bestUrgency)
@@ -211,6 +260,33 @@ namespace EmergentMechanics
             }
 
             return intentIndex >= 0;
+        }
+
+        private static bool IsNeedAllowed(FixedString64Bytes needId, ref BlobArray<FixedString64Bytes> allowedNeeds)
+        {
+            for (int i = 0; i < allowedNeeds.Length; i++)
+            {
+                if (allowedNeeds[i].Equals(needId))
+                    return true;
+            }
+
+            return false;
+        }
+
+        private static int FindEntryByActivityId(ref BlobArray<EM_Blob_NpcScheduleEntry> entries, FixedString64Bytes activityId)
+        {
+            if (activityId.Length == 0)
+                return -1;
+
+            for (int i = 0; i < entries.Length; i++)
+            {
+                ref EM_Blob_NpcScheduleEntry entry = ref entries[i];
+
+                if (entry.ActivityId.Equals(activityId))
+                    return i;
+            }
+
+            return -1;
         }
 
         // Resolve intent settings using the requester's need configuration.

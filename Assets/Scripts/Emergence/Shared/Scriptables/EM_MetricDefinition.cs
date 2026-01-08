@@ -28,8 +28,8 @@ namespace EmergentMechanics
         [Tooltip("Aggregation applied across samples since the last metric tick.")]
         [SerializeField] private EmergenceMetricAggregation aggregationKind = EmergenceMetricAggregation.Average;
         
-        [Tooltip("Seconds between samples for this metric.")]
-        [SerializeField] private float sampleInterval = 1f;
+        [Tooltip("Hours between samples for this metric (simulated time).")]
+        [SerializeField] private float sampleIntervalHours = 0.5f;
 
         [Tooltip("Target scope for samples: society root or individual members.")]
         [SerializeField] private EmergenceMetricScope scope = EmergenceMetricScope.Society;
@@ -57,11 +57,11 @@ namespace EmergentMechanics
             }
         }
 
-        public float SampleInterval
+        public float SampleIntervalSeconds
         {
             get
             {
-                return sampleInterval;
+                return Mathf.Max(0f, sampleIntervalHours) * 3600f;
             }
         }
 

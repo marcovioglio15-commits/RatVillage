@@ -18,7 +18,7 @@ namespace EmergentMechanics
                     .WithEntityAccess())
             {
                 double timeSeconds = clock.ValueRO.SimulatedTimeSeconds;
-                float intervalSeconds = GetIntervalSeconds(settings.ValueRO.TradeTickRate);
+                float intervalSeconds = GetIntervalSeconds(settings.ValueRO.TradeTickIntervalHours);
 
                 if (timeSeconds < tickState.ValueRO.NextTick)
                     continue;
@@ -30,13 +30,13 @@ namespace EmergentMechanics
             return readyMap;
         }
 
-        // Convert a tick rate (Hz) into interval seconds.
-        private static float GetIntervalSeconds(float tickRate)
+        // Convert a tick interval in simulated hours into seconds.
+        private static float GetIntervalSeconds(float intervalHours)
         {
-            if (tickRate <= 0f)
+            if (intervalHours <= 0f)
                 return 1f;
 
-            return 1f / tickRate;
+            return intervalHours * 3600f;
         }
 
         // Collect candidate NPCs with available resources for trade.

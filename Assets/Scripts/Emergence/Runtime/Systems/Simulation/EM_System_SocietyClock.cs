@@ -25,7 +25,8 @@ namespace EmergentMechanics
                 in SystemAPI.Query<RefRW<EM_Component_SocietyClock>>().WithAll<EM_Component_SocietyRoot>())
             {
                 float dayLengthSeconds = math.max(clock.ValueRO.DayLengthSeconds, 0.01f);
-                double simulatedDeltaSeconds = deltaTime * 86400d / dayLengthSeconds;
+                float speed = math.max(0f, clock.ValueRO.BaseSimulationSpeed * clock.ValueRO.SimulationSpeedMultiplier);
+                double simulatedDeltaSeconds = deltaTime * 86400d / dayLengthSeconds * speed;
                 double simulatedTimeSeconds = clock.ValueRO.SimulatedTimeSeconds + simulatedDeltaSeconds;
                 double totalHours = simulatedTimeSeconds / 3600d;
                 double wrappedHours = totalHours % 24d;

@@ -3,6 +3,13 @@ using Unity.Entities;
 
 namespace EmergentMechanics
 {
+    public enum EM_ScheduleTradePolicy : byte
+    {
+        AllowAll = 0,
+        AllowOnlyListed = 1,
+        BlockAll = 2
+    }
+
     // Components and blob definitions for per-NPC schedules.
     #region Components
     public struct EM_Component_NpcSchedule : IComponentData
@@ -28,6 +35,15 @@ namespace EmergentMechanics
         public float RemainingHours;
         public float DurationHours;
         public int EntryIndex;
+        #endregion
+    }
+
+    public struct EM_Component_NpcScheduleOverrideGate : IComponentData
+    {
+        #region Data
+        public double LastOverrideTimeSeconds;
+        public float LastOverridePriority;
+        public FixedString64Bytes LastOverrideActivityId;
         #endregion
     }
 
@@ -78,6 +94,8 @@ namespace EmergentMechanics
         public byte UseDuration;
         public float MinDurationHours;
         public float MaxDurationHours;
+        public byte TradePolicy;
+        public BlobArray<FixedString64Bytes> AllowedTradeNeedIds;
         public BlobArray<EM_Blob_NpcScheduleSignal> Signals;
         #endregion
     }

@@ -13,6 +13,8 @@ namespace EmergentMechanics
         private ComponentLookup<EM_Component_RandomSeed> randomLookup;
         private ComponentLookup<EM_Component_NpcType> npcTypeLookup;
         private ComponentLookup<EM_Component_NpcTradePreferences> tradePreferencesLookup;
+        private ComponentLookup<EM_Component_NpcSchedule> scheduleLookup;
+        private ComponentLookup<EM_Component_NpcScheduleState> scheduleStateLookup;
         private BufferLookup<EM_BufferElement_Intent> intentLookup;
         private BufferLookup<EM_BufferElement_Need> needLookup;
         private BufferLookup<EM_BufferElement_NeedSetting> needSettingLookup;
@@ -32,6 +34,8 @@ namespace EmergentMechanics
             randomLookup = state.GetComponentLookup<EM_Component_RandomSeed>(false);
             npcTypeLookup = state.GetComponentLookup<EM_Component_NpcType>(true);
             tradePreferencesLookup = state.GetComponentLookup<EM_Component_NpcTradePreferences>(true);
+            scheduleLookup = state.GetComponentLookup<EM_Component_NpcSchedule>(true);
+            scheduleStateLookup = state.GetComponentLookup<EM_Component_NpcScheduleState>(true);
             intentLookup = state.GetBufferLookup<EM_BufferElement_Intent>(false);
             needLookup = state.GetBufferLookup<EM_BufferElement_Need>(false);
             needSettingLookup = state.GetBufferLookup<EM_BufferElement_NeedSetting>(true);
@@ -52,10 +56,13 @@ namespace EmergentMechanics
 
             bool hasDebugBuffer = SystemAPI.TryGetSingletonBuffer(out DynamicBuffer<EM_Component_Event> debugBuffer);
             int maxEntries = 0;
+            EM_Component_Log debugLog = default;
+            RefRW<EM_Component_Log> debugLogRef = default;
 
             if (hasDebugBuffer)
             {
-                EM_Component_Log debugLog = SystemAPI.GetSingleton<EM_Component_Log>();
+                debugLogRef = SystemAPI.GetSingletonRW<EM_Component_Log>();
+                debugLog = debugLogRef.ValueRO;
                 maxEntries = debugLog.MaxEntries;
             }
 
@@ -63,6 +70,8 @@ namespace EmergentMechanics
             randomLookup.Update(ref state);
             npcTypeLookup.Update(ref state);
             tradePreferencesLookup.Update(ref state);
+            scheduleLookup.Update(ref state);
+            scheduleStateLookup.Update(ref state);
             intentLookup.Update(ref state);
             needLookup.Update(ref state);
             needSettingLookup.Update(ref state);
@@ -95,15 +104,31 @@ namespace EmergentMechanics
                 if (!randomLookup.HasComponent(entity))
                     continue;
 
+                BlobAssetReference<EM_BlobDefinition_NpcSchedule> tradeSchedule;
+                int tradeEntryIndex;
+
+                if (!TryGetTradeEntry(entity, ref scheduleLookup, ref scheduleStateLookup, out tradeSchedule, out tradeEntryIndex))
+                    continue;
+
+                ref EM_BlobDefinition_NpcSchedule scheduleDefinition = ref tradeSchedule.Value;
+                ref BlobArray<EM_Blob_NpcScheduleEntry> tradeEntries = ref scheduleDefinition.Entries;
+                ref EM_Blob_NpcScheduleEntry tradeEntry = ref tradeEntries[tradeEntryIndex];
+
+                if ((EM_ScheduleTradePolicy)tradeEntry.TradePolicy == EM_ScheduleTradePolicy.BlockAll)
+                    continue;
+
                 EM_Component_TradeSettings tradeSettings = tradeSettingsLookup[member.SocietyRoot];
                 EM_Component_RandomSeed seed = randomLookup[entity];
 
-                TryResolveIntent(entity, member.SocietyRoot, tradeSettings, timeSeconds, ref seed, intents, needs, settings, resources, signals,
+                TryResolveIntent(entity, member.SocietyRoot, tradeSettings, timeSeconds, ref tradeEntry, ref seed, intents, needs, settings, resources, signals,
                     ref resourceLookup, ref relationshipLookup, ref relationshipTypeLookup, ref npcTypeLookup, ref tradePreferencesLookup,
-                    candidates, candidateSocieties, hasDebugBuffer, debugBuffer, maxEntries);
+                    candidates, candidateSocieties, hasDebugBuffer, debugBuffer, maxEntries, ref debugLog);
 
                 randomLookup[entity] = seed;
             }
+
+            if (hasDebugBuffer)
+                debugLogRef.ValueRW = debugLog;
 
             candidates.Dispose();
             candidateSocieties.Dispose();

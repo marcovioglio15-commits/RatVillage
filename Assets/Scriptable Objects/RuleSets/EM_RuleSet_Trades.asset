@@ -48,7 +48,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     weight: 1
-    cooldownSeconds: 0
+    cooldownHours: 0
   - metric: {fileID: 11400000, guid: b23debb9f2bb11c4888a192e4becf328, type: 2}
     contextIdDefinition: {fileID: 0}
     contextIdFilter: 
@@ -80,5 +80,5 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     weight: 1
-    cooldownSeconds: 0
+    cooldownHours: 0
   description: 

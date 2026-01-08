@@ -35,7 +35,7 @@ namespace EmergentMechanics
         // Emit a trade signal and mirror it into the debug buffer.
         private static void EmitTradeSignal(DynamicBuffer<EM_BufferElement_SignalEvent> signals, FixedString64Bytes signalId,
             FixedString64Bytes contextId, Entity subject, Entity target, Entity societyRoot, double timeSeconds, float value,
-            bool hasDebugBuffer, DynamicBuffer<EM_Component_Event> debugBuffer, int maxEntries)
+            bool hasDebugBuffer, DynamicBuffer<EM_Component_Event> debugBuffer, int maxEntries, ref EM_Component_Log debugLog)
         {
             if (signalId.Length == 0)
                 return;
@@ -57,7 +57,7 @@ namespace EmergentMechanics
                 return;
 
             EM_Component_Event debugEvent = EM_Utility_LogEvent.BuildSignalEvent(signalId, value, contextId, subject, target, societyRoot);
-            EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, debugEvent);
+            EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, debugEvent);
         }
 
         // Get the current amount for a resource id.

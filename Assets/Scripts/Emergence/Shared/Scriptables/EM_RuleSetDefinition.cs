@@ -76,8 +76,8 @@ namespace EmergentMechanics
             [Tooltip("Multiplier applied to all effects when this rule fires.")]
             [SerializeField] private float weight;
 
-            [Tooltip("Minimum seconds between firings on the same target.")]
-            [SerializeField] private float cooldownSeconds;
+            [Tooltip("Minimum hours between firings on the same target (simulated time).")]
+            [SerializeField] private float cooldownHours;
             #endregion
             #endregion
 
@@ -134,7 +134,7 @@ namespace EmergentMechanics
             {
                 get
                 {
-                    return cooldownSeconds;
+                    return Mathf.Max(0f, cooldownHours) * 3600f;
                 }
             }
 

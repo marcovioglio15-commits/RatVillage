@@ -10,13 +10,15 @@ namespace EmergentMechanics
         public float DayLengthSeconds;
         public float TimeOfDay;
         public double SimulatedTimeSeconds;
+        public float BaseSimulationSpeed;
+        public float SimulationSpeedMultiplier;
         #endregion
     }
 
     public struct EM_Component_NeedTickSettings : IComponentData
     {
         #region Data
-        public float TickRate;
+        public float TickIntervalHours;
         #endregion
     }
 
@@ -47,11 +49,18 @@ namespace EmergentMechanics
     public struct EM_Component_TradeSettings : IComponentData
     {
         #region Data
-        public float TradeTickRate;
+        public float TradeTickIntervalHours;
         public float BaseAcceptance;
         public float AffinityWeight;
         public FixedString64Bytes TradeSuccessSignalId;
         public FixedString64Bytes TradeFailSignalId;
+        #endregion
+    }
+
+    public struct EM_Component_ScheduleOverrideSettings : IComponentData
+    {
+        #region Data
+        public byte BlockOverrideWhileOverridden;
         #endregion
     }
 

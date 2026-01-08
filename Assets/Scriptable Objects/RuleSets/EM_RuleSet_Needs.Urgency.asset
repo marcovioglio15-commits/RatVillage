@@ -57,7 +57,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     weight: 1
-    cooldownSeconds: 0
+    cooldownHours: 0
   - metric: {fileID: 11400000, guid: 92ae2373b397d0045a77c1f6eac76079, type: 2}
     contextIdDefinition: {fileID: 11400000, guid: c4e22a71fca2cba4f846af0b73310230, type: 2}
     contextIdFilter: Sleep
@@ -100,7 +100,7 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     weight: 1
-    cooldownSeconds: 0
+    cooldownHours: 0
   - metric: {fileID: 11400000, guid: 92ae2373b397d0045a77c1f6eac76079, type: 2}
     contextIdDefinition: {fileID: 11400000, guid: e7ca60fafb33e624796c4844bf252696, type: 2}
     contextIdFilter: Water
@@ -143,5 +143,5 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
     weight: 1
-    cooldownSeconds: 0
+    cooldownHours: 0
   description: 

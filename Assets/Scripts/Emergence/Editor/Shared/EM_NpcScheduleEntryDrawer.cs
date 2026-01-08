@@ -37,6 +37,20 @@ namespace EmergentMechanics
                 height += GetChildHeight(property, "maxDurationHours", false);
             }
 
+            SerializedProperty tradePolicyProperty = property.FindPropertyRelative("tradePolicy");
+
+            if (tradePolicyProperty != null)
+            {
+                height += spacing;
+                height += EditorGUI.GetPropertyHeight(tradePolicyProperty, false);
+
+                if (tradePolicyProperty.enumValueIndex == (int)EM_ScheduleTradePolicy.AllowOnlyListed)
+                {
+                    height += spacing;
+                    height += GetChildHeight(property, "allowedTradeNeeds", true);
+                }
+            }
+
             height += spacing;
             height += GetChildHeight(property, "signalEntries", true);
 
@@ -77,6 +91,16 @@ namespace EmergentMechanics
                     DrawChildProperty(ref contentRect, property, "minDurationHours", false);
                     DrawChildProperty(ref contentRect, property, "maxDurationHours", false);
                 }
+            }
+
+            SerializedProperty tradePolicyProperty = property.FindPropertyRelative("tradePolicy");
+
+            if (tradePolicyProperty != null)
+            {
+                DrawProperty(ref contentRect, tradePolicyProperty, false);
+
+                if (tradePolicyProperty.enumValueIndex == (int)EM_ScheduleTradePolicy.AllowOnlyListed)
+                    DrawChildProperty(ref contentRect, property, "allowedTradeNeeds", true);
             }
 
             DrawChildProperty(ref contentRect, property, "signalEntries", true);

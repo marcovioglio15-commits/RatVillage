@@ -7,8 +7,12 @@ namespace EmergentMechanics
     {
         #region Schedule
         // Apply a schedule override for the target NPC.
-        private static bool ApplyScheduleOverride(Entity target, FixedString64Bytes activityId, float durationHours,
-            ref ComponentLookup<EM_Component_NpcSchedule> scheduleLookup, ref ComponentLookup<EM_Component_NpcScheduleOverride> scheduleOverrideLookup,
+        private static bool ApplyScheduleOverride(Entity target, FixedString64Bytes activityId, float durationHours, double timeSeconds,
+            float priority, Entity societyRoot, ref ComponentLookup<EM_Component_SocietyMember> memberLookup,
+            ref ComponentLookup<EM_Component_ScheduleOverrideSettings> overrideSettingsLookup,
+            ref ComponentLookup<EM_Component_NpcSchedule> scheduleLookup,
+            ref ComponentLookup<EM_Component_NpcScheduleOverride> scheduleOverrideLookup,
+            ref ComponentLookup<EM_Component_NpcScheduleOverrideGate> overrideGateLookup,
             out float before, out float after)
         {
             before = 0f;
@@ -36,12 +40,60 @@ namespace EmergentMechanics
                 return true;
             }
 
+            if (IsOverrideBlocked(target, societyRoot, scheduleOverride, ref memberLookup, ref overrideSettingsLookup))
+            {
+                after = before;
+                return false;
+            }
+
+            if (!TryArbitrateScheduleOverride(target, timeSeconds, priority, activityId, ref overrideGateLookup))
+            {
+                after = before;
+                return false;
+            }
+
             scheduleOverride.ActivityId = activityId;
             scheduleOverride.RemainingHours = durationHours;
             scheduleOverride.DurationHours = durationHours;
             scheduleOverride.EntryIndex = FindEntryIndexByActivityId(schedule.Schedule, activityId);
             scheduleOverrideLookup[target] = scheduleOverride;
             after = durationHours;
+            return true;
+        }
+
+        private static bool IsOverrideBlocked(Entity target, Entity societyRoot, EM_Component_NpcScheduleOverride scheduleOverride,
+            ref ComponentLookup<EM_Component_SocietyMember> memberLookup,
+            ref ComponentLookup<EM_Component_ScheduleOverrideSettings> overrideSettingsLookup)
+        {
+            if (scheduleOverride.RemainingHours <= 0f || scheduleOverride.ActivityId.Length == 0)
+                return false;
+
+            Entity settingsRoot = societyRoot;
+
+            if (settingsRoot == Entity.Null && memberLookup.HasComponent(target))
+                settingsRoot = memberLookup[target].SocietyRoot;
+
+            if (settingsRoot == Entity.Null || !overrideSettingsLookup.HasComponent(settingsRoot))
+                return false;
+
+            return overrideSettingsLookup[settingsRoot].BlockOverrideWhileOverridden != 0;
+        }
+
+        private static bool TryArbitrateScheduleOverride(Entity target, double timeSeconds, float priority, FixedString64Bytes activityId,
+            ref ComponentLookup<EM_Component_NpcScheduleOverrideGate> overrideGateLookup)
+        {
+            if (!overrideGateLookup.HasComponent(target))
+                return true;
+
+            EM_Component_NpcScheduleOverrideGate gate = overrideGateLookup[target];
+
+            if (gate.LastOverrideTimeSeconds == timeSeconds && priority <= gate.LastOverridePriority)
+                return false;
+
+            gate.LastOverrideTimeSeconds = timeSeconds;
+            gate.LastOverridePriority = priority;
+            gate.LastOverrideActivityId = activityId;
+            overrideGateLookup[target] = gate;
             return true;
         }
 

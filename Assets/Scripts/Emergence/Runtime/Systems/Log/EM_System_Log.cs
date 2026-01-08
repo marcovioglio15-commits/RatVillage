@@ -22,7 +22,11 @@ namespace EmergentMechanics
             }
 
             Entity entity = state.EntityManager.CreateEntity();
-            state.EntityManager.AddComponentData(entity, new EM_Component_Log { MaxEntries = DefaultMaxEntries });
+            state.EntityManager.AddComponentData(entity, new EM_Component_Log
+            {
+                MaxEntries = DefaultMaxEntries,
+                NextSequence = 1
+            });
             state.EntityManager.AddBuffer<EM_Component_Event>(entity);
             state.Enabled = false;
         }

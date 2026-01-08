@@ -8,6 +8,7 @@ namespace EmergentMechanics
     {
         #region Data
         public int MaxEntries;
+        public ulong NextSequence;
         #endregion
     }
 
@@ -16,6 +17,7 @@ namespace EmergentMechanics
         #region Data
         public EM_DebugEventType Type;
         public double Time;
+        public ulong Sequence;
         public Entity Society;
         public Entity Subject;
         public Entity Target;

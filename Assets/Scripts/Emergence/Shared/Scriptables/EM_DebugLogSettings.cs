@@ -27,14 +27,14 @@ namespace EmergentMechanics
         [Header("Signals")]
         [SerializeField] private bool includeSignals = true;
 
-        [Tooltip("Signal id prefix used to tag need-related signals. Default: \"Need.\"")]
-        [SerializeField] private string needSignalPrefix = "Need.";
+        [Tooltip("Signal id prefix used to tag need-related signals. Default: \"Signal.Need.\"")]
+        [SerializeField] private string needSignalPrefix = "Signal.Need.";
 
         [Tooltip("Include signals whose id starts with the need prefix.")]
         [SerializeField] private bool includeNeedSignals = true;
 
-        [Tooltip("Signal id prefix used to tag trade-related signals. Default: \"Trade.\"")]
-        [SerializeField] private string tradeSignalPrefix = "Trade.";
+        [Tooltip("Signal id prefix used to tag trade-related signals. Default: \"Signal.Trade.\"")]
+        [SerializeField] private string tradeSignalPrefix = "Signal.Trade.";
 
         [Tooltip("Include signals whose id starts with the trade prefix.")]
         [SerializeField] private bool includeTradeSignals = true;

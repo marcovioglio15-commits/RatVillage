@@ -23,7 +23,7 @@ namespace EmergentMechanics
         }
 
         private static EM_MetricDefinition CreateMetric(string rootFolder, string assetName, EM_IdDefinition idDefinition, string legacyId,
-            EM_SignalDefinition signal, float sampleInterval)
+            EM_SignalDefinition signal, float sampleIntervalHours)
         {
             string folder = EM_StudioAssetUtility.GetCategoryFolder(EM_Categories.Metrics, rootFolder);
             EM_StudioAssetUtility.EnsureFolderExists(folder);
@@ -35,7 +35,7 @@ namespace EmergentMechanics
             serialized.FindProperty("signal").objectReferenceValue = signal;
             serialized.FindProperty("samplingMode").enumValueIndex = (int)EmergenceMetricSamplingMode.Event;
             serialized.FindProperty("aggregationKind").enumValueIndex = (int)EmergenceMetricAggregation.No_Aggregation;
-            serialized.FindProperty("sampleInterval").floatValue = sampleInterval;
+            serialized.FindProperty("sampleIntervalHours").floatValue = sampleIntervalHours;
             serialized.FindProperty("scope").enumValueIndex = (int)EmergenceMetricScope.Member;
             serialized.FindProperty("normalization").enumValueIndex = (int)EmergenceMetricNormalization.Clamp01;
             serialized.ApplyModifiedPropertiesWithoutUndo();

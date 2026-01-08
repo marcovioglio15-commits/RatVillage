@@ -18,7 +18,7 @@ namespace EmergentMechanics
         private const string DefaultTimeLabelTemplate = "Time of Day: {time}";
         private const string DefaultSignalEmittedTemplate = "[{time}] {subject} emitted {signal} ({context}) value {value}.";
         private const string DefaultIntentCreatedTemplate = "[{time}] {subject} created intent {intent} for {need} ({resource}) amount {value} urgency {delta}.";
-        private const string DefaultEffectAppliedTemplate = "[{time}] {subject} applied {effect} on {target} ({parameter}/{context}) delta {delta} (from {before} to {after}).";
+        private const string DefaultEffectAppliedTemplate = "[{time}] {subject} applied {effect} on {target} (param: {parameter}, context: {context}) delta {delta} (from {before} to {after}).";
         private const string DefaultInteractionAttemptTemplate = "[{time}] {subject} attempts to resolve {need} using {resource}.";
         private const string DefaultInteractionSuccessTemplate = "[{time}] {subject} obtained {resource} from {target} for {need} (amount {value}).";
         private const string DefaultInteractionFailTemplate = "[{time}] {subject} failed to resolve {need} using {resource} (reason: {reason}).";
@@ -76,7 +76,7 @@ namespace EmergentMechanics
         private EntityQuery debugQuery;
         private EntityQuery clockQuery;
         private float nextRefreshTime;
-        private int lastEventIndex;
+        private ulong lastSequence;
         private int lastFilterSignature;
         private bool hasQueries;
         #endregion
@@ -89,7 +89,7 @@ namespace EmergentMechanics
         private void OnEnable()
         {
             nextRefreshTime = 0f;
-            lastEventIndex = 0;
+            lastSequence = 0;
             lastFilterSignature = int.MinValue;
             logLines.Clear();
 
@@ -165,18 +165,23 @@ namespace EmergentMechanics
 
             if (filterChanged)
             {
-                lastEventIndex = 0;
+                lastSequence = 0;
                 logLines.Clear();
             }
 
-            if (lastEventIndex > buffer.Length)
-                lastEventIndex = 0;
-
             bool appended = false;
+            ulong maxSequence = 0;
 
-            for (int i = lastEventIndex; i < buffer.Length; i++)
+            for (int i = 0; i < buffer.Length; i++)
             {
                 EM_Component_Event debugEvent = buffer[i];
+                ulong sequence = debugEvent.Sequence;
+
+                if (sequence > maxSequence)
+                    maxSequence = sequence;
+
+                if (lastSequence != 0 && sequence <= lastSequence)
+                    continue;
 
                 if (!ShouldIncludeEvent(debugEvent))
                     continue;
@@ -190,7 +195,34 @@ namespace EmergentMechanics
                 appended = true;
             }
 
-            lastEventIndex = buffer.Length;
+            if (lastSequence > 0 && maxSequence < lastSequence)
+            {
+                lastSequence = 0;
+                logLines.Clear();
+
+                for (int i = 0; i < buffer.Length; i++)
+                {
+                    EM_Component_Event debugEvent = buffer[i];
+                    ulong sequence = debugEvent.Sequence;
+
+                    if (sequence > maxSequence)
+                        maxSequence = sequence;
+
+                    if (!ShouldIncludeEvent(debugEvent))
+                        continue;
+
+                    string line = FormatEvent(debugEvent);
+
+                    if (string.IsNullOrEmpty(line))
+                        continue;
+
+                    logLines.Add(line);
+                    appended = true;
+                }
+            }
+
+            if (maxSequence > 0)
+                lastSequence = maxSequence;
 
             bool trimmed = TrimLogLines();
 

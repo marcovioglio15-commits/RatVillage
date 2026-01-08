@@ -91,13 +91,13 @@ namespace EmergentMechanics
             EM_SignalDefinition signalTradeFail = CreateSignal(rootFolder, "EM_Signal_Trade.Fail", signalTradeFailId, "Signal.Trade.Fail",
                 "Emitted when a trade fails.");
 
-            float sampleInterval = 0.5f * tuning.MetricIntervalMultiplier;
+            float sampleIntervalHours = 0.5f * tuning.MetricIntervalMultiplier;
             EM_MetricDefinition metricNeedUrgency = CreateMetric(rootFolder, "EM_Metric_Need.Urgency", metricNeedUrgencyId, "Metric.Need.Urgency",
-                signalNeedUrgency, sampleInterval);
+                signalNeedUrgency, sampleIntervalHours);
             EM_MetricDefinition metricTradeSuccess = CreateMetric(rootFolder, "EM_Metric_Trade.Success", metricTradeSuccessId, "Metric.Trade.Success",
-                signalTradeSuccess, sampleInterval);
+                signalTradeSuccess, sampleIntervalHours);
             EM_MetricDefinition metricTradeFail = CreateMetric(rootFolder, "EM_Metric_Trade.Fail", metricTradeFailId, "Metric.Trade.Fail",
-                signalTradeFail, sampleInterval);
+                signalTradeFail, sampleIntervalHours);
 
             float overrideScale = tuning.EffectMagnitudeMultiplier;
             EM_EffectDefinition effectOverrideSeekFood = CreateOverrideEffect(rootFolder, "EM_Effect_Override.SeekFood", effectOverrideSeekFoodId,

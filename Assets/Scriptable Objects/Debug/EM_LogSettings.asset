@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef8b57d796c699f488be8d632e7b26fd, type: 3}
   m_Name: EM_LogSettings
   m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_DebugLogSettings
-  filterMode: 2
-  includeSignals: 0
-  needSignalPrefix: Need.
-  includeNeedSignals: 0
-  tradeSignalPrefix: Trade.
-  includeTradeSignals: 0
-  includeOtherSignals: 0
+  filterMode: 0
+  includeSignals: 1
+  needSignalPrefix: Signal.Need.
+  includeNeedSignals: 1
+  tradeSignalPrefix: Signal.Trade.
+  includeTradeSignals: 1
+  includeOtherSignals: 1
   includeIntents: 1
   includeEffects: 1
   includeInteractionAttempts: 1

@@ -66,6 +66,18 @@ namespace EmergentMechanics
             EnsureSignalLookup(ref libraryBlob);
             EnsureMetricGroupLookup(ref libraryBlob);
 
+            bool hasDebugBuffer = SystemAPI.TryGetSingletonBuffer(out DynamicBuffer<EM_Component_Event> debugBuffer);
+            int maxEntries = 0;
+            EM_Component_Log debugLog = default;
+            RefRW<EM_Component_Log> debugLogRef = default;
+
+            if (hasDebugBuffer)
+            {
+                debugLogRef = SystemAPI.GetSingletonRW<EM_Component_Log>();
+                debugLog = debugLogRef.ValueRO;
+                maxEntries = debugLog.MaxEntries;
+            }
+
             accumulatorLookup.Update(ref state);
             eventSampleLookup.Update(ref state);
             memberLookup.Update(ref state);
@@ -101,6 +113,9 @@ namespace EmergentMechanics
 
                     if (!groupFound)
                         continue;
+
+                    if (hasDebugBuffer)
+                        TryAppendTradeSignalDebugEvent(signalEvent, debugBuffer, maxEntries, ref debugLog);
 
                     Entity societyRoot = ResolveSocietyRoot(signalEvent.Subject, signalEvent.SocietyRoot, memberLookup, rootLookup);
                     BlobAssetReference<EM_Blob_SocietyProfile> profileBlob;
@@ -165,6 +180,9 @@ namespace EmergentMechanics
 
                 emitterBuffer.Clear();
             }
+
+            if (hasDebugBuffer)
+                debugLogRef.ValueRW = debugLog;
         }
         #endregion
 
