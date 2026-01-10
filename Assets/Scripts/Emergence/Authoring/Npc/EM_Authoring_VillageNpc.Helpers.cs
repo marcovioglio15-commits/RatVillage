@@ -219,6 +219,7 @@ namespace EmergentMechanics
                     NeedId = needId,
                     ResourceId = resourceId,
                     RatePerHourSamples = defaultRateSamples,
+                    RateMultiplier = 0f,
                     MinValue = source[i].MinValue,
                     MaxValue = source[i].MaxValue,
                     RequestAmount = source[i].RequestAmount,

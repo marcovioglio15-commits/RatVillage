@@ -17,6 +17,6 @@ MonoBehaviour:
   signal: {fileID: 11400000, guid: 00f1be700b8ed7e44bbe375cdbd1a481, type: 2}
   samplingMode: 1
   aggregationKind: 0
-  sampleIntervalHours: 0.1
+  sampleIntervalHours: 0.05
   scope: 1
   normalization: 0

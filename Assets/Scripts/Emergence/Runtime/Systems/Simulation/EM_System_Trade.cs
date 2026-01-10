@@ -82,6 +82,12 @@ namespace EmergentMechanics
             NativeList<Entity> candidates = new NativeList<Entity>(Allocator.Temp);
             NativeList<Entity> candidateSocieties = new NativeList<Entity>(Allocator.Temp);
             BuildCandidateLists(ref state, ref candidates, ref candidateSocieties);
+            int providerCapacity = candidates.Length;
+
+            if (providerCapacity < 1)
+                providerCapacity = 1;
+
+            NativeParallelHashSet<Entity> providerLock = new NativeParallelHashSet<Entity>(providerCapacity, Allocator.Temp);
 
             foreach ((DynamicBuffer<EM_BufferElement_Intent> intents, DynamicBuffer<EM_BufferElement_Need> needs,
                 DynamicBuffer<EM_BufferElement_NeedSetting> settings, DynamicBuffer<EM_BufferElement_Resource> resources,
@@ -122,7 +128,7 @@ namespace EmergentMechanics
 
                 TryResolveIntent(entity, member.SocietyRoot, tradeSettings, timeSeconds, ref tradeEntry, ref seed, intents, needs, settings, resources, signals,
                     ref resourceLookup, ref relationshipLookup, ref relationshipTypeLookup, ref npcTypeLookup, ref tradePreferencesLookup,
-                    candidates, candidateSocieties, hasDebugBuffer, debugBuffer, maxEntries, ref debugLog);
+                    candidates, candidateSocieties, ref providerLock, hasDebugBuffer, debugBuffer, maxEntries, ref debugLog);
 
                 randomLookup[entity] = seed;
             }
@@ -132,6 +138,7 @@ namespace EmergentMechanics
 
             candidates.Dispose();
             candidateSocieties.Dispose();
+            providerLock.Dispose();
             readyMap.Dispose();
         }
         #endregion

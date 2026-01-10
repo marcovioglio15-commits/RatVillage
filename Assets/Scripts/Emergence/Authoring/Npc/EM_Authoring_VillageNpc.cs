@@ -137,8 +137,11 @@ namespace EmergentMechanics
         #endregion
 
         #region Needs
-        [Tooltip("Need profiles defining initial values and simulation settings.")]
+        [Tooltip("Per-NPC multiplier variance applied to need rate curves. A value of 0.1 produces random multipliers between 0.9 and 1.1 per need.")]
         [Header("Needs")]
+        [SerializeField] private float needRateVariance = 0.1f;
+
+        [Tooltip("Need profiles defining initial values and simulation settings.")]
         [SerializeField] private NeedProfileEntry[] needs = new NeedProfileEntry[0];
         #endregion
 
@@ -187,6 +190,8 @@ namespace EmergentMechanics
                     Value = new float4(authoring.logMessageColor.r, authoring.logMessageColor.g, authoring.logMessageColor.b, authoring.logMessageColor.a)
                 });
                 AddComponent(entity, new EM_Component_RandomSeed { Value = GetStableSeed(authoring.name) });
+                AddComponent(entity, new EM_Component_NpcNeedTickState { NextTick = -1d });
+                AddComponent(entity, new EM_Component_NpcNeedRateSettings { RateMultiplierVariance = math.max(0f, authoring.needRateVariance) });
                 AddComponent<EM_Component_SignalEmitter>(entity);
                 AddBuffer<EM_BufferElement_SignalEvent>(entity);
                 AddBuffer<EM_BufferElement_MetricAccumulator>(entity);

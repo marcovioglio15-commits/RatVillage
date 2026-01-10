@@ -14,51 +14,6 @@ namespace EmergentMechanics
         #endregion
 
         #region IntentResolution
-        private static bool TryGetTradeEntry(Entity entity, ref ComponentLookup<EM_Component_NpcSchedule> scheduleLookup,
-            ref ComponentLookup<EM_Component_NpcScheduleState> scheduleStateLookup,
-            out BlobAssetReference<EM_BlobDefinition_NpcSchedule> schedule, out int entryIndex)
-        {
-            schedule = default;
-            entryIndex = -1;
-
-            if (!scheduleLookup.HasComponent(entity) || !scheduleStateLookup.HasComponent(entity))
-                return false;
-
-            EM_Component_NpcSchedule scheduleComponent = scheduleLookup[entity];
-
-            if (!scheduleComponent.Schedule.IsCreated)
-                return false;
-
-            schedule = scheduleComponent.Schedule;
-            ref BlobArray<EM_Blob_NpcScheduleEntry> entries = ref schedule.Value.Entries;
-
-            if (entries.Length == 0)
-                return false;
-
-            EM_Component_NpcScheduleState scheduleState = scheduleStateLookup[entity];
-
-            if (scheduleState.CurrentActivityId.Length == 0)
-                return false;
-
-            entryIndex = scheduleState.CurrentEntryIndex;
-
-            if (entryIndex >= 0 && entryIndex < entries.Length)
-            {
-                ref EM_Blob_NpcScheduleEntry entry = ref entries[entryIndex];
-
-                if (entry.ActivityId.Equals(scheduleState.CurrentActivityId))
-                    return true;
-            }
-
-            int resolvedIndex = FindEntryByActivityId(ref entries, scheduleState.CurrentActivityId);
-
-            if (resolvedIndex < 0)
-                return false;
-
-            entryIndex = resolvedIndex;
-            return true;
-        }
-
         // Resolve the highest urgency intent for the requester entity.
         private static void TryResolveIntent(Entity requester, Entity societyRoot, EM_Component_TradeSettings settings, double timeSeconds,
             ref EM_Blob_NpcScheduleEntry tradeEntry, ref EM_Component_RandomSeed seed, DynamicBuffer<EM_BufferElement_Intent> intents,
@@ -67,17 +22,22 @@ namespace EmergentMechanics
             DynamicBuffer<EM_BufferElement_SignalEvent> requesterSignals, ref BufferLookup<EM_BufferElement_Resource> resourceLookup,
             ref BufferLookup<EM_BufferElement_Relationship> relationshipLookup, ref BufferLookup<EM_BufferElement_RelationshipType> relationshipTypeLookup,
             ref ComponentLookup<EM_Component_NpcType> npcTypeLookup, ref ComponentLookup<EM_Component_NpcTradePreferences> tradePreferencesLookup,
-            NativeList<Entity> candidates, NativeList<Entity> candidateSocieties,
+            NativeList<Entity> candidates, NativeList<Entity> candidateSocieties, ref NativeParallelHashSet<Entity> providerLock,
             bool hasDebugBuffer, DynamicBuffer<EM_Component_Event> debugBuffer, int maxEntries, ref EM_Component_Log debugLog)
         {
+            IntentPolicy policy = ResolveIntentPolicy(settings);
+
+            if (intents.Length == 0)
+                return;
+
+            PruneIntents(intents, needs, needSettings, policy.MinUrgencyToKeep);
+
             int intentIndex;
             EM_BufferElement_Intent intent;
-            bool hasIntent = SelectBestIntent(intents, timeSeconds, ref tradeEntry, out intentIndex, out intent);
+            bool hasIntent = SelectBestIntent(intents, timeSeconds, policy.MinUrgency, ref tradeEntry, out intentIndex, out intent);
 
             if (!hasIntent)
-            {
                 return;
-            }
 
             NeedResolutionData needData;
             bool hasNeedData = ResolveNeedData(intent, needSettings, out needData);
@@ -87,31 +47,234 @@ namespace EmergentMechanics
                 if (hasDebugBuffer)
                 {
                     EM_Component_Event debugEvent = EM_Utility_LogEvent.BuildInteractionEvent(EM_DebugEventType.InteractionFail, ReasonNoResource,
-                        requester, Entity.Null, societyRoot, intent.NeedId, intent.ResourceId, 0f);
+                        requester, Entity.Null, societyRoot, intent.NeedId, intent.ResourceId, 0f, timeSeconds);
                     EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, debugEvent);
                 }
 
+                RemoveIntentAt(intentIndex, intents);
+                return;
+            }
+
+            float urgency = ResolveNeedUrgency(needs, needData);
+
+            if (urgency < policy.MinUrgencyToKeep)
+            {
+                RemoveIntentAt(intentIndex, intents);
+                return;
+            }
+
+            intent.Urgency = urgency;
+            intents[intentIndex] = intent;
+
+            float remainingAmount = intent.DesiredAmount > 0f ? intent.DesiredAmount : needData.RequestAmount;
+
+            if (remainingAmount <= 0f)
+            {
+                RemoveIntentAt(intentIndex, intents);
+                return;
+            }
+
+            if (policy.ClampTransferToNeed)
+            {
+                float remainingNeedAmount = ResolveRemainingNeedAmount(needs, needData);
+
+                if (remainingNeedAmount <= 0f)
+                {
+                    RemoveIntentAt(intentIndex, intents);
+                    return;
+                }
+
+                remainingAmount = math.min(remainingAmount, remainingNeedAmount);
+            }
+
+            if (remainingAmount <= 0f)
+            {
+                RemoveIntentAt(intentIndex, intents);
                 return;
             }
 
             if (hasDebugBuffer)
             {
                 EM_Component_Event attemptEvent = EM_Utility_LogEvent.BuildInteractionEvent(EM_DebugEventType.InteractionAttempt, default,
-                    requester, Entity.Null, societyRoot, needData.NeedId, needData.ResourceId, intent.Urgency);
+                    requester, Entity.Null, societyRoot, needData.NeedId, needData.ResourceId, intent.Urgency, timeSeconds);
                 EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, attemptEvent);
             }
 
-            if (TryResolveWithSociety(requester, societyRoot, intentIndex, intents, needData, needs, requesterResources, resourceLookup,
-                requesterSignals, settings, timeSeconds, hasDebugBuffer, debugBuffer, maxEntries, ref debugLog))
+            if (policy.ConsumeInventoryFirst)
+            {
+                float inventoryResolved = TryResolveWithInventory(requesterResources, needs, needData, remainingAmount, policy.ClampTransferToNeed);
+
+                if (inventoryResolved > 0f)
+                {
+                    remainingAmount -= inventoryResolved;
+
+                    if (hasDebugBuffer)
+                    {
+                        EM_Component_Event successEvent = EM_Utility_LogEvent.BuildInteractionEvent(EM_DebugEventType.InteractionSuccess, default,
+                            requester, requester, societyRoot, needData.NeedId, needData.ResourceId, inventoryResolved, timeSeconds);
+                        EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, successEvent);
+                    }
+                }
+            }
+
+            if (remainingAmount <= 0f)
+            {
+                RemoveIntentAt(intentIndex, intents);
                 return;
+            }
 
-            Entity provider;
-            float affinity;
-            float availableAmount;
-            bool found = FindBestProvider(requester, societyRoot, needData.ResourceId, candidates, candidateSocieties, resourceLookup,
-                relationshipLookup, relationshipTypeLookup, npcTypeLookup, out provider, out affinity, out availableAmount);
+            if (policy.ClampTransferToNeed)
+            {
+                float remainingNeedAmount = ResolveRemainingNeedAmount(needs, needData);
 
-            if (!found)
+                if (remainingNeedAmount <= 0f)
+                {
+                    RemoveIntentAt(intentIndex, intents);
+                    return;
+                }
+
+                remainingAmount = math.min(remainingAmount, remainingNeedAmount);
+            }
+
+            float societyResolved = TryResolveWithSociety(requester, societyRoot, needData, needs, requesterResources, resourceLookup,
+                requesterSignals, settings, timeSeconds, remainingAmount, policy, hasDebugBuffer, debugBuffer, maxEntries, ref debugLog);
+
+            if (societyResolved > 0f)
+                remainingAmount -= societyResolved;
+
+            if (remainingAmount <= 0f)
+            {
+                RemoveIntentAt(intentIndex, intents);
+                return;
+            }
+
+            if (policy.ClampTransferToNeed)
+            {
+                float remainingNeedAmount = ResolveRemainingNeedAmount(needs, needData);
+
+                if (remainingNeedAmount <= 0f)
+                {
+                    RemoveIntentAt(intentIndex, intents);
+                    return;
+                }
+
+                remainingAmount = math.min(remainingAmount, remainingNeedAmount);
+            }
+
+            FixedList128Bytes<Entity> rejectedProviders = default;
+            int maxProviderAttempts = policy.MaxProviderAttemptsPerTick;
+
+            if (maxProviderAttempts < 1)
+                maxProviderAttempts = 1;
+
+            int providerAttempts = 0;
+            bool attemptedProvider = false;
+
+            while (providerAttempts < maxProviderAttempts)
+            {
+                Entity provider;
+                float affinity;
+                float availableAmount;
+                bool found = FindBestProvider(requester, societyRoot, needData.ResourceId, candidates, candidateSocieties, resourceLookup,
+                    relationshipLookup, relationshipTypeLookup, npcTypeLookup, providerLock, policy.LockProviderPerTick, ref rejectedProviders,
+                    out provider, out affinity, out availableAmount);
+
+                if (!found)
+                    break;
+
+                attemptedProvider = true;
+
+                if (provider == requester || provider.Index == requester.Index)
+                {
+                    if (rejectedProviders.Length < MaxProviderAttemptsPerTickCap)
+                        rejectedProviders.Add(provider);
+
+                    providerAttempts++;
+                    continue;
+                }
+
+                float acceptance = math.saturate(settings.BaseAcceptance + affinity * settings.AffinityWeight);
+                float acceptanceRoll = NextRandom01(ref seed);
+
+                if (acceptanceRoll > acceptance)
+                {
+                    EmitTradeSignal(requesterSignals, settings.TradeFailSignalId, needData.NeedId, requester, provider, societyRoot, timeSeconds, 0f,
+                        hasDebugBuffer, debugBuffer, maxEntries, ref debugLog);
+
+                    if (hasDebugBuffer)
+                    {
+                        EM_Component_Event failEvent = EM_Utility_LogEvent.BuildInteractionEvent(EM_DebugEventType.InteractionFail, ReasonRejected,
+                            requester, provider, societyRoot, needData.NeedId, needData.ResourceId, 0f, timeSeconds);
+                        EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, failEvent);
+                    }
+
+                    if (rejectedProviders.Length < MaxProviderAttemptsPerTickCap)
+                        rejectedProviders.Add(provider);
+
+                    providerAttempts++;
+                    continue;
+                }
+
+                float affinity01 = math.saturate((affinity + 1f) * 0.5f);
+                float multiplier = SampleAffinityMultiplier(provider, affinity01, ref tradePreferencesLookup);
+                float desiredAmount = remainingAmount * multiplier;
+                float transferAmount = math.min(availableAmount, desiredAmount);
+
+                if (policy.ClampTransferToNeed)
+                    transferAmount = math.min(transferAmount, remainingAmount);
+
+                if (transferAmount <= 0f)
+                {
+                    EmitTradeSignal(requesterSignals, settings.TradeFailSignalId, needData.NeedId, requester, provider, societyRoot, timeSeconds, 0f,
+                        hasDebugBuffer, debugBuffer, maxEntries, ref debugLog);
+
+                    if (hasDebugBuffer)
+                    {
+                        EM_Component_Event failEvent = EM_Utility_LogEvent.BuildInteractionEvent(EM_DebugEventType.InteractionFail, ReasonNoResource,
+                            requester, provider, societyRoot, needData.NeedId, needData.ResourceId, 0f, timeSeconds);
+                        EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, failEvent);
+                    }
+
+                    if (rejectedProviders.Length < MaxProviderAttemptsPerTickCap)
+                        rejectedProviders.Add(provider);
+
+                    providerAttempts++;
+                    continue;
+                }
+
+                if (!policy.ConsumeOnResolve)
+                    ApplyResourceDelta(requesterResources, needData.ResourceId, transferAmount);
+
+                ApplyResourceDelta(resourceLookup[provider], needData.ResourceId, -transferAmount);
+                ApplyNeedDelta(needs, needData.NeedId, -transferAmount * needData.NeedSatisfactionPerUnit, needData.MinValue, needData.MaxValue);
+
+                EmitTradeSignal(requesterSignals, settings.TradeSuccessSignalId, needData.NeedId, requester, provider, societyRoot, timeSeconds, transferAmount,
+                    hasDebugBuffer, debugBuffer, maxEntries, ref debugLog);
+
+                if (hasDebugBuffer)
+                {
+                    EM_Component_Event successEvent = EM_Utility_LogEvent.BuildInteractionEvent(EM_DebugEventType.InteractionSuccess, default,
+                        requester, provider, societyRoot, needData.NeedId, needData.ResourceId, transferAmount, timeSeconds);
+                    EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, successEvent);
+                }
+
+                if (policy.LockProviderPerTick)
+                    providerLock.Add(provider);
+
+                remainingAmount -= transferAmount;
+                urgency = ResolveNeedUrgency(needs, needData);
+
+                if (remainingAmount <= 0f || urgency < policy.MinUrgencyToKeep)
+                {
+                    RemoveIntentAt(intentIndex, intents);
+                    return;
+                }
+
+                UpdateIntentAfterProgress(intentIndex, intents, remainingAmount, timeSeconds, urgency);
+                return;
+            }
+
+            if (!attemptedProvider)
             {
                 EmitTradeSignal(requesterSignals, settings.TradeFailSignalId, needData.NeedId, requester, Entity.Null, societyRoot, timeSeconds, 0f,
                     hasDebugBuffer, debugBuffer, maxEntries, ref debugLog);
@@ -119,224 +282,20 @@ namespace EmergentMechanics
                 if (hasDebugBuffer)
                 {
                     EM_Component_Event failEvent = EM_Utility_LogEvent.BuildInteractionEvent(EM_DebugEventType.InteractionFail, ReasonNoPartner,
-                        requester, Entity.Null, societyRoot, needData.NeedId, needData.ResourceId, 0f);
+                        requester, Entity.Null, societyRoot, needData.NeedId, needData.ResourceId, 0f, timeSeconds);
                     EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, failEvent);
                 }
+            }
 
+            urgency = ResolveNeedUrgency(needs, needData);
+
+            if (urgency < policy.MinUrgencyToKeep)
+            {
+                RemoveIntentAt(intentIndex, intents);
                 return;
             }
 
-            float acceptance = math.saturate(settings.BaseAcceptance + affinity * settings.AffinityWeight);
-            float acceptanceRoll = NextRandom01(ref seed);
-
-            if (acceptanceRoll > acceptance)
-            {
-                EmitTradeSignal(requesterSignals, settings.TradeFailSignalId, needData.NeedId, requester, provider, societyRoot, timeSeconds, 0f,
-                    hasDebugBuffer, debugBuffer, maxEntries, ref debugLog);
-
-                if (hasDebugBuffer)
-                {
-                    EM_Component_Event failEvent = EM_Utility_LogEvent.BuildInteractionEvent(EM_DebugEventType.InteractionFail, ReasonRejected,
-                        requester, provider, societyRoot, needData.NeedId, needData.ResourceId, 0f);
-                    EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, failEvent);
-                }
-
-                return;
-            }
-
-            float affinity01 = math.saturate((affinity + 1f) * 0.5f);
-            float multiplier = SampleAffinityMultiplier(provider, affinity01, ref tradePreferencesLookup);
-            float baseRequest = needData.RequestAmount > 0f ? needData.RequestAmount : availableAmount;
-            float desiredAmount = baseRequest * multiplier;
-            float transferAmount = math.min(availableAmount, desiredAmount);
-
-            if (transferAmount <= 0f)
-            {
-                EmitTradeSignal(requesterSignals, settings.TradeFailSignalId, needData.NeedId, requester, provider, societyRoot, timeSeconds, 0f,
-                    hasDebugBuffer, debugBuffer, maxEntries, ref debugLog);
-
-                if (hasDebugBuffer)
-                {
-                    EM_Component_Event failEvent = EM_Utility_LogEvent.BuildInteractionEvent(EM_DebugEventType.InteractionFail, ReasonNoResource,
-                        requester, provider, societyRoot, needData.NeedId, needData.ResourceId, 0f);
-                    EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, failEvent);
-                }
-
-                return;
-            }
-
-            ApplyResourceDelta(requesterResources, needData.ResourceId, transferAmount);
-            ApplyResourceDelta(resourceLookup[provider], needData.ResourceId, -transferAmount);
-            ApplyNeedDelta(needs, needData.NeedId, -transferAmount * needData.NeedSatisfactionPerUnit, needData.MinValue, needData.MaxValue);
-
-            EmitTradeSignal(requesterSignals, settings.TradeSuccessSignalId, needData.NeedId, requester, provider, societyRoot, timeSeconds, transferAmount,
-                hasDebugBuffer, debugBuffer, maxEntries, ref debugLog);
-
-            if (hasDebugBuffer)
-            {
-                EM_Component_Event successEvent = EM_Utility_LogEvent.BuildInteractionEvent(EM_DebugEventType.InteractionSuccess, default,
-                    requester, provider, societyRoot, needData.NeedId, needData.ResourceId, transferAmount);
-                EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, successEvent);
-            }
-
-            intents.RemoveAt(intentIndex);
-        }
-
-        // Resolve an intent using the shared society resource pool.
-        private static bool TryResolveWithSociety(Entity requester, Entity societyRoot, int intentIndex, DynamicBuffer<EM_BufferElement_Intent> intents,
-            NeedResolutionData needData, DynamicBuffer<EM_BufferElement_Need> needs,
-            DynamicBuffer<EM_BufferElement_Resource> requesterResources, BufferLookup<EM_BufferElement_Resource> resourceLookup,
-            DynamicBuffer<EM_BufferElement_SignalEvent> requesterSignals, EM_Component_TradeSettings settings, double timeSeconds,
-            bool hasDebugBuffer, DynamicBuffer<EM_Component_Event> debugBuffer, int maxEntries, ref EM_Component_Log debugLog)
-        {
-            if (societyRoot == Entity.Null)
-                return false;
-
-            if (!resourceLookup.HasBuffer(societyRoot))
-                return false;
-
-            DynamicBuffer<EM_BufferElement_Resource> societyResources = resourceLookup[societyRoot];
-            float available = GetResourceAmount(societyResources, needData.ResourceId);
-
-            if (available <= 0f)
-                return false;
-
-            float baseRequest = needData.RequestAmount > 0f ? needData.RequestAmount : available;
-            float transferAmount = math.min(available, baseRequest);
-
-            if (transferAmount <= 0f)
-                return false;
-
-            ApplyResourceDelta(requesterResources, needData.ResourceId, transferAmount);
-            ApplyResourceDelta(societyResources, needData.ResourceId, -transferAmount);
-            ApplyNeedDelta(needs, needData.NeedId, -transferAmount * needData.NeedSatisfactionPerUnit, needData.MinValue, needData.MaxValue);
-
-            EmitTradeSignal(requesterSignals, settings.TradeSuccessSignalId, needData.NeedId, requester, societyRoot, societyRoot, timeSeconds, transferAmount,
-                hasDebugBuffer, debugBuffer, maxEntries, ref debugLog);
-
-            if (hasDebugBuffer)
-            {
-                EM_Component_Event successEvent = EM_Utility_LogEvent.BuildInteractionEvent(EM_DebugEventType.InteractionSuccess, default,
-                    requester, societyRoot, societyRoot, needData.NeedId, needData.ResourceId, transferAmount);
-                EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, successEvent);
-            }
-
-            intents.RemoveAt(intentIndex);
-            return true;
-        }
-
-        // Select the highest urgency intent that is ready to be attempted.
-        private static bool SelectBestIntent(DynamicBuffer<EM_BufferElement_Intent> intents, double time,
-            ref EM_Blob_NpcScheduleEntry tradeEntry, out int intentIndex, out EM_BufferElement_Intent intent)
-        {
-            intentIndex = -1;
-            intent = default;
-            float bestUrgency = 0f;
-            EM_ScheduleTradePolicy policy = (EM_ScheduleTradePolicy)tradeEntry.TradePolicy;
-
-            if (policy == EM_ScheduleTradePolicy.BlockAll)
-                return false;
-
-            for (int i = 0; i < intents.Length; i++)
-            {
-                EM_BufferElement_Intent current = intents[i];
-
-                if (time < current.NextAttemptTime)
-                    continue;
-
-                if (current.NeedId.Length == 0)
-                    continue;
-
-                if (policy == EM_ScheduleTradePolicy.AllowOnlyListed &&
-                    !IsNeedAllowed(current.NeedId, ref tradeEntry.AllowedTradeNeedIds))
-                    continue;
-
-                if (current.Urgency <= bestUrgency)
-                    continue;
-
-                bestUrgency = current.Urgency;
-                intentIndex = i;
-                intent = current;
-            }
-
-            return intentIndex >= 0;
-        }
-
-        private static bool IsNeedAllowed(FixedString64Bytes needId, ref BlobArray<FixedString64Bytes> allowedNeeds)
-        {
-            for (int i = 0; i < allowedNeeds.Length; i++)
-            {
-                if (allowedNeeds[i].Equals(needId))
-                    return true;
-            }
-
-            return false;
-        }
-
-        private static int FindEntryByActivityId(ref BlobArray<EM_Blob_NpcScheduleEntry> entries, FixedString64Bytes activityId)
-        {
-            if (activityId.Length == 0)
-                return -1;
-
-            for (int i = 0; i < entries.Length; i++)
-            {
-                ref EM_Blob_NpcScheduleEntry entry = ref entries[i];
-
-                if (entry.ActivityId.Equals(activityId))
-                    return i;
-            }
-
-            return -1;
-        }
-
-        // Resolve intent settings using the requester's need configuration.
-        private static bool ResolveNeedData(EM_BufferElement_Intent intent, DynamicBuffer<EM_BufferElement_NeedSetting> settings,
-            out NeedResolutionData data)
-        {
-            data = default;
-            FixedString64Bytes needId = intent.NeedId;
-            FixedString64Bytes resourceId = intent.ResourceId;
-
-            if (needId.Length == 0 && resourceId.Length == 0)
-                return false;
-
-            for (int i = 0; i < settings.Length; i++)
-            {
-                if (needId.Length > 0 && !settings[i].NeedId.Equals(needId))
-                    continue;
-
-                data.NeedId = settings[i].NeedId;
-                data.ResourceId = resourceId.Length > 0 ? resourceId : settings[i].ResourceId;
-                data.MinValue = math.min(settings[i].MinValue, settings[i].MaxValue);
-                data.MaxValue = math.max(settings[i].MinValue, settings[i].MaxValue);
-                data.RequestAmount = intent.DesiredAmount > 0f ? intent.DesiredAmount : settings[i].RequestAmount;
-                data.NeedSatisfactionPerUnit = settings[i].NeedSatisfactionPerUnit > 0f ? settings[i].NeedSatisfactionPerUnit : 1f;
-
-                return data.ResourceId.Length > 0;
-            }
-
-            if (resourceId.Length == 0)
-                return false;
-
-            data.NeedId = needId;
-            data.ResourceId = resourceId;
-            data.MinValue = 0f;
-            data.MaxValue = 1f;
-            data.RequestAmount = intent.DesiredAmount;
-            data.NeedSatisfactionPerUnit = 1f;
-            return true;
-        }
-        #endregion
-
-        #region Data
-        private struct NeedResolutionData
-        {
-            public FixedString64Bytes NeedId;
-            public FixedString64Bytes ResourceId;
-            public float MinValue;
-            public float MaxValue;
-            public float RequestAmount;
-            public float NeedSatisfactionPerUnit;
+            UpdateIntentAfterFailure(intentIndex, intents, remainingAmount, urgency, policy, timeSeconds, ref seed);
         }
         #endregion
     }

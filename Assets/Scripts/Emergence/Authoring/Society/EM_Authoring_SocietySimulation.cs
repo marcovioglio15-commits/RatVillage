@@ -126,6 +126,39 @@ namespace EmergentMechanics
         [Tooltip("Legacy trade fail signal id string (auto-migrated when missing an id definition).")]
         [SerializeField]
         [HideInInspector] private string tradeFailSignalId = "Trade.Fail";
+
+        [Tooltip("Minimum urgency required to create or refresh a resolve-need intent (0-1). Set to 0 to allow all.")]
+        [SerializeField] private float minIntentUrgency = 0.6f;
+
+        [Tooltip("Minimum urgency required to keep an intent alive; intents below this threshold are removed (0-1). Set to 0 to disable pruning.")]
+        [SerializeField] private float minIntentUrgencyToKeep = 0.2f;
+
+        [Tooltip("Base backoff in hours after a failed intent attempt. Set to 0 to disable backoff.")]
+        [SerializeField] private float intentBackoffHours = 0.25f;
+
+        [Tooltip("Maximum backoff in hours after repeated failures. Set to 0 to disable the cap.")]
+        [SerializeField] private float intentBackoffMaxHours = 1f;
+
+        [Tooltip("Jitter in hours applied to intent backoff to reduce sync retries. Set to 0 to disable jitter.")]
+        [SerializeField] private float intentBackoffJitterHours = 0.05f;
+
+        [Tooltip("Maximum number of failed attempts before an intent is discarded. Set to 0 for unlimited attempts.")]
+        [SerializeField] private int intentMaxAttempts = 4;
+
+        [Tooltip("Maximum number of providers attempted per tick when resolving an intent. Set to 0 to use the default.")]
+        [SerializeField] private int maxProviderAttemptsPerTick = 3;
+
+        [Tooltip("When enabled, resources are consumed immediately when resolving a need (no inventory accumulation).")]
+        [SerializeField] private bool consumeResourceOnResolve = true;
+
+        [Tooltip("When enabled, requesters try to satisfy needs from their own inventory before trading.")]
+        [SerializeField] private bool consumeInventoryFirst = true;
+
+        [Tooltip("When enabled, transfer amounts are clamped to the remaining need amount.")]
+        [SerializeField] private bool clampTransferToNeed = true;
+
+        [Tooltip("When enabled, each provider can fulfill at most one trade per tick.")]
+        [SerializeField] private bool lockProviderPerTick = true;
         #endregion
 
         #region Schedule Overrides
@@ -179,7 +212,18 @@ namespace EmergentMechanics
                     BaseAcceptance = authoring.tradeBaseAcceptance,
                     AffinityWeight = authoring.tradeAffinityWeight,
                     TradeSuccessSignalId = EM_IdUtility.ToFixed(authoring.tradeSuccessSignalIdDefinition, authoring.tradeSuccessSignalId),
-                    TradeFailSignalId = EM_IdUtility.ToFixed(authoring.tradeFailSignalIdDefinition, authoring.tradeFailSignalId)
+                    TradeFailSignalId = EM_IdUtility.ToFixed(authoring.tradeFailSignalIdDefinition, authoring.tradeFailSignalId),
+                    MinIntentUrgency = Mathf.Clamp01(authoring.minIntentUrgency),
+                    MinIntentUrgencyToKeep = Mathf.Clamp01(authoring.minIntentUrgencyToKeep),
+                    IntentBackoffHours = Mathf.Max(0f, authoring.intentBackoffHours),
+                    IntentBackoffMaxHours = Mathf.Max(0f, authoring.intentBackoffMaxHours),
+                    IntentBackoffJitterHours = Mathf.Max(0f, authoring.intentBackoffJitterHours),
+                    IntentMaxAttempts = Mathf.Max(0, authoring.intentMaxAttempts),
+                    MaxProviderAttemptsPerTick = Mathf.Max(0, authoring.maxProviderAttemptsPerTick),
+                    ConsumeResourceOnResolve = (byte)(authoring.consumeResourceOnResolve ? 1 : 0),
+                    ConsumeInventoryFirst = (byte)(authoring.consumeInventoryFirst ? 1 : 0),
+                    ClampTransferToNeed = (byte)(authoring.clampTransferToNeed ? 1 : 0),
+                    LockProviderPerTick = (byte)(authoring.lockProviderPerTick ? 1 : 0)
                 };
 
                 EM_Component_ScheduleOverrideSettings scheduleOverrideSettings = new EM_Component_ScheduleOverrideSettings

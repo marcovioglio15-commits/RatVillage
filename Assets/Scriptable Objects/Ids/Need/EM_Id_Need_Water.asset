@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: EM_Id_Need_Water
   m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_IdDefinition
   category: 7
-  id: Water
+  id: Thirst
   description: Water need

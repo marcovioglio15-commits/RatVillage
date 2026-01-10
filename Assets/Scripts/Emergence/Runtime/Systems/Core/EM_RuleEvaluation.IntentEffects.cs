@@ -9,7 +9,7 @@ namespace EmergentMechanics
         #region Intent
         // Add or update an intent buffer entry for the target.
         private static bool ApplyIntent(Entity target, FixedString64Bytes intentId, FixedString64Bytes resourceOverride,
-            FixedString64Bytes contextId, float urgencyDelta, double timeSeconds, ref BufferLookup<EM_BufferElement_Intent> intentLookup,
+            FixedString64Bytes contextId, float urgencyValue, double timeSeconds, ref BufferLookup<EM_BufferElement_Intent> intentLookup,
             ref BufferLookup<EM_BufferElement_NeedSetting> settingLookup, out float before, out float after,
             out bool created, out FixedString64Bytes needId, out FixedString64Bytes resourceId, out float desiredAmount)
         {
@@ -54,7 +54,7 @@ namespace EmergentMechanics
                     continue;
 
                 before = intent.Urgency;
-                intent.Urgency = math.max(0f, intent.Urgency + urgencyDelta);
+                intent.Urgency = math.clamp(urgencyValue, 0f, 1f);
 
                 if (desiredAmount > 0f)
                     intent.DesiredAmount = desiredAmount;
@@ -64,15 +64,22 @@ namespace EmergentMechanics
                 return true;
             }
 
+            float clampedUrgency = math.clamp(urgencyValue, 0f, 1f);
+
+            if (clampedUrgency <= 0f)
+                return false;
+
             EM_BufferElement_Intent newIntent = new EM_BufferElement_Intent
             {
                 IntentId = intentId,
                 NeedId = needId,
                 ResourceId = resourceId,
-                Urgency = math.max(0f, urgencyDelta),
+                Urgency = clampedUrgency,
                 DesiredAmount = desiredAmount,
                 CreatedTime = timeSeconds,
                 NextAttemptTime = timeSeconds,
+                LastAttemptTime = -1d,
+                AttemptCount = 0,
                 PreferredTarget = Entity.Null
             };
 

@@ -16,13 +16,17 @@ namespace EmergentMechanics
 
             float timeOfDay = (float)debugEvent.Time;
 
-            if (timeOfDay <= 0f)
+            if (timeOfDay < 0f)
                 timeOfDay = GetSocietyTime();
 
             string timeString = FormatTimeOfDay(timeOfDay);
             string subject = FormatEntityId(debugEvent.Subject);
             string target = FormatEntityId(debugEvent.Target);
             string society = FormatEntityId(debugEvent.Society);
+
+            if (debugEvent.Type == EM_DebugEventType.InteractionSuccess && debugEvent.Subject == debugEvent.Target)
+                target = "Inventory";
+
             string signal = debugEvent.SignalId.Length > 0 ? debugEvent.SignalId.ToString() : "None";
             string intent = debugEvent.IntentId.Length > 0 ? debugEvent.IntentId.ToString() : "None";
             string effect = debugEvent.Type == EM_DebugEventType.EffectApplied ? debugEvent.EffectType.ToString() : "None";

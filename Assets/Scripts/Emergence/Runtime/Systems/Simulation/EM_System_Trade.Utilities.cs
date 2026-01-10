@@ -56,7 +56,8 @@ namespace EmergentMechanics
             if (!hasDebugBuffer)
                 return;
 
-            EM_Component_Event debugEvent = EM_Utility_LogEvent.BuildSignalEvent(signalId, value, contextId, subject, target, societyRoot);
+            EM_Component_Event debugEvent = EM_Utility_LogEvent.BuildSignalEvent(signalId, value, contextId, subject, target, societyRoot,
+                timeSeconds);
             EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, debugEvent);
         }
 

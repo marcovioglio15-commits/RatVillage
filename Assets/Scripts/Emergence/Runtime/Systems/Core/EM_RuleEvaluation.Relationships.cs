@@ -18,6 +18,9 @@ namespace EmergentMechanics
             if (source == Entity.Null || other == Entity.Null)
                 return false;
 
+            if (source == other)
+                return false;
+
             if (!relationshipLookup.HasBuffer(source))
                 return false;
 

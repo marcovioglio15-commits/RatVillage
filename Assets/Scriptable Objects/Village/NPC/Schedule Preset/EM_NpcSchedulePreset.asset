@@ -43,7 +43,7 @@ MonoBehaviour:
     endHour: 0
     useDuration: 1
     minDurationHours: 0.5
-    maxDurationHours: 1
+    maxDurationHours: 0.5
     legacyTickIntervalHours: 0
     legacyTickSignalCurve:
       serializedVersion: 2
@@ -66,7 +66,7 @@ MonoBehaviour:
     endHour: 0
     useDuration: 1
     minDurationHours: 0.5
-    maxDurationHours: 1
+    maxDurationHours: 3
     legacyTickIntervalHours: 0
     legacyTickSignalCurve:
       serializedVersion: 2

@@ -529,7 +529,6 @@ GameObject:
   - component: {fileID: 610679696}
   - component: {fileID: 610679695}
   - component: {fileID: 610679694}
-  - component: {fileID: 610679693}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -537,28 +536,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &610679693
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 610679692}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1da494df1f0a014398f81f32fa4b4e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Emergence.EmergenceDebugUiManager
-  timeLabel: {fileID: 2107908077}
-  logScrollRect: {fileID: 0}
-  logContent: {fileID: 0}
-  logLinePrefab: {fileID: 0}
-  templates: {fileID: 11400000, guid: 7954b7fb88122a645ac6a95221d4ea6f, type: 2}
-  refreshInterval: 0.25
-  maxLogLines: 40
-  maxLogCharacters: 4000
-  autoScroll: 1
-  logSettings: {fileID: 11400000, guid: 2a64f83952171be4abeaef76de4002ad, type: 2}
 --- !u!114 &610679694
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1493,8 +1470,8 @@ MonoBehaviour:
   logLinePrefab: {fileID: 3981265325607759151, guid: 661e4db54599e0542988c1720dc20329, type: 3}
   templates: {fileID: 11400000, guid: 7954b7fb88122a645ac6a95221d4ea6f, type: 2}
   refreshInterval: 0.25
-  maxLogLines: 40
-  maxLogCharacters: 4000
+  maxLogLines: 150
+  maxLogCharacters: 40000
   autoScroll: 1
   logSettings: {fileID: 11400000, guid: 2a64f83952171be4abeaef76de4002ad, type: 2}
 --- !u!1 &1924287884

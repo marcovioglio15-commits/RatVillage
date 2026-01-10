@@ -54,6 +54,17 @@ namespace EmergentMechanics
         public float AffinityWeight;
         public FixedString64Bytes TradeSuccessSignalId;
         public FixedString64Bytes TradeFailSignalId;
+        public float MinIntentUrgency;
+        public float MinIntentUrgencyToKeep;
+        public float IntentBackoffHours;
+        public float IntentBackoffMaxHours;
+        public float IntentBackoffJitterHours;
+        public int IntentMaxAttempts;
+        public int MaxProviderAttemptsPerTick;
+        public byte ConsumeResourceOnResolve;
+        public byte ConsumeInventoryFirst;
+        public byte ClampTransferToNeed;
+        public byte LockProviderPerTick;
         #endregion
     }
 

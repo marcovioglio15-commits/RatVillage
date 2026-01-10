@@ -60,15 +60,16 @@ namespace EmergentMechanics
                 FixedString64Bytes needId;
                 FixedString64Bytes resourceId;
                 float desiredAmount;
+                float urgencyValue = math.saturate(rulePriority * math.max(0f, magnitude));
 
-                applied = ApplyIntent(target, effect.ParameterId, effect.SecondaryId, contextId, magnitude, timeSeconds, ref lookups.IntentLookup,
+                applied = ApplyIntent(target, effect.ParameterId, effect.SecondaryId, contextId, urgencyValue, timeSeconds, ref lookups.IntentLookup,
                     ref lookups.NeedSettingLookup, out before, out after, out created, out needId, out resourceId, out desiredAmount);
                 delta = after - before;
 
                 if (applied && created && hasDebugBuffer)
                 {
                     EM_Component_Event intentEvent = EM_Utility_LogEvent.BuildIntentEvent(effect.ParameterId, needId, resourceId, desiredAmount,
-                        after, subject, target, societyRoot);
+                        after, subject, target, societyRoot, timeSeconds);
                     EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, intentEvent);
                 }
             }
@@ -84,7 +85,7 @@ namespace EmergentMechanics
                 if (applied && hasDebugBuffer)
                 {
                     EM_Component_Event signalEvent = EM_Utility_LogEvent.BuildSignalEvent(emittedSignalId, magnitude, emittedContextId,
-                        target, signalTarget, societyRoot);
+                        target, signalTarget, societyRoot, timeSeconds);
                     EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, signalEvent);
                 }
             }
@@ -93,13 +94,16 @@ namespace EmergentMechanics
                 return applied;
 
             EM_Component_Event effectEvent = EM_Utility_LogEvent.BuildEffectEvent(effect.EffectType, effect.ParameterId, contextId,
-                delta, before, after, subject, target, societyRoot);
+                delta, before, after, subject, target, societyRoot, timeSeconds);
             EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, effectEvent);
             return applied;
         }
 
         private static Entity ResolveRelationshipOther(Entity target, Entity subject, Entity signalTarget)
         {
+            if (signalTarget != Entity.Null && signalTarget == subject)
+                return Entity.Null;
+
             if (target == subject && signalTarget != Entity.Null)
                 return signalTarget;
 

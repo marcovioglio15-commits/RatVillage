@@ -36,12 +36,12 @@ namespace EmergentMechanics
 
         #region Builders
         public static EM_Component_Event BuildSignalEvent(FixedString64Bytes signalId, float value, FixedString64Bytes contextId,
-            Entity subject, Entity target, Entity society)
+            Entity subject, Entity target, Entity society, double timeSeconds)
         {
             return new EM_Component_Event
             {
                 Type = EM_DebugEventType.SignalEmitted,
-                Time = 0d,
+                Time = ConvertTimeSecondsToHours(timeSeconds),
                 Society = society,
                 Subject = subject,
                 Target = target,
@@ -62,12 +62,12 @@ namespace EmergentMechanics
         }
 
         public static EM_Component_Event BuildIntentEvent(FixedString64Bytes intentId, FixedString64Bytes needId, FixedString64Bytes resourceId,
-            float desiredAmount, float urgency, Entity subject, Entity target, Entity society)
+            float desiredAmount, float urgency, Entity subject, Entity target, Entity society, double timeSeconds)
         {
             return new EM_Component_Event
             {
                 Type = EM_DebugEventType.IntentCreated,
-                Time = 0d,
+                Time = ConvertTimeSecondsToHours(timeSeconds),
                 Society = society,
                 Subject = subject,
                 Target = target,
@@ -88,12 +88,12 @@ namespace EmergentMechanics
         }
 
         public static EM_Component_Event BuildEffectEvent(EmergenceEffectType effectType, FixedString64Bytes parameterId, FixedString64Bytes contextId,
-            float delta, float before, float after, Entity subject, Entity target, Entity society)
+            float delta, float before, float after, Entity subject, Entity target, Entity society, double timeSeconds)
         {
             return new EM_Component_Event
             {
                 Type = EM_DebugEventType.EffectApplied,
-                Time = 0d,
+                Time = ConvertTimeSecondsToHours(timeSeconds),
                 Society = society,
                 Subject = subject,
                 Target = target,
@@ -114,12 +114,12 @@ namespace EmergentMechanics
         }
 
         public static EM_Component_Event BuildInteractionEvent(EM_DebugEventType eventType, FixedString64Bytes reason,
-            Entity subject, Entity target, Entity society, FixedString64Bytes needId, FixedString64Bytes resourceId, float value)
+            Entity subject, Entity target, Entity society, FixedString64Bytes needId, FixedString64Bytes resourceId, float value, double timeSeconds)
         {
             return new EM_Component_Event
             {
                 Type = eventType,
-                Time = 0d,
+                Time = ConvertTimeSecondsToHours(timeSeconds),
                 Society = society,
                 Subject = subject,
                 Target = target,
@@ -163,6 +163,16 @@ namespace EmergentMechanics
                 Before = 0f,
                 After = 0f
             };
+        }
+        #endregion
+
+        #region Time
+        private static double ConvertTimeSecondsToHours(double timeSeconds)
+        {
+            if (timeSeconds < 0d)
+                return -1d;
+
+            return timeSeconds / 3600d;
         }
         #endregion
     }

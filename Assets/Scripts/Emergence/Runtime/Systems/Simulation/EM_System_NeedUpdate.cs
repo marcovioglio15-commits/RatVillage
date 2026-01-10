@@ -24,6 +24,7 @@ namespace EmergentMechanics
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<EM_BufferElement_NeedSetting>();
+            state.RequireForUpdate<EM_Component_NpcNeedTickState>();
             signalSettingsLookup = state.GetComponentLookup<EM_Component_NeedSignalSettings>(true);
             needSignalOverrideLookup = state.GetBufferLookup<EM_BufferElement_NeedSignalOverride>(true);
             needActivityRateLookup = state.GetBufferLookup<EM_BufferElement_NeedActivityRate>(true);
@@ -35,11 +36,10 @@ namespace EmergentMechanics
 
         public void OnUpdate(ref SystemState state)
         {
-            NativeParallelHashMap<Entity, NeedTickData> deltaHoursMap = BuildDeltaHoursMap(ref state);
-
-            if (deltaHoursMap.Count() == 0)
+            NativeParallelHashMap<Entity, NeedTickData> tickDataMap = BuildTickConfigMap(ref state);
+            if (tickDataMap.Count() == 0)
             {
-                deltaHoursMap.Dispose();
+                tickDataMap.Dispose();
                 return;
             }
 
@@ -54,7 +54,6 @@ namespace EmergentMechanics
                 debugLog = debugLogRef.ValueRO;
                 maxEntries = debugLog.MaxEntries;
             }
-
             signalSettingsLookup.Update(ref state);
             needSignalOverrideLookup.Update(ref state);
             needActivityRateLookup.Update(ref state);
@@ -64,17 +63,25 @@ namespace EmergentMechanics
             scheduleStateLookup.Update(ref state);
 
             foreach ((DynamicBuffer<EM_BufferElement_Need> needs, DynamicBuffer<EM_BufferElement_NeedSetting> settings,
-                DynamicBuffer<EM_BufferElement_SignalEvent> signals, EM_Component_SocietyMember member, Entity entity)
+                DynamicBuffer<EM_BufferElement_SignalEvent> signals, RefRW<EM_Component_NpcNeedTickState> tickState,
+                EM_Component_SocietyMember member, Entity entity)
                 in SystemAPI.Query<DynamicBuffer<EM_BufferElement_Need>, DynamicBuffer<EM_BufferElement_NeedSetting>,
-                    DynamicBuffer<EM_BufferElement_SignalEvent>, EM_Component_SocietyMember>()
+                    DynamicBuffer<EM_BufferElement_SignalEvent>, RefRW<EM_Component_NpcNeedTickState>, EM_Component_SocietyMember>()
                     .WithAll<EM_Component_SignalEmitter>()
                     .WithEntityAccess())
             {
                 NeedTickData tickData;
-                bool found = deltaHoursMap.TryGetValue(member.SocietyRoot, out tickData);
+                bool found = tickDataMap.TryGetValue(member.SocietyRoot, out tickData);
 
                 if (!found)
                     continue;
+
+                if (tickData.TimeSeconds < tickState.ValueRO.NextTick)
+                    continue;
+
+                EM_Component_NpcNeedTickState updatedTick = tickState.ValueRO;
+                updatedTick.NextTick = tickData.TimeSeconds + tickData.IntervalSeconds;
+                tickState.ValueRW = updatedTick;
 
                 EM_Component_NeedSignalSettings signalSettings = default;
                 bool hasSignalSettings = member.SocietyRoot != Entity.Null && signalSettingsLookup.HasComponent(member.SocietyRoot);
@@ -135,33 +142,27 @@ namespace EmergentMechanics
             if (hasDebugBuffer)
                 debugLogRef.ValueRW = debugLog;
 
-            deltaHoursMap.Dispose();
+            tickDataMap.Dispose();
         }
         #endregion
 
         #region Helpers
-        // Compute per-society delta hours based on tick settings.
-        private NativeParallelHashMap<Entity, NeedTickData> BuildDeltaHoursMap(ref SystemState state)
+        // Cache per-society tick configuration from the shared clock.
+        private NativeParallelHashMap<Entity, NeedTickData> BuildTickConfigMap(ref SystemState state)
         {
-            NativeParallelHashMap<Entity, NeedTickData> deltaHoursMap = new NativeParallelHashMap<Entity, NeedTickData>(8, Allocator.Temp);
+            NativeParallelHashMap<Entity, NeedTickData> tickDataMap = new NativeParallelHashMap<Entity, NeedTickData>(8, Allocator.Temp);
 
-            foreach ((RefRW<EM_Component_NeedTickState> tickState, RefRO<EM_Component_NeedTickSettings> settings,
-                RefRO<EM_Component_SocietyClock> clock, Entity entity)
-                in SystemAPI.Query<RefRW<EM_Component_NeedTickState>, RefRO<EM_Component_NeedTickSettings>, RefRO<EM_Component_SocietyClock>>()
+            foreach ((RefRO<EM_Component_NeedTickSettings> settings, RefRO<EM_Component_SocietyClock> clock, Entity entity)
+                in SystemAPI.Query<RefRO<EM_Component_NeedTickSettings>, RefRO<EM_Component_SocietyClock>>()
                     .WithAll<EM_Component_SocietyRoot>()
                     .WithEntityAccess())
             {
                 float intervalSeconds = GetIntervalSeconds(settings.ValueRO.TickIntervalHours);
                 double timeSeconds = clock.ValueRO.SimulatedTimeSeconds;
-
-                if (timeSeconds < tickState.ValueRO.NextTick)
-                    continue;
-
-                tickState.ValueRW.NextTick = timeSeconds + intervalSeconds;
-                deltaHoursMap.TryAdd(entity, new NeedTickData(intervalSeconds / 3600f, timeSeconds, clock.ValueRO.TimeOfDay));
+                tickDataMap.TryAdd(entity, new NeedTickData(intervalSeconds, timeSeconds, clock.ValueRO.TimeOfDay));
             }
 
-            return deltaHoursMap;
+            return tickDataMap;
         }
 
         private static float GetIntervalSeconds(float intervalHours)
@@ -210,6 +211,12 @@ namespace EmergentMechanics
                 }
 
                 float ratePerHour = SampleRatePerHour(in rateSamples, activityNormalizedTime);
+                float rateMultiplier = setting.RateMultiplier;
+
+                if (rateMultiplier <= 0f)
+                    rateMultiplier = 1f;
+
+                ratePerHour *= rateMultiplier;
                 float delta = ratePerHour * deltaHours;
                 float updatedValue = math.clamp(currentValue + delta, minValue, maxValue);
 
@@ -275,13 +282,15 @@ namespace EmergentMechanics
 
         private readonly struct NeedTickData
         {
+            public readonly float IntervalSeconds;
             public readonly float DeltaHours;
             public readonly double TimeSeconds;
             public readonly float TimeOfDay;
 
-            public NeedTickData(float deltaHours, double timeSeconds, float timeOfDay)
+            public NeedTickData(float intervalSeconds, double timeSeconds, float timeOfDay)
             {
-                DeltaHours = deltaHours;
+                IntervalSeconds = intervalSeconds;
+                DeltaHours = intervalSeconds / 3600f;
                 TimeSeconds = timeSeconds;
                 TimeOfDay = timeOfDay;
             }

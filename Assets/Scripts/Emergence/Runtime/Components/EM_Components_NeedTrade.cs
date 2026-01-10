@@ -9,6 +9,7 @@ namespace EmergentMechanics
         public FixedString64Bytes NeedId;
         public FixedString64Bytes ResourceId;
         public FixedList128Bytes<float> RatePerHourSamples;
+        public float RateMultiplier;
         public float MinValue;
         public float MaxValue;
         public float RequestAmount;
@@ -35,6 +36,8 @@ namespace EmergentMechanics
         public float DesiredAmount;
         public double CreatedTime;
         public double NextAttemptTime;
+        public double LastAttemptTime;
+        public int AttemptCount;
         public Entity PreferredTarget;
         #endregion
     }

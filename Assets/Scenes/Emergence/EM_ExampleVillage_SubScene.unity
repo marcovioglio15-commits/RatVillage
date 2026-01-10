@@ -453,13 +453,25 @@ MonoBehaviour:
   needUrgencySignalIdDefinition: {fileID: 11400000, guid: f6a20f715f961ac428b1b4ad12a40a36, type: 2}
   needUrgencySignalId: Signal.Need.Urgency
   needSignalOverrides: []
-  tradeTickIntervalHours: 0.5
+  tradeTickIntervalHours: 0.05
   tradeBaseAcceptance: 0.5
   tradeAffinityWeight: 0.5
   tradeSuccessSignalIdDefinition: {fileID: 11400000, guid: a3ac1efa163841e4c80f18120ac8c7de, type: 2}
   tradeSuccessSignalId: Signal.Trade.Success
   tradeFailSignalIdDefinition: {fileID: 11400000, guid: f3b3ff318fe3c44439dae6cb0bfe66e8, type: 2}
   tradeFailSignalId: Signal.Trade.Fail
+  minIntentUrgency: 0.6
+  minIntentUrgencyToKeep: 0.2
+  intentBackoffHours: 0.25
+  intentBackoffMaxHours: 1
+  intentBackoffJitterHours: 0.05
+  intentMaxAttempts: 4
+  maxProviderAttemptsPerTick: 2
+  consumeResourceOnResolve: 1
+  consumeInventoryFirst: 1
+  clampTransferToNeed: 1
+  lockProviderPerTick: 1
+  blockOverrideWhileOverridden: 1
 --- !u!114 &1984070726
 MonoBehaviour:
   m_ObjectHideFlags: 0

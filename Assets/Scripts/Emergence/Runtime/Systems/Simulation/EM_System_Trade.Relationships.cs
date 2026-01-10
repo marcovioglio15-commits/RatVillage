@@ -10,7 +10,8 @@ namespace EmergentMechanics
         private static bool FindBestProvider(Entity requester, Entity societyRoot, FixedString64Bytes resourceId,
             NativeList<Entity> candidates, NativeList<Entity> candidateSocieties, BufferLookup<EM_BufferElement_Resource> resourceLookup,
             BufferLookup<EM_BufferElement_Relationship> relationshipLookup, BufferLookup<EM_BufferElement_RelationshipType> relationshipTypeLookup,
-            ComponentLookup<EM_Component_NpcType> npcTypeLookup, out Entity provider, out float affinity, out float availableAmount)
+            ComponentLookup<EM_Component_NpcType> npcTypeLookup, NativeParallelHashSet<Entity> providerLock, bool lockProviderPerTick,
+            ref FixedList128Bytes<Entity> excludedProviders, out Entity provider, out float affinity, out float availableAmount)
         {
             provider = Entity.Null;
             affinity = 0f;
@@ -24,7 +25,16 @@ namespace EmergentMechanics
                 if (candidate == requester)
                     continue;
 
+                if (candidate.Index == requester.Index)
+                    continue;
+
                 if (candidateSocieties[i] != societyRoot)
+                    continue;
+
+                if (excludedProviders.Length > 0 && ContainsEntity(candidate, ref excludedProviders))
+                    continue;
+
+                if (lockProviderPerTick && providerLock.Contains(candidate))
                     continue;
 
                 if (!resourceLookup.HasBuffer(candidate))
