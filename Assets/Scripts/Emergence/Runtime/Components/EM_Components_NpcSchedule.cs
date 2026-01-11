@@ -28,6 +28,17 @@ namespace EmergentMechanics
         #endregion
     }
 
+    public struct EM_Component_NpcScheduleTarget : IComponentData
+    {
+        #region Data
+        public int EntryIndex;
+        public FixedString64Bytes ActivityId;
+        public FixedString64Bytes LocationId;
+        public byte IsOverride;
+        public byte TradeCapable;
+        #endregion
+    }
+
     public struct EM_Component_NpcScheduleOverride : IComponentData
     {
         #region Data
@@ -89,11 +100,13 @@ namespace EmergentMechanics
     {
         #region Data
         public FixedString64Bytes ActivityId;
+        public FixedString64Bytes LocationId;
         public float StartHour;
         public float EndHour;
         public byte UseDuration;
         public float MinDurationHours;
         public float MaxDurationHours;
+        public byte TradeCapable;
         public byte TradePolicy;
         public BlobArray<FixedString64Bytes> AllowedTradeNeedIds;
         public BlobArray<EM_Blob_NpcScheduleSignal> Signals;

@@ -16,6 +16,8 @@ MonoBehaviour:
   entries:
   - activityIdDefinition: {fileID: 11400000, guid: fd2c35d15f57a5742a34c449580d94f3, type: 2}
     activityId: Override.SeekFood
+    locationDefinition: {fileID: 0}
+    tradeCapable: 0
     startHour: 0
     endHour: 0
     useDuration: 1
@@ -39,6 +41,8 @@ MonoBehaviour:
     legacyTickSignalId: 
   - activityIdDefinition: {fileID: 11400000, guid: fff2bcbf7bdcbfe46b66633cd0c08f9e, type: 2}
     activityId: Override.SeekWater
+    locationDefinition: {fileID: 0}
+    tradeCapable: 0
     startHour: 0
     endHour: 0
     useDuration: 1
@@ -62,6 +66,8 @@ MonoBehaviour:
     legacyTickSignalId: 
   - activityIdDefinition: {fileID: 11400000, guid: 03476dd9832b06040b063b228e754cb1, type: 2}
     activityId: Override.Sleep
+    locationDefinition: {fileID: 0}
+    tradeCapable: 0
     startHour: 0
     endHour: 0
     useDuration: 1
@@ -85,6 +91,8 @@ MonoBehaviour:
     legacyTickSignalId: 
   - activityIdDefinition: {fileID: 11400000, guid: 20e60703ccb2c34448b06b9f8703adcd, type: 2}
     activityId: Work
+    locationDefinition: {fileID: 0}
+    tradeCapable: 0
     startHour: 6
     endHour: 24
     useDuration: 1

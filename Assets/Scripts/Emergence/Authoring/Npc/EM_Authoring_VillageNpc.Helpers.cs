@@ -42,12 +42,17 @@ namespace EmergentMechanics
 
                 ref EM_Blob_NpcScheduleEntry blobEntry = ref blobEntries[writeIndex];
                 blobEntry.ActivityId = new FixedString64Bytes(activityId);
+                blobEntry.LocationId = default;
                 blobEntry.StartHour = entry.StartHour;
                 blobEntry.EndHour = entry.EndHour;
                 blobEntry.UseDuration = (byte)(entry.UseDuration ? 1 : 0);
                 blobEntry.MinDurationHours = entry.MinDurationHours;
                 blobEntry.MaxDurationHours = entry.MaxDurationHours;
+                blobEntry.TradeCapable = (byte)(entry.TradeCapable ? 1 : 0);
                 blobEntry.TradePolicy = (byte)entry.TradePolicy;
+
+                if (!string.IsNullOrWhiteSpace(entry.LocationId))
+                    blobEntry.LocationId = new FixedString64Bytes(entry.LocationId);
 
                 EM_NpcSchedulePreset.ScheduleTradeNeedEntry[] tradeNeeds = entry.AllowedTradeNeeds;
                 int tradeNeedCount = CountValidTradeNeedEntries(tradeNeeds);

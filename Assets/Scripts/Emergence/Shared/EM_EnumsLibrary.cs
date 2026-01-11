@@ -31,6 +31,16 @@ namespace EmergentMechanics
     }
     #endregion
 
+    #region Navigation
+    public enum EM_NpcDestinationKind : byte
+    {
+        None = 0,
+        Activity = 1,
+        TradeMeeting = 2,
+        TradeQueue = 3
+    }
+    #endregion
+
     #region Metric
     public enum EmergenceMetricScope
     {

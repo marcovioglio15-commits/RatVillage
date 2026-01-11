@@ -19,6 +19,19 @@ namespace EmergentMechanics
             height += spacing;
             height += GetChildHeight(property, "activityIdDefinition", false);
             height += spacing;
+            height += GetChildHeight(property, "locationDefinition", false);
+
+            SerializedProperty locationProperty = property.FindPropertyRelative("locationDefinition");
+            SerializedProperty tradeCapableProperty = property.FindPropertyRelative("tradeCapable");
+            bool hasLocation = locationProperty != null && locationProperty.objectReferenceValue != null;
+
+            if (tradeCapableProperty != null && hasLocation)
+            {
+                height += spacing;
+                height += EditorGUI.GetPropertyHeight(tradeCapableProperty, false);
+            }
+
+            height += spacing;
             height += GetChildHeight(property, "startHour", false);
             height += spacing;
             height += GetChildHeight(property, "endHour", false);
@@ -77,6 +90,20 @@ namespace EmergentMechanics
             EditorGUI.indentLevel = indent + 1;
 
             DrawChildProperty(ref contentRect, property, "activityIdDefinition", false);
+            DrawChildProperty(ref contentRect, property, "locationDefinition", false);
+
+            SerializedProperty locationProperty = property.FindPropertyRelative("locationDefinition");
+            SerializedProperty tradeCapableProperty = property.FindPropertyRelative("tradeCapable");
+            bool hasLocation = locationProperty != null && locationProperty.objectReferenceValue != null;
+
+            if (tradeCapableProperty != null)
+            {
+                if (!hasLocation)
+                    tradeCapableProperty.boolValue = false;
+                else
+                    DrawProperty(ref contentRect, tradeCapableProperty, false);
+            }
+
             DrawChildProperty(ref contentRect, property, "startHour", false);
             DrawChildProperty(ref contentRect, property, "endHour", false);
 

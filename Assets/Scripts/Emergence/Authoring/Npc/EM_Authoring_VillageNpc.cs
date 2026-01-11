@@ -168,6 +168,7 @@ namespace EmergentMechanics
         [Tooltip("Maximum clamp for the affinity-based transfer multiplier.")]
         [SerializeField] private float affinityMultiplierMax = 2f;
         #endregion
+
         #endregion
         #endregion
 
@@ -192,6 +193,8 @@ namespace EmergentMechanics
                 AddComponent(entity, new EM_Component_RandomSeed { Value = GetStableSeed(authoring.name) });
                 AddComponent(entity, new EM_Component_NpcNeedTickState { NextTick = -1d });
                 AddComponent(entity, new EM_Component_NpcNeedRateSettings { RateMultiplierVariance = math.max(0f, authoring.needRateVariance) });
+                AddMovementComponents(authoring, entity, this);
+                AddTradeInteractionComponents(authoring, entity, this);
                 AddComponent<EM_Component_SignalEmitter>(entity);
                 AddBuffer<EM_BufferElement_SignalEvent>(entity);
                 AddBuffer<EM_BufferElement_MetricAccumulator>(entity);

@@ -37,6 +37,8 @@ namespace EmergentMechanics
             SerializedProperty entryProperty = entriesProperty.GetArrayElementAtIndex(index);
             entryProperty.FindPropertyRelative("activityIdDefinition").objectReferenceValue = activityId;
             entryProperty.FindPropertyRelative("activityId").stringValue = activityId != null ? activityId.Id : string.Empty;
+            entryProperty.FindPropertyRelative("locationDefinition").objectReferenceValue = null;
+            entryProperty.FindPropertyRelative("tradeCapable").boolValue = false;
             entryProperty.FindPropertyRelative("startHour").floatValue = startHour;
             entryProperty.FindPropertyRelative("endHour").floatValue = endHour;
             entryProperty.FindPropertyRelative("useDuration").boolValue = false;

@@ -53,6 +53,12 @@ namespace EmergentMechanics
             [SerializeField]
             [HideInInspector] private string activityId;
 
+            [Tooltip("Location definition required before the activity can start. Leave empty to allow the activity anywhere.")]
+            [SerializeField] private EM_LocationDefinition locationDefinition;
+
+            [Tooltip("Whether trading is allowed while performing this activity. Requires a location definition.")]
+            [SerializeField] private bool tradeCapable;
+
             [Tooltip("Start hour for the activity (0-24).")]
             [SerializeField] private float startHour;
 
@@ -122,6 +128,33 @@ namespace EmergentMechanics
                 get
                 {
                     return activityIdDefinition;
+                }
+            }
+
+            public EM_LocationDefinition LocationDefinition
+            {
+                get
+                {
+                    return locationDefinition;
+                }
+            }
+
+            public string LocationId
+            {
+                get
+                {
+                    if (locationDefinition == null)
+                        return string.Empty;
+
+                    return locationDefinition.Id;
+                }
+            }
+
+            public bool TradeCapable
+            {
+                get
+                {
+                    return tradeCapable;
                 }
             }
 
@@ -204,6 +237,12 @@ namespace EmergentMechanics
                 if (allowedTradeNeeds == null)
                 {
                     allowedTradeNeeds = new ScheduleTradeNeedEntry[0];
+                    updated = true;
+                }
+
+                if (locationDefinition == null && tradeCapable)
+                {
+                    tradeCapable = false;
                     updated = true;
                 }
 
