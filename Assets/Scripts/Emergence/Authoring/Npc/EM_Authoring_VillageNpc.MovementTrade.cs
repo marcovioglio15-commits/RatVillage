@@ -86,6 +86,8 @@ namespace EmergentMechanics
                 TargetAnchor = Entity.Null,
                 StartTimeSeconds = -1d,
                 WaitStartTimeSeconds = -1d,
+                QueueSlotIndex = -1,
+                IsOverrideRequest = 0,
                 Stage = EM_TradeRequestStage.None
             });
             baker.AddComponent(entity, new EM_Component_TradeProviderState

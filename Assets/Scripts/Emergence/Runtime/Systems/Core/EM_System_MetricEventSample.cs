@@ -30,9 +30,12 @@ namespace EmergentMechanics
         private ComponentLookup<EM_Component_NpcType> npcTypeLookup;
         private ComponentLookup<EM_Component_Reputation> reputationLookup;
         private ComponentLookup<EM_Component_Cohesion> cohesionLookup;
+        private ComponentLookup<EM_Component_NpcHealth> healthLookup;
         private ComponentLookup<EM_Component_NpcSchedule> scheduleLookup;
         private ComponentLookup<EM_Component_NpcScheduleOverride> scheduleOverrideLookup;
         private ComponentLookup<EM_Component_NpcScheduleOverrideGate> scheduleOverrideGateLookup;
+        private ComponentLookup<EM_Component_NpcScheduleOverrideCooldownSettings> scheduleOverrideCooldownSettingsLookup;
+        private ComponentLookup<EM_Component_NpcScheduleOverrideCooldownState> scheduleOverrideCooldownStateLookup;
         private BufferLookup<EM_BufferElement_Intent> intentLookup;
         private BufferLookup<EM_BufferElement_SignalEvent> signalLookup;
         #endregion
@@ -56,9 +59,12 @@ namespace EmergentMechanics
             npcTypeLookup = state.GetComponentLookup<EM_Component_NpcType>(true);
             reputationLookup = state.GetComponentLookup<EM_Component_Reputation>(false);
             cohesionLookup = state.GetComponentLookup<EM_Component_Cohesion>(false);
+            healthLookup = state.GetComponentLookup<EM_Component_NpcHealth>(false);
             scheduleLookup = state.GetComponentLookup<EM_Component_NpcSchedule>(true);
             scheduleOverrideLookup = state.GetComponentLookup<EM_Component_NpcScheduleOverride>(false);
             scheduleOverrideGateLookup = state.GetComponentLookup<EM_Component_NpcScheduleOverrideGate>(false);
+            scheduleOverrideCooldownSettingsLookup = state.GetComponentLookup<EM_Component_NpcScheduleOverrideCooldownSettings>(true);
+            scheduleOverrideCooldownStateLookup = state.GetComponentLookup<EM_Component_NpcScheduleOverrideCooldownState>(true);
             intentLookup = state.GetBufferLookup<EM_BufferElement_Intent>(false);
             signalLookup = state.GetBufferLookup<EM_BufferElement_SignalEvent>(false);
         }
@@ -111,9 +117,12 @@ namespace EmergentMechanics
             npcTypeLookup.Update(ref state);
             reputationLookup.Update(ref state);
             cohesionLookup.Update(ref state);
+            healthLookup.Update(ref state);
             scheduleLookup.Update(ref state);
             scheduleOverrideLookup.Update(ref state);
             scheduleOverrideGateLookup.Update(ref state);
+            scheduleOverrideCooldownSettingsLookup.Update(ref state);
+            scheduleOverrideCooldownStateLookup.Update(ref state);
             intentLookup.Update(ref state);
             signalLookup.Update(ref state);
 
@@ -132,9 +141,12 @@ namespace EmergentMechanics
                 NpcTypeLookup = npcTypeLookup,
                 ReputationLookup = reputationLookup,
                 CohesionLookup = cohesionLookup,
+                HealthLookup = healthLookup,
                 ScheduleLookup = scheduleLookup,
                 ScheduleOverrideLookup = scheduleOverrideLookup,
                 ScheduleOverrideGateLookup = scheduleOverrideGateLookup,
+                ScheduleOverrideCooldownSettingsLookup = scheduleOverrideCooldownSettingsLookup,
+                ScheduleOverrideCooldownStateLookup = scheduleOverrideCooldownStateLookup,
                 IntentLookup = intentLookup,
                 SignalLookup = signalLookup
             };

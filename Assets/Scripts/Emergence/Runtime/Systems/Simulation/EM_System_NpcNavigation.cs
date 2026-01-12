@@ -41,6 +41,7 @@ namespace EmergentMechanics
 
             clockLookup.Update(ref state);
             anchorLookup.Update(ref state);
+            float deltaTime = SystemAPI.Time.DeltaTime;
 
             foreach ((RefRW<LocalTransform> transform, RefRO<EM_Component_NpcMovementSettings> settings,
                 RefRW<EM_Component_NpcMovementState> movementState, RefRW<EM_Component_NpcNavigationState> navigationState,
@@ -53,17 +54,17 @@ namespace EmergentMechanics
                     .WithEntityAccess())
             {
                 float speedScale = ResolveSpeedScale(member.SocietyRoot);
-                UpdateCurrentNode(transform.ValueRO.Position, entity, ref grid, nodes, occupancy, ref locationState, ref anchorMap);
+                UpdateCurrentNode(transform.ValueRO.Position, entity, grid, nodes, occupancy, locationState, ref anchorMap);
 
                 if (navigationState.ValueRO.DestinationKind == EM_NpcDestinationKind.None)
                 {
-                    StopMovement(ref navigationState, ref movementState);
+                    StopMovement(navigationState, movementState);
                     continue;
                 }
 
-                UpdateDestinationAnchor(ref navigationState);
-                EnsurePath(entity, ref grid, nodes, occupancy, ref navigationState, ref pathNodes, locationState.ValueRO);
-                MoveAlongPath(ref transform, settings.ValueRO, speedScale, ref movementState, ref navigationState, ref grid, ref locationState,
+                UpdateDestinationAnchor(navigationState);
+                EnsurePath(entity, grid, nodes, occupancy, navigationState, pathNodes, locationState.ValueRO);
+                MoveAlongPath(transform, settings.ValueRO, speedScale, deltaTime, movementState, navigationState, grid, locationState,
                     nodes, occupancy, pathNodes, entity, ref anchorMap);
             }
 

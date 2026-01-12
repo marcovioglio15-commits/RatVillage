@@ -109,6 +109,50 @@ namespace EmergentMechanics
             return asset;
         }
 
+        private static EM_EffectDefinition CreateResourceEffect(string rootFolder, string assetName, EM_IdDefinition effectIdDefinition,
+            string legacyId, EM_IdDefinition resourceIdDefinition, float magnitude)
+        {
+            string folder = EM_StudioAssetUtility.GetCategoryFolder(EM_Categories.Effects, rootFolder);
+            EM_StudioAssetUtility.EnsureFolderExists(folder);
+            string path = AssetDatabase.GenerateUniqueAssetPath(folder + "/" + assetName + ".asset");
+            EM_EffectDefinition asset = ScriptableObject.CreateInstance<EM_EffectDefinition>();
+            SerializedObject serialized = new SerializedObject(asset);
+            serialized.FindProperty("effectIdDefinition").objectReferenceValue = effectIdDefinition;
+            serialized.FindProperty("effectId").stringValue = legacyId;
+            serialized.FindProperty("effectType").enumValueIndex = (int)EmergenceEffectType.ModifyResource;
+            serialized.FindProperty("target").enumValueIndex = (int)EmergenceEffectTarget.EventTarget;
+            serialized.FindProperty("parameterIdDefinition").objectReferenceValue = resourceIdDefinition;
+            serialized.FindProperty("parameterId").stringValue = resourceIdDefinition != null ? resourceIdDefinition.Id : string.Empty;
+            serialized.FindProperty("secondaryIdDefinition").objectReferenceValue = null;
+            serialized.FindProperty("secondaryId").stringValue = string.Empty;
+            serialized.FindProperty("magnitude").floatValue = magnitude;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            AssetDatabase.CreateAsset(asset, path);
+            return asset;
+        }
+
+        private static EM_EffectDefinition CreateHealthEffect(string rootFolder, string assetName, EM_IdDefinition effectIdDefinition,
+            string legacyId, float magnitude)
+        {
+            string folder = EM_StudioAssetUtility.GetCategoryFolder(EM_Categories.Effects, rootFolder);
+            EM_StudioAssetUtility.EnsureFolderExists(folder);
+            string path = AssetDatabase.GenerateUniqueAssetPath(folder + "/" + assetName + ".asset");
+            EM_EffectDefinition asset = ScriptableObject.CreateInstance<EM_EffectDefinition>();
+            SerializedObject serialized = new SerializedObject(asset);
+            serialized.FindProperty("effectIdDefinition").objectReferenceValue = effectIdDefinition;
+            serialized.FindProperty("effectId").stringValue = legacyId;
+            serialized.FindProperty("effectType").enumValueIndex = (int)EmergenceEffectType.ModifyHealth;
+            serialized.FindProperty("target").enumValueIndex = (int)EmergenceEffectTarget.EventTarget;
+            serialized.FindProperty("parameterIdDefinition").objectReferenceValue = null;
+            serialized.FindProperty("parameterId").stringValue = string.Empty;
+            serialized.FindProperty("secondaryIdDefinition").objectReferenceValue = null;
+            serialized.FindProperty("secondaryId").stringValue = string.Empty;
+            serialized.FindProperty("magnitude").floatValue = magnitude;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            AssetDatabase.CreateAsset(asset, path);
+            return asset;
+        }
+
         private static EM_DomainDefinition CreateDomain(string rootFolder, string assetName, EM_IdDefinition idDefinition, string legacyId,
             EM_RuleSetDefinition[] ruleSets, Color color)
         {

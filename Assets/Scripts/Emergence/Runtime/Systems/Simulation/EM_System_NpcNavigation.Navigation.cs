@@ -21,7 +21,7 @@ namespace EmergentMechanics
             return speed;
         }
 
-        private void UpdateDestinationAnchor(ref RefRW<EM_Component_NpcNavigationState> navigationState)
+        private void UpdateDestinationAnchor(RefRW<EM_Component_NpcNavigationState> navigationState)
         {
             if (navigationState.ValueRO.DestinationAnchor == Entity.Null)
                 return;
@@ -33,11 +33,23 @@ namespace EmergentMechanics
             navigationState.ValueRW.DestinationNodeIndex = anchor.NodeIndex;
         }
 
-        private static void EnsurePath(Entity entity, ref EM_Component_LocationGrid grid, DynamicBuffer<EM_BufferElement_LocationNode> nodes,
-            DynamicBuffer<EM_BufferElement_LocationOccupancy> occupancy, ref RefRW<EM_Component_NpcNavigationState> navigationState,
-            ref DynamicBuffer<EM_BufferElement_NpcPathNode> pathNodes, EM_Component_NpcLocationState locationState)
+        private static void EnsurePath(Entity entity, EM_Component_LocationGrid grid, DynamicBuffer<EM_BufferElement_LocationNode> nodes,
+            DynamicBuffer<EM_BufferElement_LocationOccupancy> occupancy, RefRW<EM_Component_NpcNavigationState> navigationState,
+            DynamicBuffer<EM_BufferElement_NpcPathNode> pathNodes, EM_Component_NpcLocationState locationState)
         {
             int destinationIndex = navigationState.ValueRO.DestinationNodeIndex;
+
+            if (destinationIndex < 0 && navigationState.ValueRO.DestinationKind == EM_NpcDestinationKind.TradeQueue)
+            {
+                int positionIndex;
+                bool hasPosition = EM_Utility_LocationGrid.TryGetNodeIndex(navigationState.ValueRO.DestinationPosition, grid, out positionIndex);
+
+                if (hasPosition)
+                {
+                    navigationState.ValueRW.DestinationNodeIndex = positionIndex;
+                    destinationIndex = positionIndex;
+                }
+            }
 
             if (destinationIndex < 0)
                 return;
@@ -59,7 +71,7 @@ namespace EmergentMechanics
                 return;
 
             pathNodes.Clear();
-            bool built = TryBuildPath(locationState.CurrentNodeIndex, destinationIndex, entity, ref grid, nodes, occupancy, ref pathNodes);
+            bool built = TryBuildPath(locationState.CurrentNodeIndex, destinationIndex, entity, grid, nodes, occupancy, pathNodes);
 
             if (!built)
             {

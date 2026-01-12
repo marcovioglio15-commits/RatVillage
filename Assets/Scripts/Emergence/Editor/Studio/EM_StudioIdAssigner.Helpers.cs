@@ -85,6 +85,9 @@ namespace EmergentMechanics
             if (effectType == EmergenceEffectType.ModifyResource)
                 return EM_IdCategory.Resource;
 
+            if (effectType == EmergenceEffectType.ModifyHealth)
+                return EM_IdCategory.Context;
+
             if (effectType == EmergenceEffectType.OverrideSchedule)
                 return EM_IdCategory.Activity;
 

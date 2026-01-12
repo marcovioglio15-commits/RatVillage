@@ -13,6 +13,8 @@ namespace EmergentMechanics
             ref ComponentLookup<EM_Component_NpcSchedule> scheduleLookup,
             ref ComponentLookup<EM_Component_NpcScheduleOverride> scheduleOverrideLookup,
             ref ComponentLookup<EM_Component_NpcScheduleOverrideGate> overrideGateLookup,
+            ref ComponentLookup<EM_Component_NpcScheduleOverrideCooldownSettings> overrideCooldownSettingsLookup,
+            ref ComponentLookup<EM_Component_NpcScheduleOverrideCooldownState> overrideCooldownStateLookup,
             out float before, out float after)
         {
             before = 0f;
@@ -38,6 +40,12 @@ namespace EmergentMechanics
                 scheduleOverrideLookup[target] = scheduleOverride;
                 after = 0f;
                 return true;
+            }
+
+            if (IsOverrideOnCooldown(target, activityId, timeSeconds, ref overrideCooldownSettingsLookup, ref overrideCooldownStateLookup))
+            {
+                after = before;
+                return false;
             }
 
             if (IsOverrideBlocked(target, societyRoot, scheduleOverride, ref memberLookup, ref overrideSettingsLookup))
@@ -77,6 +85,46 @@ namespace EmergentMechanics
                 return false;
 
             return overrideSettingsLookup[settingsRoot].BlockOverrideWhileOverridden != 0;
+        }
+
+        private static bool IsOverrideOnCooldown(Entity target, FixedString64Bytes activityId, double timeSeconds,
+            ref ComponentLookup<EM_Component_NpcScheduleOverrideCooldownSettings> cooldownSettingsLookup,
+            ref ComponentLookup<EM_Component_NpcScheduleOverrideCooldownState> cooldownStateLookup)
+        {
+            if (!cooldownSettingsLookup.HasComponent(target) || !cooldownStateLookup.HasComponent(target))
+                return false;
+
+            EM_Component_NpcScheduleOverrideCooldownSettings settings = cooldownSettingsLookup[target];
+            float sameCooldownHours = settings.SameOverrideCooldownHours;
+            float anyCooldownHours = settings.AnyOverrideCooldownHours;
+
+            if (sameCooldownHours <= 0f && anyCooldownHours <= 0f)
+                return false;
+
+            EM_Component_NpcScheduleOverrideCooldownState state = cooldownStateLookup[target];
+            double lastEndTime = state.LastOverrideEndTimeSeconds;
+
+            if (lastEndTime < 0d)
+                return false;
+
+            double elapsedSeconds = timeSeconds - lastEndTime;
+
+            if (elapsedSeconds < 0d)
+                return false;
+
+            if (anyCooldownHours > 0f && elapsedSeconds < anyCooldownHours * 3600d)
+                return true;
+
+            if (sameCooldownHours <= 0f)
+                return false;
+
+            if (state.LastOverrideActivityId.Length == 0 || activityId.Length == 0)
+                return false;
+
+            if (!state.LastOverrideActivityId.Equals(activityId))
+                return false;
+
+            return elapsedSeconds < sameCooldownHours * 3600d;
         }
 
         private static bool TryArbitrateScheduleOverride(Entity target, double timeSeconds, float priority, FixedString64Bytes activityId,

@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 08dc9d692ff7435d9bcb30e0bfc662e0, type: 3}
-  m_Name: EM_Location_WorkingRed
+  m_Name: EM_Location_OrangeWorkPlace
   m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_LocationDefinition
-  id: Location.Id
-  displayName: Red's Workplace
-  color: {r: 1, g: 0, b: 0, a: 1}
+  id: Location.Work.Orange
+  displayName: Orange's Workplace
+  color: {r: 1, g: 0.6154983, b: 0.23921567, a: 0.18431373}
   queueRadius: 2
   queueSlotCount: 4

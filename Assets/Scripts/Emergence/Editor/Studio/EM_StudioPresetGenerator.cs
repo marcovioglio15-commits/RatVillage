@@ -48,10 +48,18 @@ namespace EmergentMechanics
             EM_IdDefinition signalNeedUrgencyId = EnsureId(rootFolder, EM_IdCategory.Signal, "Signal.Need.Urgency", "Need urgency signal", idLookup);
             EM_IdDefinition signalTradeSuccessId = EnsureId(rootFolder, EM_IdCategory.Signal, "Signal.Trade.Success", "Trade success signal", idLookup);
             EM_IdDefinition signalTradeFailId = EnsureId(rootFolder, EM_IdCategory.Signal, "Signal.Trade.Fail", "Trade fail signal", idLookup);
+            EM_IdDefinition signalHealthValueId = EnsureId(rootFolder, EM_IdCategory.Signal, "Signal.Health.Value", "Health value signal", idLookup);
+            EM_IdDefinition signalHealthDamageId = EnsureId(rootFolder, EM_IdCategory.Signal, "Signal.Health.Damage", "Health damage signal", idLookup);
+            EM_IdDefinition signalWorkProduceFoodId = EnsureId(rootFolder, EM_IdCategory.Signal, "Signal.Work.Tick.ProduceFood", "Work food production tick", idLookup);
+            EM_IdDefinition signalWorkProduceWaterId = EnsureId(rootFolder, EM_IdCategory.Signal, "Signal.Work.Tick.ProduceWater", "Work water production tick", idLookup);
 
             EM_IdDefinition metricNeedUrgencyId = EnsureId(rootFolder, EM_IdCategory.Metric, "Metric.Need.Urgency", "Need urgency metric", idLookup);
             EM_IdDefinition metricTradeSuccessId = EnsureId(rootFolder, EM_IdCategory.Metric, "Metric.Trade.Success", "Trade success metric", idLookup);
             EM_IdDefinition metricTradeFailId = EnsureId(rootFolder, EM_IdCategory.Metric, "Metric.Trade.Fail", "Trade fail metric", idLookup);
+            EM_IdDefinition metricHealthValueId = EnsureId(rootFolder, EM_IdCategory.Metric, "Metric.Health.Value", "Health value metric", idLookup);
+            EM_IdDefinition metricHealthDamageId = EnsureId(rootFolder, EM_IdCategory.Metric, "Metric.Health.Damage", "Health damage metric", idLookup);
+            EM_IdDefinition metricWorkProduceFoodId = EnsureId(rootFolder, EM_IdCategory.Metric, "Metric.Work.ProduceFood", "Work food production metric", idLookup);
+            EM_IdDefinition metricWorkProduceWaterId = EnsureId(rootFolder, EM_IdCategory.Metric, "Metric.Work.ProduceWater", "Work water production metric", idLookup);
 
             EM_IdDefinition effectOverrideSeekFoodId = EnsureId(rootFolder, EM_IdCategory.Effect, "Effect.Override.SeekFood", "Override seek food", idLookup);
             EM_IdDefinition effectOverrideSeekWaterId = EnsureId(rootFolder, EM_IdCategory.Effect, "Effect.Override.SeekWater", "Override seek water", idLookup);
@@ -61,9 +69,14 @@ namespace EmergentMechanics
             EM_IdDefinition effectRelationshipProviderDownId = EnsureId(rootFolder, EM_IdCategory.Effect, "Effect.Relationship.Provider.Down", "Provider relationship down", idLookup);
             EM_IdDefinition effectRelationshipRequesterUpId = EnsureId(rootFolder, EM_IdCategory.Effect, "Effect.Relationship.Requester.Up", "Requester relationship up", idLookup);
             EM_IdDefinition effectRelationshipRequesterDownId = EnsureId(rootFolder, EM_IdCategory.Effect, "Effect.Relationship.Requester.Down", "Requester relationship down", idLookup);
+            EM_IdDefinition effectHealthModifyId = EnsureId(rootFolder, EM_IdCategory.Effect, "Effect.Health.Modify", "Modify health", idLookup);
+            EM_IdDefinition effectProduceFoodId = EnsureId(rootFolder, EM_IdCategory.Effect, "Effect.Resource.Produce.Food", "Produce food", idLookup);
+            EM_IdDefinition effectProduceWaterId = EnsureId(rootFolder, EM_IdCategory.Effect, "Effect.Resource.Produce.Water", "Produce water", idLookup);
 
             EM_IdDefinition ruleSetNeedUrgencyId = EnsureId(rootFolder, EM_IdCategory.RuleSet, "RuleSet.Needs.Urgency", "Need urgency rules", idLookup);
             EM_IdDefinition ruleSetTradeSuccessId = EnsureId(rootFolder, EM_IdCategory.RuleSet, "RuleSet.Trade.Success", "Trade response rules", idLookup);
+            EM_IdDefinition ruleSetHealthDamageId = EnsureId(rootFolder, EM_IdCategory.RuleSet, "RuleSet.Health.Damage", "Health damage rules", idLookup);
+            EM_IdDefinition ruleSetWorkProductionId = EnsureId(rootFolder, EM_IdCategory.RuleSet, "RuleSet.Work.Production", "Work production rules", idLookup);
 
             EM_IdDefinition domainSurvivalId = EnsureId(rootFolder, EM_IdCategory.Domain, "Domain.Survival", "Survival domain", idLookup);
             EM_IdDefinition domainEconomyId = EnsureId(rootFolder, EM_IdCategory.Domain, "Domain.Economy", "Economy domain", idLookup);
@@ -90,6 +103,14 @@ namespace EmergentMechanics
                 "Emitted when a trade succeeds.");
             EM_SignalDefinition signalTradeFail = CreateSignal(rootFolder, "EM_Signal_Trade.Fail", signalTradeFailId, "Signal.Trade.Fail",
                 "Emitted when a trade fails.");
+            EM_SignalDefinition signalHealthValue = CreateSignal(rootFolder, "EM_Signal_Health.Value", signalHealthValueId, "Signal.Health.Value",
+                "Emitted with the current normalized health value.");
+            EM_SignalDefinition signalHealthDamage = CreateSignal(rootFolder, "EM_Signal_Health.Damage", signalHealthDamageId, "Signal.Health.Damage",
+                "Emitted when health damage is applied (normalized to max health).");
+            EM_SignalDefinition signalWorkProduceFood = CreateSignal(rootFolder, "EM_Signal_Work.Tick.ProduceFood", signalWorkProduceFoodId,
+                "Signal.Work.Tick.ProduceFood", "Emitted on work ticks to produce food.");
+            EM_SignalDefinition signalWorkProduceWater = CreateSignal(rootFolder, "EM_Signal_Work.Tick.ProduceWater", signalWorkProduceWaterId,
+                "Signal.Work.Tick.ProduceWater", "Emitted on work ticks to produce water.");
 
             float sampleIntervalHours = 0.5f * tuning.MetricIntervalMultiplier;
             EM_MetricDefinition metricNeedUrgency = CreateMetric(rootFolder, "EM_Metric_Need.Urgency", metricNeedUrgencyId, "Metric.Need.Urgency",
@@ -98,6 +119,14 @@ namespace EmergentMechanics
                 signalTradeSuccess, sampleIntervalHours);
             EM_MetricDefinition metricTradeFail = CreateMetric(rootFolder, "EM_Metric_Trade.Fail", metricTradeFailId, "Metric.Trade.Fail",
                 signalTradeFail, sampleIntervalHours);
+            EM_MetricDefinition metricHealthValue = CreateMetric(rootFolder, "EM_Metric_Health.Value", metricHealthValueId, "Metric.Health.Value",
+                signalHealthValue, sampleIntervalHours);
+            EM_MetricDefinition metricHealthDamage = CreateMetric(rootFolder, "EM_Metric_Health.Damage", metricHealthDamageId, "Metric.Health.Damage",
+                signalHealthDamage, sampleIntervalHours);
+            EM_MetricDefinition metricWorkProduceFood = CreateMetric(rootFolder, "EM_Metric_Work.ProduceFood", metricWorkProduceFoodId,
+                "Metric.Work.ProduceFood", signalWorkProduceFood, sampleIntervalHours);
+            EM_MetricDefinition metricWorkProduceWater = CreateMetric(rootFolder, "EM_Metric_Work.ProduceWater", metricWorkProduceWaterId,
+                "Metric.Work.ProduceWater", signalWorkProduceWater, sampleIntervalHours);
 
             float overrideScale = tuning.EffectMagnitudeMultiplier;
             EM_EffectDefinition effectOverrideSeekFood = CreateOverrideEffect(rootFolder, "EM_Effect_Override.SeekFood", effectOverrideSeekFoodId,
@@ -119,6 +148,16 @@ namespace EmergentMechanics
             EM_EffectDefinition effectRelationshipRequesterDown = CreateRelationshipEffect(rootFolder, "EM_Effect_Relationship.Requester.Down",
                 effectRelationshipRequesterDownId, "Effect.Relationship.Requester.Down", -0.05f * relationshipScale, EmergenceEffectTarget.EventTarget);
 
+            float healthScale = tuning.EffectMagnitudeMultiplier;
+            EM_EffectDefinition effectHealthModify = CreateHealthEffect(rootFolder, "EM_Effect_Health.Modify", effectHealthModifyId,
+                "Effect.Health.Modify", -1f * healthScale);
+
+            float productionScale = tuning.EffectMagnitudeMultiplier;
+            EM_EffectDefinition effectProduceFood = CreateResourceEffect(rootFolder, "EM_Effect_Resource.Produce.Food", effectProduceFoodId,
+                "Effect.Resource.Produce.Food", resourceFoodId, 1f * productionScale);
+            EM_EffectDefinition effectProduceWater = CreateResourceEffect(rootFolder, "EM_Effect_Resource.Produce.Water", effectProduceWaterId,
+                "Effect.Resource.Produce.Water", resourceWaterId, 1f * productionScale);
+
             EM_RuleSetDefinition ruleSetNeedUrgency = CreateNeedUrgencyRuleSet(rootFolder, ruleSetNeedUrgencyId, "RuleSet.Needs.Urgency",
                 metricNeedUrgency, effectOverrideSeekFood, effectOverrideSeekWater, effectOverrideSleep, effectResolveNeed,
                 needHungerId, needWaterId, needSleepId);
@@ -127,16 +166,40 @@ namespace EmergentMechanics
                 metricTradeSuccess, metricTradeFail, effectRelationshipProviderUp, effectRelationshipProviderDown,
                 effectRelationshipRequesterUp, effectRelationshipRequesterDown);
 
+            EM_RuleSetDefinition ruleSetHealthDamage = CreateHealthDamageRuleSet(rootFolder, ruleSetHealthDamageId, "RuleSet.Health.Damage",
+                metricHealthDamage, effectHealthModify);
+
+            EM_RuleSetDefinition ruleSetWorkProduction = CreateWorkProductionRuleSet(rootFolder, ruleSetWorkProductionId, "RuleSet.Work.Production",
+                metricWorkProduceFood, metricWorkProduceWater, effectProduceFood, effectProduceWater);
+
             EM_DomainDefinition domainSurvival = CreateDomain(rootFolder, "EM_Domain_Survival", domainSurvivalId, "Domain.Survival",
-                new EM_RuleSetDefinition[] { ruleSetNeedUrgency }, new Color(1f, 0.608f, 0f, 1f));
+                new EM_RuleSetDefinition[] { ruleSetNeedUrgency, ruleSetHealthDamage }, new Color(1f, 0.608f, 0f, 1f));
             EM_DomainDefinition domainEconomy = CreateDomain(rootFolder, "EM_Domain_Economy", domainEconomyId, "Domain.Economy",
-                new EM_RuleSetDefinition[] { ruleSetTradeSuccess }, new Color(0.2f, 0.6f, 1f, 1f));
+                new EM_RuleSetDefinition[] { ruleSetTradeSuccess, ruleSetWorkProduction }, new Color(0.2f, 0.6f, 1f, 1f));
 
             EM_SocietyProfile profile = CreateProfile(rootFolder, "EM_SocietyProfile", profileRatVillageId, "Society.RatVillage",
                 new EM_DomainDefinition[] { domainSurvival, domainEconomy });
 
-            library = CreateLibrary(rootFolder, new EM_SignalDefinition[] { signalNeedUrgency, signalTradeSuccess, signalTradeFail },
-                new EM_MetricDefinition[] { metricNeedUrgency, metricTradeSuccess, metricTradeFail },
+            library = CreateLibrary(rootFolder, new EM_SignalDefinition[]
+                {
+                    signalNeedUrgency,
+                    signalTradeSuccess,
+                    signalTradeFail,
+                    signalHealthValue,
+                    signalHealthDamage,
+                    signalWorkProduceFood,
+                    signalWorkProduceWater
+                },
+                new EM_MetricDefinition[]
+                {
+                    metricNeedUrgency,
+                    metricTradeSuccess,
+                    metricTradeFail,
+                    metricHealthValue,
+                    metricHealthDamage,
+                    metricWorkProduceFood,
+                    metricWorkProduceWater
+                },
                 new EM_EffectDefinition[]
                 {
                     effectOverrideSeekFood,
@@ -146,13 +209,17 @@ namespace EmergentMechanics
                     effectRelationshipProviderUp,
                     effectRelationshipProviderDown,
                     effectRelationshipRequesterUp,
-                    effectRelationshipRequesterDown
+                    effectRelationshipRequesterDown,
+                    effectHealthModify,
+                    effectProduceFood,
+                    effectProduceWater
                 },
-                new EM_RuleSetDefinition[] { ruleSetNeedUrgency, ruleSetTradeSuccess },
+                new EM_RuleSetDefinition[] { ruleSetNeedUrgency, ruleSetTradeSuccess, ruleSetHealthDamage, ruleSetWorkProduction },
                 new EM_DomainDefinition[] { domainSurvival, domainEconomy },
                 new EM_SocietyProfile[] { profile });
 
-            schedule = CreateSchedule(rootFolder, ScheduleAssetName, tuning, activitySeekFoodId, activitySeekWaterId, activitySleepId, activityWorkId);
+            schedule = CreateSchedule(rootFolder, ScheduleAssetName, tuning, activitySeekFoodId, activitySeekWaterId, activitySleepId, activityWorkId,
+                signalWorkProduceFoodId, signalWorkProduceWaterId);
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();

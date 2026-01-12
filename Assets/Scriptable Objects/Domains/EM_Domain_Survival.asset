@@ -17,4 +17,5 @@ MonoBehaviour:
   domainColor: {r: 1, g: 0.608, b: 0, a: 1}
   ruleSets:
   - {fileID: 11400000, guid: 746eff2098a2c44419228ab1fefdc293, type: 2}
+  - {fileID: 11400000, guid: e87675c224a1b3941b0c296b67c004c9, type: 2}
   description: 

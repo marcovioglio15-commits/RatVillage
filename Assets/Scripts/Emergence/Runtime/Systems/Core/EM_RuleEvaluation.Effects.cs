@@ -40,11 +40,18 @@ namespace EmergentMechanics
                 applied = ApplyCohesionDelta(target, magnitude, ref lookups.CohesionLookup, out before, out after);
                 delta = after - before;
             }
+            else if (effect.EffectType == EmergenceEffectType.ModifyHealth)
+            {
+                applied = ApplyHealthDelta(target, magnitude, rulePriority, ref lookups.HealthLookup, out before, out after);
+                delta = after - before;
+            }
             else if (effect.EffectType == EmergenceEffectType.OverrideSchedule)
             {
                 applied = ApplyScheduleOverride(target, effect.ParameterId, magnitude, timeSeconds, rulePriority, societyRoot,
                     ref lookups.MemberLookup, ref lookups.ScheduleOverrideSettingsLookup, ref lookups.ScheduleLookup,
-                    ref lookups.ScheduleOverrideLookup, ref lookups.ScheduleOverrideGateLookup, out before, out after);
+                    ref lookups.ScheduleOverrideLookup, ref lookups.ScheduleOverrideGateLookup,
+                    ref lookups.ScheduleOverrideCooldownSettingsLookup, ref lookups.ScheduleOverrideCooldownStateLookup,
+                    out before, out after);
                 delta = after - before;
             }
             else if (effect.EffectType == EmergenceEffectType.ModifyRelationship)

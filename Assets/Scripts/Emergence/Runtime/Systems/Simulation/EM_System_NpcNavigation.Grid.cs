@@ -6,7 +6,7 @@ namespace EmergentMechanics
     public partial struct EM_System_NpcNavigation
     {
         #region Grid
-        private static bool TryGetGrid(ref SystemState state, out Entity gridEntity, out EM_Component_LocationGrid grid)
+        private bool TryGetGrid(ref SystemState state, out Entity gridEntity, out EM_Component_LocationGrid grid)
         {
             gridEntity = Entity.Null;
             grid = default;
@@ -22,7 +22,7 @@ namespace EmergentMechanics
             return false;
         }
 
-        private static NativeParallelHashMap<int, Entity> BuildAnchorMap(ref SystemState state, Entity gridEntity)
+        private NativeParallelHashMap<int, Entity> BuildAnchorMap(ref SystemState state, Entity gridEntity)
         {
             NativeParallelHashMap<int, Entity> map = new NativeParallelHashMap<int, Entity>(32, Allocator.Temp);
 

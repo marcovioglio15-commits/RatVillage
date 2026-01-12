@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7607d4b6d7c5c6f43911e5943dc50e06, type: 3}
+  m_Name: EM_Metric_Work.ProduceWater
+  m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_MetricDefinition
+  metricIdDefinition: {fileID: 11400000, guid: 0e4e81354959cba44885ea4d3d65e5d2, type: 2}
+  metricId: Metric.Work.ProduceWater
+  signal: {fileID: 11400000, guid: 0803e6cb924d2ff409b5fc552c36f69f, type: 2}
+  samplingMode: 1
+  aggregationKind: 0
+  sampleIntervalHours: 0.5
+  scope: 1
+  normalization: 0

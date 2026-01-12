@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08dc9d692ff7435d9bcb30e0bfc662e0, type: 3}
+  m_Name: EM_Location_BlueWorkPlace
+  m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_LocationDefinition
+  id: Location.Work.Blue
+  displayName: Blue's Workplace
+  color: {r: 0.23921567, g: 0.2828914, b: 1, a: 0.18431373}
+  queueRadius: 2
+  queueSlotCount: 4

@@ -200,6 +200,30 @@ namespace EmergentMechanics
         }
         #endregion
 
+        // Targeting helpers.
+        #region Targeting
+        private static void UpdateScheduleTarget(RefRW<EM_Component_NpcScheduleTarget> scheduleTarget, int entryIndex,
+            FixedString64Bytes activityId, FixedString64Bytes locationId, byte isOverride, byte tradeCapable)
+        {
+            scheduleTarget.ValueRW.EntryIndex = entryIndex;
+            scheduleTarget.ValueRW.ActivityId = activityId;
+            scheduleTarget.ValueRW.LocationId = locationId;
+            scheduleTarget.ValueRW.IsOverride = isOverride;
+            scheduleTarget.ValueRW.TradeCapable = tradeCapable;
+        }
+
+        private static bool IsTargetLocationReady(FixedString64Bytes targetLocationId, FixedString64Bytes currentLocationId)
+        {
+            if (targetLocationId.Length == 0)
+                return true;
+
+            if (currentLocationId.Length == 0)
+                return false;
+
+            return currentLocationId.Equals(targetLocationId);
+        }
+        #endregion
+
         // Debug event formatting.
         #region DebugEvents
         private static EM_Component_Event ScheduleLogEvent(EM_DebugEventType eventType, float timeOfDay,

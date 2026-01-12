@@ -1,0 +1,137 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0e1142b04364344bb1a6ad6bbe429ab, type: 3}
+  m_Name: EM_NpcSchedulePreset_Orange
+  m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_NpcSchedulePreset
+  curveSamples: 32
+  entries:
+  - activityIdDefinition: {fileID: 11400000, guid: fd2c35d15f57a5742a34c449580d94f3, type: 2}
+    activityId: Override.SeekFood
+    locationDefinition: {fileID: 0}
+    tradeCapable: 0
+    startHour: 0
+    endHour: 0
+    useDuration: 0
+    minDurationHours: 0
+    maxDurationHours: 0
+    legacyTickIntervalHours: 0
+    legacyTickSignalCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    signalEntries: []
+    tradePolicy: 0
+    allowedTradeNeeds: []
+    legacyStartSignalIdDefinition: {fileID: 0}
+    legacyStartSignalId: 
+    legacyTickSignalIdDefinition: {fileID: 0}
+    legacyTickSignalId: 
+  - activityIdDefinition: {fileID: 11400000, guid: fff2bcbf7bdcbfe46b66633cd0c08f9e, type: 2}
+    activityId: Override.SeekWater
+    locationDefinition: {fileID: 0}
+    tradeCapable: 0
+    startHour: 0
+    endHour: 0
+    useDuration: 0
+    minDurationHours: 0
+    maxDurationHours: 0
+    legacyTickIntervalHours: 0
+    legacyTickSignalCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    signalEntries: []
+    tradePolicy: 0
+    allowedTradeNeeds: []
+    legacyStartSignalIdDefinition: {fileID: 0}
+    legacyStartSignalId: 
+    legacyTickSignalIdDefinition: {fileID: 0}
+    legacyTickSignalId: 
+  - activityIdDefinition: {fileID: 11400000, guid: 03476dd9832b06040b063b228e754cb1, type: 2}
+    activityId: Override.Sleep
+    locationDefinition: {fileID: 0}
+    tradeCapable: 0
+    startHour: 0
+    endHour: 0
+    useDuration: 0
+    minDurationHours: 0
+    maxDurationHours: 0
+    legacyTickIntervalHours: 0
+    legacyTickSignalCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    signalEntries: []
+    tradePolicy: 0
+    allowedTradeNeeds: []
+    legacyStartSignalIdDefinition: {fileID: 0}
+    legacyStartSignalId: 
+    legacyTickSignalIdDefinition: {fileID: 0}
+    legacyTickSignalId: 
+  - activityIdDefinition: {fileID: 11400000, guid: 20e60703ccb2c34448b06b9f8703adcd, type: 2}
+    activityId: Work
+    locationDefinition: {fileID: 11400000, guid: 3e72f521413a22e48b37552ccacfb0ae, type: 2}
+    tradeCapable: 1
+    startHour: 0
+    endHour: 24
+    useDuration: 0
+    minDurationHours: 0
+    maxDurationHours: 0
+    legacyTickIntervalHours: 0
+    legacyTickSignalCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    signalEntries:
+    - startSignalIdDefinition: {fileID: 0}
+      startSignalId: 
+      tickSignalIdDefinition: {fileID: 11400000, guid: e3100c031cf258c4aa9df967a0b5ccc9, type: 2}
+      tickSignalId: Signal.Work.Tick.ProduceFood
+      tickIntervalHours: 1
+      tickSignalCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+    tradePolicy: 0
+    allowedTradeNeeds: []
+    legacyStartSignalIdDefinition: {fileID: 0}
+    legacyStartSignalId: 
+    legacyTickSignalIdDefinition: {fileID: 0}
+    legacyTickSignalId: 

@@ -20,9 +20,12 @@ namespace EmergentMechanics
         public ComponentLookup<EM_Component_NpcType> NpcTypeLookup;
         public ComponentLookup<EM_Component_Reputation> ReputationLookup;
         public ComponentLookup<EM_Component_Cohesion> CohesionLookup;
+        public ComponentLookup<EM_Component_NpcHealth> HealthLookup;
         public ComponentLookup<EM_Component_NpcSchedule> ScheduleLookup;
         public ComponentLookup<EM_Component_NpcScheduleOverride> ScheduleOverrideLookup;
         public ComponentLookup<EM_Component_NpcScheduleOverrideGate> ScheduleOverrideGateLookup;
+        public ComponentLookup<EM_Component_NpcScheduleOverrideCooldownSettings> ScheduleOverrideCooldownSettingsLookup;
+        public ComponentLookup<EM_Component_NpcScheduleOverrideCooldownState> ScheduleOverrideCooldownStateLookup;
         public BufferLookup<EM_BufferElement_Intent> IntentLookup;
         public BufferLookup<EM_BufferElement_SignalEvent> SignalLookup;
         #endregion
@@ -39,35 +42,29 @@ namespace EmergentMechanics
         {
             if (!hasProfile)
                 return false;
-
             int groupIndex;
             bool foundGroup = ruleGroupLookup.TryGetValue(metricIndex, out groupIndex);
 
             if (!foundGroup)
                 return false;
-
             ref BlobArray<EM_Blob_RuleGroup> ruleGroups = ref libraryBlob.RuleGroups;
             ref BlobArray<EM_Blob_Rule> rules = ref libraryBlob.Rules;
             ref BlobArray<EM_Blob_RuleEffect> ruleEffects = ref libraryBlob.RuleEffects;
             ref BlobArray<EM_Blob_Effect> effects = ref libraryBlob.Effects;
             ref BlobArray<EM_Blob_ProbabilityCurve> curves = ref libraryBlob.Curves;
             ref BlobArray<byte> ruleSetMask = ref profileBlob.Value.RuleSetMask;
-
             EM_Blob_RuleGroup group = ruleGroups[groupIndex];
 
             if (group.Length <= 0)
                 return false;
-
             if (!lookups.RandomLookup.HasComponent(subject))
                 return false;
 
             EM_Component_RandomSeed seed = lookups.RandomLookup[subject];
             bool triggered = false;
-
             for (int r = group.StartIndex; r < group.StartIndex + group.Length; r++)
             {
                 EM_Blob_Rule rule = rules[r];
-
                 if (rule.RuleSetIndex >= 0 && rule.RuleSetIndex < ruleSetMask.Length && ruleSetMask[rule.RuleSetIndex] == 0)
                     continue;
 
@@ -150,10 +147,8 @@ namespace EmergentMechanics
         {
             if (cooldownSeconds <= 0f)
                 return true;
-
             if (target == Entity.Null)
                 return true;
-
             if (!cooldownLookup.HasBuffer(target))
                 return true;
 
@@ -234,7 +229,6 @@ namespace EmergentMechanics
                 resolvedTarget = subject;
                 return subject != Entity.Null;
             }
-
             if (targetMode == EmergenceEffectTarget.SignalTarget)
             {
                 resolvedTarget = signalTarget;

@@ -151,7 +151,7 @@ namespace EmergentMechanics
 
         #region Helpers
 #if UNITY_EDITOR
-        private static UnityEditor.GUIStyle cellLabelStyle;
+        private static GUIStyle cellLabelStyle;
 #endif
 
         private static Vector3 ResolveGridOrigin(Vector3 position, Vector3 offset, int width, int height, float nodeSize)
@@ -197,12 +197,12 @@ namespace EmergentMechanics
         }
 
 #if UNITY_EDITOR
-        private static UnityEditor.GUIStyle GetCellLabelStyle()
+        private static GUIStyle GetCellLabelStyle()
         {
             if (cellLabelStyle != null)
                 return cellLabelStyle;
 
-            cellLabelStyle = new UnityEditor.GUIStyle(UnityEditor.EditorStyles.miniLabel)
+            cellLabelStyle = new GUIStyle(UnityEditor.EditorStyles.miniLabel)
             {
                 alignment = TextAnchor.MiddleCenter
             };
@@ -214,7 +214,7 @@ namespace EmergentMechanics
         {
             float heightOffset = math.max(0.02f, nodeSize * 0.05f);
             Vector3 labelPosition = center + new Vector3(0f, heightOffset, 0f);
-            UnityEditor.GUIStyle style = GetCellLabelStyle();
+            GUIStyle style = GetCellLabelStyle();
             UnityEditor.Handles.Label(labelPosition, string.Format("{0},{1}", x, y), style);
         }
 #endif

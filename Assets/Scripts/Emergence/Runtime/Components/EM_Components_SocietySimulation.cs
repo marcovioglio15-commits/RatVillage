@@ -30,6 +30,14 @@ namespace EmergentMechanics
         #endregion
     }
 
+    public struct EM_Component_HealthSignalSettings : IComponentData
+    {
+        #region Data
+        public FixedString64Bytes HealthValueSignalId;
+        public FixedString64Bytes HealthDamageSignalId;
+        #endregion
+    }
+
     public struct EM_BufferElement_NeedSignalOverride : IBufferElementData
     {
         #region Data

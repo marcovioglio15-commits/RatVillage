@@ -27,7 +27,8 @@ namespace EmergentMechanics
         OverrideSchedule,
         ModifyRelationship,
         AddIntent,
-        EmitSignal
+        EmitSignal,
+        ModifyHealth
     }
     #endregion
 

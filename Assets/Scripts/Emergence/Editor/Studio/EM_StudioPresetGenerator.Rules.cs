@@ -57,6 +57,52 @@ namespace EmergentMechanics
             return asset;
         }
 
+        private static EM_RuleSetDefinition CreateHealthDamageRuleSet(string rootFolder, EM_IdDefinition ruleSetIdDefinition, string legacyId,
+            EM_MetricDefinition damageMetric, EM_EffectDefinition healthModify)
+        {
+            string folder = EM_StudioAssetUtility.GetCategoryFolder(EM_Categories.RuleSets, rootFolder);
+            EM_StudioAssetUtility.EnsureFolderExists(folder);
+            string path = AssetDatabase.GenerateUniqueAssetPath(folder + "/EM_RuleSet_Health.Damage.asset");
+            EM_RuleSetDefinition asset = ScriptableObject.CreateInstance<EM_RuleSetDefinition>();
+            SerializedObject serialized = new SerializedObject(asset);
+            serialized.FindProperty("ruleSetIdDefinition").objectReferenceValue = ruleSetIdDefinition;
+            serialized.FindProperty("ruleSetId").stringValue = legacyId;
+
+            SerializedProperty rulesProperty = serialized.FindProperty("rules");
+            rulesProperty.arraySize = 1;
+
+            ConfigureRuleEntry(rulesProperty, 0, damageMetric, null, new EM_EffectDefinition[] { healthModify }, BuildAlwaysCurve());
+
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            AssetDatabase.CreateAsset(asset, path);
+            return asset;
+        }
+
+        private static EM_RuleSetDefinition CreateWorkProductionRuleSet(string rootFolder, EM_IdDefinition ruleSetIdDefinition, string legacyId,
+            EM_MetricDefinition produceFoodMetric, EM_MetricDefinition produceWaterMetric,
+            EM_EffectDefinition produceFoodEffect, EM_EffectDefinition produceWaterEffect)
+        {
+            string folder = EM_StudioAssetUtility.GetCategoryFolder(EM_Categories.RuleSets, rootFolder);
+            EM_StudioAssetUtility.EnsureFolderExists(folder);
+            string path = AssetDatabase.GenerateUniqueAssetPath(folder + "/EM_RuleSet_Work.Production.asset");
+            EM_RuleSetDefinition asset = ScriptableObject.CreateInstance<EM_RuleSetDefinition>();
+            SerializedObject serialized = new SerializedObject(asset);
+            serialized.FindProperty("ruleSetIdDefinition").objectReferenceValue = ruleSetIdDefinition;
+            serialized.FindProperty("ruleSetId").stringValue = legacyId;
+
+            SerializedProperty rulesProperty = serialized.FindProperty("rules");
+            rulesProperty.arraySize = 2;
+
+            ConfigureRuleEntry(rulesProperty, 0, produceFoodMetric, null,
+                new EM_EffectDefinition[] { produceFoodEffect }, BuildAlwaysCurve());
+            ConfigureRuleEntry(rulesProperty, 1, produceWaterMetric, null,
+                new EM_EffectDefinition[] { produceWaterEffect }, BuildAlwaysCurve());
+
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            AssetDatabase.CreateAsset(asset, path);
+            return asset;
+        }
+
         private static void ConfigureRuleEntry(SerializedProperty rulesProperty, int index, EM_MetricDefinition metric,
             EM_IdDefinition contextIdDefinition, EM_EffectDefinition[] effects, AnimationCurve curve)
         {

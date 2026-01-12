@@ -75,7 +75,9 @@ namespace EmergentMechanics
                     string filter = idSearchFilter.Trim().ToLowerInvariant();
                     string id = definition.Id != null ? definition.Id.ToLowerInvariant() : string.Empty;
 
-                    if (!id.Contains(filter))
+                    string assetName = definition.name != null ? definition.name.ToLowerInvariant() : string.Empty;
+
+                    if (!id.Contains(filter) && !assetName.Contains(filter))
                         continue;
                 }
 

@@ -7,9 +7,9 @@ namespace EmergentMechanics
     public partial struct EM_System_NpcNavigation
     {
         #region Pathfinding
-        private static bool TryBuildPath(int startIndex, int goalIndex, Entity entity, ref EM_Component_LocationGrid grid,
+        private static bool TryBuildPath(int startIndex, int goalIndex, Entity entity, EM_Component_LocationGrid grid,
             DynamicBuffer<EM_BufferElement_LocationNode> nodes, DynamicBuffer<EM_BufferElement_LocationOccupancy> occupancy,
-            ref DynamicBuffer<EM_BufferElement_NpcPathNode> pathNodes)
+            DynamicBuffer<EM_BufferElement_NpcPathNode> pathNodes)
         {
             int width = grid.Width;
             int height = grid.Height;
@@ -100,7 +100,7 @@ namespace EmergentMechanics
                 return false;
             }
 
-            BuildPath(startIndex, goalIndex, cameFrom, ref pathNodes);
+            BuildPath(startIndex, goalIndex, cameFrom, pathNodes);
 
             gScore.Dispose();
             fScore.Dispose();
@@ -111,7 +111,7 @@ namespace EmergentMechanics
         }
 
         private static void BuildPath(int startIndex, int goalIndex, NativeArray<int> cameFrom,
-            ref DynamicBuffer<EM_BufferElement_NpcPathNode> pathNodes)
+            DynamicBuffer<EM_BufferElement_NpcPathNode> pathNodes)
         {
             NativeList<int> reversed = new NativeList<int>(Allocator.Temp);
             int current = goalIndex;

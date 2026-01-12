@@ -7,9 +7,9 @@ namespace EmergentMechanics
     public partial struct EM_System_NpcNavigation
     {
         #region Occupancy
-        private static void UpdateCurrentNode(float3 position, Entity entity, ref EM_Component_LocationGrid grid,
+        private static void UpdateCurrentNode(float3 position, Entity entity, EM_Component_LocationGrid grid,
             DynamicBuffer<EM_BufferElement_LocationNode> nodes, DynamicBuffer<EM_BufferElement_LocationOccupancy> occupancy,
-            ref RefRW<EM_Component_NpcLocationState> locationState, ref NativeParallelHashMap<int, Entity> anchorMap)
+            RefRW<EM_Component_NpcLocationState> locationState, ref NativeParallelHashMap<int, Entity> anchorMap)
         {
             int nodeIndex;
 
@@ -30,7 +30,7 @@ namespace EmergentMechanics
             locationState.ValueRW.CurrentLocationAnchor = hasAnchor ? anchorEntity : Entity.Null;
         }
 
-        private static void UpdateNodeOccupancy(int nodeIndex, Entity entity, ref RefRW<EM_Component_NpcLocationState> locationState,
+        private static void UpdateNodeOccupancy(int nodeIndex, Entity entity, RefRW<EM_Component_NpcLocationState> locationState,
             DynamicBuffer<EM_BufferElement_LocationNode> nodes, DynamicBuffer<EM_BufferElement_LocationOccupancy> occupancy,
             ref NativeParallelHashMap<int, Entity> anchorMap)
         {

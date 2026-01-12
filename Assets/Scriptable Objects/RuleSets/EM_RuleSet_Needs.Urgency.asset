@@ -64,6 +64,8 @@ MonoBehaviour:
     effects:
     - effect: {fileID: 11400000, guid: 8bb31a6cc38e7b6488a738a6f0ea921b, type: 2}
       weight: 1
+    - effect: {fileID: 11400000, guid: 0135452cb63ddba46890270d1935f3f1, type: 2}
+      weight: 1
     probabilityCurve:
       serializedVersion: 2
       m_Curve:

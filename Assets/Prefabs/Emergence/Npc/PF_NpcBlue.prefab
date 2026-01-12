@@ -51,7 +51,8 @@ MonoBehaviour:
   npcTypeIdDefinition: {fileID: 11400000, guid: 005951d83abc21f408f679be6a14c93b, type: 2}
   npcTypeId: Blue
   logMessageColor: {r: 0, g: 0.101481915, b: 1, a: 1}
-  schedulePreset: {fileID: 11400000, guid: 6b3b6f92814ddc54e91cfccfd7e4db5a, type: 2}
+  schedulePreset: {fileID: 11400000, guid: 0664b839f54f78b4780092c2f10db9dd, type: 2}
+  needRateVariance: 0.1
   needs:
   - NeedIdDefinition: {fileID: 11400000, guid: bb08d13ab847f4e498d901bd00407fc1, type: 2}
     NeedId: Hunger
@@ -115,6 +116,8 @@ MonoBehaviour:
     ResourceId: Food
     RequestAmount: 1
     NeedSatisfactionPerUnit: 0.6
+    DamageThreshold: 0.9
+    DamagePerHour: 10
   - NeedIdDefinition: {fileID: 11400000, guid: e7ca60fafb33e624796c4844bf252696, type: 2}
     NeedId: Water
     InitialValue: 0.35
@@ -177,6 +180,8 @@ MonoBehaviour:
     ResourceId: Water
     RequestAmount: 1
     NeedSatisfactionPerUnit: 0.6
+    DamageThreshold: 0.9
+    DamagePerHour: 10
   - NeedIdDefinition: {fileID: 11400000, guid: c4e22a71fca2cba4f846af0b73310230, type: 2}
     NeedId: Sleep
     InitialValue: 0.25
@@ -279,10 +284,12 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
-    ResourceIdDefinition: {fileID: 11400000, guid: 864539d39e094c94a2b38d35bdf26d5b, type: 2}
+    ResourceIdDefinition: {fileID: 0}
     ResourceId: Sleep
     RequestAmount: 1
     NeedSatisfactionPerUnit: 0.6
+    DamageThreshold: 0.9
+    DamagePerHour: 10
   resources:
   - ResourceIdDefinition: {fileID: 11400000, guid: f3c7958a16ce9da4fbdbb82dbad55a8a, type: 2}
     ResourceId: Food
@@ -317,6 +324,17 @@ MonoBehaviour:
     m_RotationOrder: 4
   affinityMultiplierMin: 0
   affinityMultiplierMax: 2
+  moveSpeed: 2
+  acceleration: 8
+  turnSpeed: 360
+  stopRadius: 0.25
+  tradeInteractionDistance: 5
+  tradeWaitSeconds: 10
+  allowMidwayTradeAnywhere: 1
+  sameOverrideCooldownHours: 2
+  anyOverrideCooldownHours: 1
+  maxHealth: 100
+  initialHealth: 100
 --- !u!33 &5218148292420720532
 MeshFilter:
   m_ObjectHideFlags: 0

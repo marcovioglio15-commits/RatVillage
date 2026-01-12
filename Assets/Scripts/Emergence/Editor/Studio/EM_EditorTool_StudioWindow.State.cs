@@ -46,6 +46,7 @@ namespace EmergentMechanics
         private EnumField categoryField;
         private TextField itemSearchField;
         private Button createAssetButton;
+        private Button deleteAssetButton;
         private Label statusLabel;
         #endregion
 
@@ -65,6 +66,7 @@ namespace EmergentMechanics
         private TextField newIdValueField;
         private TextField newIdDescriptionField;
         private Button createIdButton;
+        private Button deleteIdButton;
         #endregion
 
         #region Validation UI

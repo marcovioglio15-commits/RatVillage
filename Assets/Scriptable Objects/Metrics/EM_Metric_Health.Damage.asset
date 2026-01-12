@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7607d4b6d7c5c6f43911e5943dc50e06, type: 3}
+  m_Name: EM_Metric_Health.Damage
+  m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_MetricDefinition
+  metricIdDefinition: {fileID: 11400000, guid: 8527da34c353600408874dd0eee00f0d, type: 2}
+  metricId: Metric.Health.Damage
+  signal: {fileID: 11400000, guid: 2df17c5d91b397045a8e23b38b72fc10, type: 2}
+  samplingMode: 1
+  aggregationKind: 0
+  sampleIntervalHours: 0.5
+  scope: 1
+  normalization: 0

@@ -58,6 +58,24 @@ namespace EmergentMechanics
         #endregion
     }
 
+    public struct EM_Component_NpcScheduleOverrideCooldownSettings : IComponentData
+    {
+        #region Data
+        public float SameOverrideCooldownHours;
+        public float AnyOverrideCooldownHours;
+        #endregion
+    }
+
+    public struct EM_Component_NpcScheduleOverrideCooldownState : IComponentData
+    {
+        #region Data
+        public double LastOverrideEndTimeSeconds;
+        public FixedString64Bytes LastOverrideActivityId;
+        public FixedString64Bytes ActiveOverrideActivityId;
+        public byte WasOverrideActive;
+        #endregion
+    }
+
     public struct EM_Component_NpcScheduleDuration : IComponentData
     {
         #region Data

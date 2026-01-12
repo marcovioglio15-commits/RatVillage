@@ -12,6 +12,8 @@ namespace EmergentMechanics
         #region Fields
         private ComponentLookup<EM_Component_SocietyClock> clockLookup;
         private ComponentLookup<EM_Component_RandomSeed> randomLookup;
+        private BufferLookup<EM_BufferElement_SignalEvent> signalLookup;
+        private ComponentLookup<EM_Component_SocietyMember> memberLookup;
         #endregion
 
         #region Unity Lifecycle
@@ -21,13 +23,14 @@ namespace EmergentMechanics
             state.RequireForUpdate<EM_Component_NpcSchedule>();
             clockLookup = state.GetComponentLookup<EM_Component_SocietyClock>(true);
             randomLookup = state.GetComponentLookup<EM_Component_RandomSeed>(false);
+            signalLookup = state.GetBufferLookup<EM_BufferElement_SignalEvent>(false);
+            memberLookup = state.GetComponentLookup<EM_Component_SocietyMember>(true);
         }
 
         // Evaluate per-NPC schedules and emit activity signals.
         public void OnUpdate(ref SystemState state)
         {
             float deltaTime = SystemAPI.Time.DeltaTime;
-
             if (deltaTime <= 0f)
                 return;
 
@@ -45,25 +48,36 @@ namespace EmergentMechanics
 
             clockLookup.Update(ref state);
             randomLookup.Update(ref state);
+            signalLookup.Update(ref state);
+            memberLookup.Update(ref state);
 
             // Schedule evaluation and signal emission.
             foreach ((RefRO<EM_Component_NpcSchedule> schedule, RefRW<EM_Component_NpcScheduleState> scheduleState,
-                RefRW<EM_Component_NpcScheduleOverride> scheduleOverride, RefRW<EM_Component_NpcScheduleDuration> scheduleDuration,
-                DynamicBuffer<EM_BufferElement_NpcScheduleSignalState> signalStates, DynamicBuffer<EM_BufferElement_SignalEvent> signals,
-                EM_Component_SocietyMember member, Entity entity)
-                in SystemAPI.Query<RefRO<EM_Component_NpcSchedule>, RefRW<EM_Component_NpcScheduleState>, RefRW<EM_Component_NpcScheduleOverride>,
-                    RefRW<EM_Component_NpcScheduleDuration>, DynamicBuffer<EM_BufferElement_NpcScheduleSignalState>,
-                    DynamicBuffer<EM_BufferElement_SignalEvent>, EM_Component_SocietyMember>()
+                RefRW<EM_Component_NpcScheduleTarget> scheduleTarget, RefRW<EM_Component_NpcScheduleOverride> scheduleOverride,
+                RefRW<EM_Component_NpcScheduleDuration> scheduleDuration, RefRW<EM_Component_NpcLocationState> locationState,
+                DynamicBuffer<EM_BufferElement_NpcScheduleSignalState> signalStates, Entity entity)
+                in SystemAPI.Query<RefRO<EM_Component_NpcSchedule>, RefRW<EM_Component_NpcScheduleState>, RefRW<EM_Component_NpcScheduleTarget>,
+                    RefRW<EM_Component_NpcScheduleOverride>, RefRW<EM_Component_NpcScheduleDuration>, RefRW<EM_Component_NpcLocationState>,
+                    DynamicBuffer<EM_BufferElement_NpcScheduleSignalState>>()
                     .WithAll<EM_Component_SignalEmitter>()
                     .WithEntityAccess())
             {
                 if (!schedule.ValueRO.Schedule.IsCreated)
                     continue;
 
+                if (!memberLookup.HasComponent(entity))
+                    continue;
+
+                EM_Component_SocietyMember member = memberLookup[entity];
                 Entity societyRoot = member.SocietyRoot;
 
                 if (societyRoot == Entity.Null || !clockLookup.HasComponent(societyRoot))
                     continue;
+
+                if (!signalLookup.HasBuffer(entity))
+                    continue;
+
+                DynamicBuffer<EM_BufferElement_SignalEvent> signals = signalLookup[entity];
 
                 EM_Component_SocietyClock clock = clockLookup[societyRoot];
                 float dayLength = math.max(clock.DayLengthSeconds, 0.01f);
@@ -154,10 +168,15 @@ namespace EmergentMechanics
                     }
                 }
 
+                FixedString64Bytes targetLocationId = default;
+                byte targetTradeCapable = 0;
+
                 if (hasEntryData)
                 {
                     ref EM_Blob_NpcScheduleEntry entryData = ref entries[entryIndex];
                     ref BlobArray<EM_Blob_NpcScheduleSignal> signalEntries = ref entryData.Signals;
+                    targetLocationId = entryData.LocationId;
+                    targetTradeCapable = entryData.TradeCapable;
 
                     for (int signalIndex = 0; signalIndex < signalEntries.Length; signalIndex++)
                     {
@@ -173,30 +192,38 @@ namespace EmergentMechanics
                     }
                 }
 
-                FixedString64Bytes previousActivityId = scheduleState.ValueRO.CurrentActivityId;
                 byte overrideFlag = (byte)(overrideActive ? 1 : 0);
-                bool activityChanged = scheduleState.ValueRO.CurrentEntryIndex != entryIndex ||
-                    scheduleState.ValueRO.IsOverride != overrideFlag ||
-                    !scheduleState.ValueRO.CurrentActivityId.Equals(activityId);
+                UpdateScheduleTarget(scheduleTarget, entryIndex, activityId, targetLocationId, overrideFlag, targetTradeCapable);
+
+                bool locationReady = IsTargetLocationReady(targetLocationId, locationState.ValueRO.CurrentLocationId);
+                bool canStart = hasEntryData && activityId.Length > 0 && locationReady;
+                int activeEntryIndex = canStart ? entryIndex : -1;
+                FixedString64Bytes activeActivityId = canStart ? activityId : default;
+                byte activeOverrideFlag = (byte)(canStart && overrideActive ? 1 : 0);
+
+                FixedString64Bytes previousActivityId = scheduleState.ValueRO.CurrentActivityId;
+                bool activityChanged = scheduleState.ValueRO.CurrentEntryIndex != activeEntryIndex ||
+                    scheduleState.ValueRO.IsOverride != activeOverrideFlag ||
+                    !scheduleState.ValueRO.CurrentActivityId.Equals(activeActivityId);
 
                 if (activityChanged)
                 {
-                    if (hasDebugBuffer && previousActivityId.Length > 0 && !previousActivityId.Equals(activityId))
+                    if (hasDebugBuffer && previousActivityId.Length > 0 && !previousActivityId.Equals(activeActivityId))
                     {
                         EM_Component_Event debugEvent = ScheduleLogEvent(EM_DebugEventType.ScheduleEnd, timeOfDay,
                             societyRoot, entity, previousActivityId, 0f);
                         EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, debugEvent);
                     }
 
-                    scheduleState.ValueRW.CurrentEntryIndex = entryIndex;
-                    scheduleState.ValueRW.CurrentActivityId = activityId;
-                    scheduleState.ValueRW.IsOverride = overrideFlag;
+                    scheduleState.ValueRW.CurrentEntryIndex = activeEntryIndex;
+                    scheduleState.ValueRW.CurrentActivityId = activeActivityId;
+                    scheduleState.ValueRW.IsOverride = activeOverrideFlag;
 
                     signalStateBuffer.Clear();
 
-                    if (entryIndex >= 0 && entryIndex < entries.Length)
+                    if (activeEntryIndex >= 0 && activeEntryIndex < entries.Length)
                     {
-                        ref EM_Blob_NpcScheduleEntry entryData = ref entries[entryIndex];
+                        ref EM_Blob_NpcScheduleEntry entryData = ref entries[activeEntryIndex];
                         int signalCount = entryData.Signals.Length;
 
                         if (signalCount > 0)
@@ -214,9 +241,9 @@ namespace EmergentMechanics
                         }
                     }
 
-                    if (activityId.Length > 0 && hasStartSignals)
+                    if (activeActivityId.Length > 0 && hasStartSignals)
                     {
-                        ref BlobArray<EM_Blob_NpcScheduleSignal> signalEntries = ref entries[entryIndex].Signals;
+                        ref BlobArray<EM_Blob_NpcScheduleSignal> signalEntries = ref entries[activeEntryIndex].Signals;
 
                         for (int signalIndex = 0; signalIndex < signalEntries.Length; signalIndex++)
                         {
@@ -225,20 +252,23 @@ namespace EmergentMechanics
                             if (startSignalId.Length == 0)
                                 continue;
 
-                            EmitSignal(startSignalId, activityId, signals, entity, societyRoot, timeSeconds, 1f, hasDebugBuffer, debugBuffer,
+                            EmitSignal(startSignalId, activeActivityId, signals, entity, societyRoot, timeSeconds, 1f, hasDebugBuffer, debugBuffer,
                                 maxEntries, ref debugLog);
                         }
                     }
 
-                    if (hasDebugBuffer && activityId.Length > 0)
+                    if (hasDebugBuffer && activeActivityId.Length > 0)
                     {
                         EM_Component_Event debugEvent = ScheduleLogEvent(EM_DebugEventType.ScheduleWindow, timeOfDay,
-                            societyRoot, entity, activityId, 1f);
+                            societyRoot, entity, activeActivityId, 1f);
                         EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, debugEvent);
                     }
+
+                    if (canStart && targetTradeCapable != 0 && locationState.ValueRO.CurrentLocationAnchor != Entity.Null)
+                        locationState.ValueRW.LastTradeAnchor = locationState.ValueRO.CurrentLocationAnchor;
                 }
 
-                if (!hasEntryData || activityId.Length == 0)
+                if (!canStart)
                     continue;
 
                 if (!hasTickSignals || signalStateBuffer.Length == 0)
@@ -249,45 +279,9 @@ namespace EmergentMechanics
                     : durationActive
                         ? GetDurationProgress(scheduleDuration.ValueRO)
                         : GetWindowProgress(timeOfDay, startHour, endHour);
-                ref EM_Blob_NpcScheduleEntry tickEntry = ref entries[entryIndex];
-                ref BlobArray<EM_Blob_NpcScheduleSignal> tickSignals = ref tickEntry.Signals;
-
-                for (int stateIndex = 0; stateIndex < signalStateBuffer.Length; stateIndex++)
-                {
-                    EM_BufferElement_NpcScheduleSignalState signalState = signalStateBuffer[stateIndex];
-
-                    if (signalState.SignalIndex < 0 || signalState.SignalIndex >= tickSignals.Length)
-                        continue;
-
-                    ref EM_Blob_NpcScheduleSignal tickSignal = ref tickSignals[signalState.SignalIndex];
-                    FixedString64Bytes tickSignalId = tickSignal.TickSignalId;
-
-                    if (tickSignalId.Length == 0 || tickSignal.TickIntervalHours <= 0f)
-                        continue;
-
-                    signalState.TickAccumulatorHours += deltaHours;
-
-                    if (signalState.TickAccumulatorHours < tickSignal.TickIntervalHours)
-                    {
-                        signalStateBuffer[stateIndex] = signalState;
-                        continue;
-                    }
-
-                    signalState.TickAccumulatorHours -= tickSignal.TickIntervalHours;
-                    signalStateBuffer[stateIndex] = signalState;
-
-                    float curveValue = SampleCurve(ref tickSignal.CurveSamples, progress);
-
-                    EmitSignal(tickSignalId, activityId, signals, entity, societyRoot, timeSeconds, curveValue, hasDebugBuffer, debugBuffer,
-                        maxEntries, ref debugLog);
-
-                    if (hasDebugBuffer)
-                    {
-                        EM_Component_Event debugEvent = ScheduleLogEvent(EM_DebugEventType.ScheduleTick, timeOfDay,
-                            societyRoot, entity, activityId, curveValue);
-                        EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, debugEvent);
-                    }
-                }
+                ref EM_Blob_NpcScheduleEntry tickEntry = ref entries[activeEntryIndex];
+                ProcessTickSignals(deltaHours, progress, ref tickEntry, signalStateBuffer, signals, entity, societyRoot, timeSeconds,
+                    hasDebugBuffer, debugBuffer, maxEntries, ref debugLog, timeOfDay);
             }
 
             if (hasDebugBuffer)

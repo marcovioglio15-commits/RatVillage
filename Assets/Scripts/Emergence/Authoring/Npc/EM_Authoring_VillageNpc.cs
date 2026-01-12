@@ -62,6 +62,12 @@ namespace EmergentMechanics
 
             [Tooltip("Need reduction applied per resource unit transferred.")]
             public float NeedSatisfactionPerUnit;
+
+            [Tooltip("Urgency threshold (0-1) above which damage is applied.")]
+            public float DamageThreshold;
+
+            [Tooltip("Damage dealt per simulated hour while above the threshold.")]
+            public float DamagePerHour;
         }
 
         [Serializable]
@@ -143,6 +149,7 @@ namespace EmergentMechanics
 
         [Tooltip("Need profiles defining initial values and simulation settings.")]
         [SerializeField] private NeedProfileEntry[] needs = new NeedProfileEntry[0];
+
         #endregion
 
         #region Resources
@@ -178,7 +185,7 @@ namespace EmergentMechanics
             // Bake authoring data into ECS components and buffers.
             public override void Bake(EM_Authoring_VillageNpc authoring)
             {
-                Entity entity = GetEntity(TransformUsageFlags.None);
+                Entity entity = GetEntity(TransformUsageFlags.Dynamic);
                 Entity rootEntity = Entity.Null;
 
                 if (authoring.societyRoot != null)
@@ -195,6 +202,7 @@ namespace EmergentMechanics
                 AddComponent(entity, new EM_Component_NpcNeedRateSettings { RateMultiplierVariance = math.max(0f, authoring.needRateVariance) });
                 AddMovementComponents(authoring, entity, this);
                 AddTradeInteractionComponents(authoring, entity, this);
+                AddHealthComponents(authoring, entity, this);
                 AddComponent<EM_Component_SignalEmitter>(entity);
                 AddBuffer<EM_BufferElement_SignalEvent>(entity);
                 AddBuffer<EM_BufferElement_MetricAccumulator>(entity);
@@ -226,6 +234,14 @@ namespace EmergentMechanics
                         CurrentActivityId = default,
                         IsOverride = 0
                     });
+                    AddComponent(entity, new EM_Component_NpcScheduleTarget
+                    {
+                        EntryIndex = -1,
+                        ActivityId = default,
+                        LocationId = default,
+                        IsOverride = 0,
+                        TradeCapable = 0
+                    });
                     AddComponent(entity, new EM_Component_NpcScheduleOverride
                     {
                         ActivityId = default,
@@ -238,6 +254,18 @@ namespace EmergentMechanics
                         LastOverrideTimeSeconds = -1d,
                         LastOverridePriority = -1f,
                         LastOverrideActivityId = default
+                    });
+                    AddComponent(entity, new EM_Component_NpcScheduleOverrideCooldownSettings
+                    {
+                        SameOverrideCooldownHours = math.max(0f, authoring.sameOverrideCooldownHours),
+                        AnyOverrideCooldownHours = math.max(0f, authoring.anyOverrideCooldownHours)
+                    });
+                    AddComponent(entity, new EM_Component_NpcScheduleOverrideCooldownState
+                    {
+                        LastOverrideEndTimeSeconds = -1d,
+                        LastOverrideActivityId = default,
+                        ActiveOverrideActivityId = default,
+                        WasOverrideActive = 0
                     });
                     AddComponent(entity, new EM_Component_NpcScheduleDuration
                     {

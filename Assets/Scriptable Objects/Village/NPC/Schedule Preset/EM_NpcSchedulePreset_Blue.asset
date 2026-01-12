@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b0e1142b04364344bb1a6ad6bbe429ab, type: 3}
-  m_Name: EM_NpcSchedulePreset
+  m_Name: EM_NpcSchedulePreset_Blue
   m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_NpcSchedulePreset
   curveSamples: 32
   entries:
@@ -20,21 +20,19 @@ MonoBehaviour:
     tradeCapable: 0
     startHour: 0
     endHour: 0
-    useDuration: 1
-    minDurationHours: 0.5
-    maxDurationHours: 1
+    useDuration: 0
+    minDurationHours: 0
+    maxDurationHours: 0
     legacyTickIntervalHours: 0
     legacyTickSignalCurve:
       serializedVersion: 2
       m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
     signalEntries: []
-    tradePolicy: 1
-    allowedTradeNeeds:
-    - needIdDefinition: {fileID: 11400000, guid: bb08d13ab847f4e498d901bd00407fc1, type: 2}
-      needId: 
+    tradePolicy: 0
+    allowedTradeNeeds: []
     legacyStartSignalIdDefinition: {fileID: 0}
     legacyStartSignalId: 
     legacyTickSignalIdDefinition: {fileID: 0}
@@ -45,21 +43,19 @@ MonoBehaviour:
     tradeCapable: 0
     startHour: 0
     endHour: 0
-    useDuration: 1
-    minDurationHours: 0.5
-    maxDurationHours: 0.5
+    useDuration: 0
+    minDurationHours: 0
+    maxDurationHours: 0
     legacyTickIntervalHours: 0
     legacyTickSignalCurve:
       serializedVersion: 2
       m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
     signalEntries: []
-    tradePolicy: 1
-    allowedTradeNeeds:
-    - needIdDefinition: {fileID: 11400000, guid: e7ca60fafb33e624796c4844bf252696, type: 2}
-      needId: 
+    tradePolicy: 0
+    allowedTradeNeeds: []
     legacyStartSignalIdDefinition: {fileID: 0}
     legacyStartSignalId: 
     legacyTickSignalIdDefinition: {fileID: 0}
@@ -70,43 +66,70 @@ MonoBehaviour:
     tradeCapable: 0
     startHour: 0
     endHour: 0
-    useDuration: 1
-    minDurationHours: 0.5
-    maxDurationHours: 3
-    legacyTickIntervalHours: 0
-    legacyTickSignalCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    signalEntries: []
-    tradePolicy: 1
-    allowedTradeNeeds:
-    - needIdDefinition: {fileID: 11400000, guid: c4e22a71fca2cba4f846af0b73310230, type: 2}
-      needId: 
-    legacyStartSignalIdDefinition: {fileID: 0}
-    legacyStartSignalId: 
-    legacyTickSignalIdDefinition: {fileID: 0}
-    legacyTickSignalId: 
-  - activityIdDefinition: {fileID: 11400000, guid: 20e60703ccb2c34448b06b9f8703adcd, type: 2}
-    activityId: Work
-    locationDefinition: {fileID: 0}
-    tradeCapable: 0
-    startHour: 6
-    endHour: 24
-    useDuration: 1
+    useDuration: 0
     minDurationHours: 0
     maxDurationHours: 0
     legacyTickIntervalHours: 0
     legacyTickSignalCurve:
       serializedVersion: 2
       m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
     signalEntries: []
-    tradePolicy: 2
+    tradePolicy: 0
+    allowedTradeNeeds: []
+    legacyStartSignalIdDefinition: {fileID: 0}
+    legacyStartSignalId: 
+    legacyTickSignalIdDefinition: {fileID: 0}
+    legacyTickSignalId: 
+  - activityIdDefinition: {fileID: 11400000, guid: 20e60703ccb2c34448b06b9f8703adcd, type: 2}
+    activityId: Work
+    locationDefinition: {fileID: 11400000, guid: a4144a8ba0bb99b48a4e4bc33b1515bc, type: 2}
+    tradeCapable: 1
+    startHour: 0
+    endHour: 24
+    useDuration: 0
+    minDurationHours: 0
+    maxDurationHours: 0
+    legacyTickIntervalHours: 0
+    legacyTickSignalCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    signalEntries:
+    - startSignalIdDefinition: {fileID: 0}
+      startSignalId: 
+      tickSignalIdDefinition: {fileID: 11400000, guid: 96d24f3eef09adf4d9bc5e5d84325e1a, type: 2}
+      tickSignalId: Signal.Work.Tick.ProduceFood
+      tickIntervalHours: 1
+      tickSignalCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+    tradePolicy: 0
     allowedTradeNeeds: []
     legacyStartSignalIdDefinition: {fileID: 0}
     legacyStartSignalId: 

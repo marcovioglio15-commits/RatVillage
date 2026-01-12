@@ -8,15 +8,15 @@ namespace EmergentMechanics
     public partial struct EM_System_NpcNavigation
     {
         #region Movement
-        private static void MoveAlongPath(ref RefRW<LocalTransform> transform, EM_Component_NpcMovementSettings settings, float speedScale,
-            ref RefRW<EM_Component_NpcMovementState> movementState, ref RefRW<EM_Component_NpcNavigationState> navigationState,
-            ref EM_Component_LocationGrid grid, ref RefRW<EM_Component_NpcLocationState> locationState, DynamicBuffer<EM_BufferElement_LocationNode> nodes,
+        private static void MoveAlongPath(RefRW<LocalTransform> transform, EM_Component_NpcMovementSettings settings, float speedScale, float deltaTime,
+            RefRW<EM_Component_NpcMovementState> movementState, RefRW<EM_Component_NpcNavigationState> navigationState,
+            EM_Component_LocationGrid grid, RefRW<EM_Component_NpcLocationState> locationState, DynamicBuffer<EM_BufferElement_LocationNode> nodes,
             DynamicBuffer<EM_BufferElement_LocationOccupancy> occupancy, DynamicBuffer<EM_BufferElement_NpcPathNode> pathNodes, Entity entity,
             ref NativeParallelHashMap<int, Entity> anchorMap)
         {
             if (navigationState.ValueRO.HasPath == 0 || pathNodes.Length == 0)
             {
-                StopMovement(ref navigationState, ref movementState);
+                StopMovement(navigationState, movementState);
                 return;
             }
 
@@ -27,7 +27,7 @@ namespace EmergentMechanics
 
             if (pathIndex >= pathNodes.Length)
             {
-                ReachDestination(ref navigationState, ref movementState);
+                ReachDestination(navigationState, movementState);
                 return;
             }
 
@@ -35,7 +35,7 @@ namespace EmergentMechanics
 
             if (nextNodeIndex < 0)
             {
-                ReachDestination(ref navigationState, ref movementState);
+                ReachDestination(navigationState, movementState);
                 return;
             }
 
@@ -59,7 +59,6 @@ namespace EmergentMechanics
             float stopRadius = math.max(0.01f, settings.StopRadius);
             float maxSpeed = math.max(0f, settings.MaxSpeed) * speedScale;
             float acceleration = math.max(0f, settings.Acceleration) * speedScale;
-            float deltaTime = SystemAPI.Time.DeltaTime;
 
             if (deltaTime <= 0f)
                 return;
@@ -72,7 +71,7 @@ namespace EmergentMechanics
             if (distance <= stopRadius || currentSpeed <= 0f)
             {
                 transform.ValueRW.Position = targetPosition;
-                UpdateNodeOccupancy(nextNodeIndex, entity, ref locationState, nodes, occupancy, ref anchorMap);
+                UpdateNodeOccupancy(nextNodeIndex, entity, locationState, nodes, occupancy, ref anchorMap);
                 navigationState.ValueRW.PathIndex = pathIndex + 1;
                 return;
             }
@@ -83,7 +82,7 @@ namespace EmergentMechanics
             if (step >= distance)
             {
                 transform.ValueRW.Position = targetPosition;
-                UpdateNodeOccupancy(nextNodeIndex, entity, ref locationState, nodes, occupancy, ref anchorMap);
+                UpdateNodeOccupancy(nextNodeIndex, entity, locationState, nodes, occupancy, ref anchorMap);
                 navigationState.ValueRW.PathIndex = pathIndex + 1;
                 return;
             }
@@ -93,13 +92,13 @@ namespace EmergentMechanics
             navigationState.ValueRW.IsMoving = 1;
         }
 
-        private static void StopMovement(ref RefRW<EM_Component_NpcNavigationState> navigationState, ref RefRW<EM_Component_NpcMovementState> movementState)
+        private static void StopMovement(RefRW<EM_Component_NpcNavigationState> navigationState, RefRW<EM_Component_NpcMovementState> movementState)
         {
             navigationState.ValueRW.IsMoving = 0;
             movementState.ValueRW.CurrentSpeed = 0f;
         }
 
-        private static void ReachDestination(ref RefRW<EM_Component_NpcNavigationState> navigationState, ref RefRW<EM_Component_NpcMovementState> movementState)
+        private static void ReachDestination(RefRW<EM_Component_NpcNavigationState> navigationState, RefRW<EM_Component_NpcMovementState> movementState)
         {
             navigationState.ValueRW.DestinationKind = EM_NpcDestinationKind.None;
             navigationState.ValueRW.HasPath = 0;

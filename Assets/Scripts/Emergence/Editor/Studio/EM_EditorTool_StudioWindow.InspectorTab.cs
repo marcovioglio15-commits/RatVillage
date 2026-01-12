@@ -54,6 +54,11 @@ namespace EmergentMechanics
             createAssetButton.style.marginTop = 6f;
             leftPane.Add(createAssetButton);
 
+            deleteAssetButton = new Button(DeleteSelectedInspectorItem);
+            deleteAssetButton.text = "Delete Selected";
+            deleteAssetButton.style.marginTop = 4f;
+            leftPane.Add(deleteAssetButton);
+
             return leftPane;
         }
 
@@ -76,35 +81,86 @@ namespace EmergentMechanics
 
         private VisualElement MakeListItem()
         {
+            VisualElement row = new VisualElement();
+            row.style.flexDirection = FlexDirection.Row;
+            row.style.alignItems = Align.Center;
+
             Label label = new Label();
             label.style.unityTextAlign = TextAnchor.MiddleLeft;
             label.style.paddingLeft = 6f;
-            return label;
+            label.style.flexGrow = 1f;
+            row.Add(label);
+
+            TextField renameField = new TextField();
+            renameField.isDelayed = true;
+            renameField.style.flexGrow = 1f;
+            renameField.style.display = DisplayStyle.None;
+            row.Add(renameField);
+
+            RenameItemElements elements = new RenameItemElements
+            {
+                Label = label,
+                Field = renameField
+            };
+            row.userData = elements;
+
+            row.RegisterCallback<MouseDownEvent>(evt =>
+            {
+                if (evt.button != 0 || evt.clickCount != 2)
+                    return;
+
+                BeginRename(elements);
+                evt.StopPropagation();
+            }, TrickleDown.TrickleDown);
+
+            row.AddManipulator(new ContextualMenuManipulator(evt => PopulateInspectorContextMenu(evt, elements)));
+
+            renameField.RegisterCallback<KeyDownEvent>(evt =>
+            {
+                if (evt.keyCode == KeyCode.Return || evt.keyCode == KeyCode.KeypadEnter)
+                {
+                    CommitRename(elements, RefreshLibraryItems);
+                    evt.StopPropagation();
+                }
+                else if (evt.keyCode == KeyCode.Escape)
+                {
+                    CancelRename(elements);
+                    evt.StopPropagation();
+                }
+            });
+
+            renameField.RegisterCallback<FocusOutEvent>(evt => CommitRename(elements, RefreshLibraryItems));
+            return row;
         }
 
         private void BindListItem(VisualElement element, int index)
         {
-            Label label = element as Label;
+            RenameItemElements elements = element.userData as RenameItemElements;
 
-            if (label == null)
+            if (elements == null)
                 return;
 
             if (index < 0 || index >= items.Count)
             {
-                label.text = string.Empty;
+                elements.Asset = null;
+                elements.Label.text = string.Empty;
+                CancelRename(elements);
                 return;
             }
 
             Object item = items[index];
+            elements.Asset = item;
 
             if (item == null)
             {
-                label.text = "Missing";
+                elements.Label.text = "Missing";
+                CancelRename(elements);
                 return;
             }
 
             bool missingId = IsMissingIdDefinition(item);
-            label.text = missingId ? item.name + " [! Id]" : item.name;
+            elements.Label.text = missingId ? item.name + " [! Id]" : item.name;
+            CancelRename(elements);
         }
         #endregion
 

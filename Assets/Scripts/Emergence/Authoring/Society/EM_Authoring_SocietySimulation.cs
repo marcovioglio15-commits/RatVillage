@@ -99,6 +99,25 @@ namespace EmergentMechanics
         [SerializeField] private NeedSignalOverrideEntry[] needSignalOverrides = new NeedSignalOverrideEntry[0];
         #endregion
 
+        #region Health
+        [Tooltip("Id definition for the signal emitted with the normalized health value. Leave empty to disable.")]
+        [Header("Health")]
+        [EM_IdSelector(EM_IdCategory.Signal)]
+        [SerializeField] private EM_IdDefinition healthValueSignalIdDefinition;
+
+        [Tooltip("Legacy health value signal id string (auto-migrated when missing an id definition).")]
+        [SerializeField]
+        [HideInInspector] private string healthValueSignalId = "Health.Value";
+
+        [Tooltip("Id definition for the signal emitted when health damage is applied (normalized to max health). Leave empty to disable.")]
+        [EM_IdSelector(EM_IdCategory.Signal)]
+        [SerializeField] private EM_IdDefinition healthDamageSignalIdDefinition;
+
+        [Tooltip("Legacy health damage signal id string (auto-migrated when missing an id definition).")]
+        [SerializeField]
+        [HideInInspector] private string healthDamageSignalId = "Health.Damage";
+        #endregion
+
         #region Trade
         [Tooltip("Tick interval in simulated hours for trade evaluation.")]
         [Header("Trade")]
@@ -201,6 +220,12 @@ namespace EmergentMechanics
                     NeedUrgencySignalId = EM_IdUtility.ToFixed(authoring.needUrgencySignalIdDefinition, authoring.needUrgencySignalId)
                 };
 
+                EM_Component_HealthSignalSettings healthSignalSettings = new EM_Component_HealthSignalSettings
+                {
+                    HealthValueSignalId = EM_IdUtility.ToFixed(authoring.healthValueSignalIdDefinition, authoring.healthValueSignalId),
+                    HealthDamageSignalId = EM_IdUtility.ToFixed(authoring.healthDamageSignalIdDefinition, authoring.healthDamageSignalId)
+                };
+
                 EM_Component_NeedTickState needState = new EM_Component_NeedTickState
                 {
                     NextTick = 0d
@@ -239,6 +264,7 @@ namespace EmergentMechanics
                 AddComponent(entity, clock);
                 AddComponent(entity, needSettings);
                 AddComponent(entity, needSignalSettings);
+                AddComponent(entity, healthSignalSettings);
                 AddComponent(entity, needState);
                 AddComponent(entity, tradeSettings);
                 AddComponent(entity, scheduleOverrideSettings);
