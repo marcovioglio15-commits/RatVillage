@@ -1,0 +1,511 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e660100be3264c7d8400d0bdca829a84, type: 3}
+  m_Name: EM_NarrativeLogTemplates
+  m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_NarrativeLogTemplates
+  templates:
+  - name: Need Urgency - Hunger
+    eventType: 0
+    visibility: 0
+    severity: 1
+    verbosity: 1
+    tags: 1
+    weight: 1
+    cooldownHours: 0
+    signalIdEquals: 
+    signalIdPrefix: 
+    needIdEquals: Hunger
+    resourceIdEquals: 
+    activityIdEquals: 
+    contextIdEquals: 
+    reasonIdEquals: 
+    useEffectType: 0
+    effectType: 0
+    useMinValue: 0
+    minValue: 0
+    useMaxValue: 0
+    maxValue: 0
+    useMinDelta: 0
+    minDelta: 0
+    useMaxDelta: 0
+    maxDelta: 0
+    useMinAfter: 0
+    minAfter: 0
+    useMaxAfter: 0
+    maxAfter: 0
+    titleTemplate: '[{time}] {subject} is starving'
+    bodyTemplate: Hunger urgency reached {value}.
+  - name: Need Urgency - Water
+    eventType: 0
+    visibility: 0
+    severity: 1
+    verbosity: 1
+    tags: 1
+    weight: 1
+    cooldownHours: 0
+    signalIdEquals: 
+    signalIdPrefix: 
+    needIdEquals: Water
+    resourceIdEquals: 
+    activityIdEquals: 
+    contextIdEquals: 
+    reasonIdEquals: 
+    useEffectType: 0
+    effectType: 0
+    useMinValue: 0
+    minValue: 0
+    useMaxValue: 0
+    maxValue: 0
+    useMinDelta: 0
+    minDelta: 0
+    useMaxDelta: 0
+    maxDelta: 0
+    useMinAfter: 0
+    minAfter: 0
+    useMaxAfter: 0
+    maxAfter: 0
+    titleTemplate: '[{time}] {subject} needs water'
+    bodyTemplate: Thirst urgency reached {value}.
+  - name: Need Urgency - Sleep
+    eventType: 0
+    visibility: 0
+    severity: 1
+    verbosity: 1
+    tags: 1
+    weight: 1
+    cooldownHours: 0
+    signalIdEquals: 
+    signalIdPrefix: 
+    needIdEquals: Sleep
+    resourceIdEquals: 
+    activityIdEquals: 
+    contextIdEquals: 
+    reasonIdEquals: 
+    useEffectType: 0
+    effectType: 0
+    useMinValue: 0
+    minValue: 0
+    useMaxValue: 0
+    maxValue: 0
+    useMinDelta: 0
+    minDelta: 0
+    useMaxDelta: 0
+    maxDelta: 0
+    useMinAfter: 0
+    minAfter: 0
+    useMaxAfter: 0
+    maxAfter: 0
+    titleTemplate: '[{time}] {subject} is exhausted'
+    bodyTemplate: Sleep urgency reached {value}.
+  - name: Need Relief - Hunger
+    eventType: 1
+    visibility: 0
+    severity: 0
+    verbosity: 1
+    tags: 1
+    weight: 1
+    cooldownHours: 0
+    signalIdEquals: 
+    signalIdPrefix: 
+    needIdEquals: Hunger
+    resourceIdEquals: 
+    activityIdEquals: 
+    contextIdEquals: 
+    reasonIdEquals: 
+    useEffectType: 0
+    effectType: 0
+    useMinValue: 0
+    minValue: 0
+    useMaxValue: 0
+    maxValue: 0
+    useMinDelta: 0
+    minDelta: 0
+    useMaxDelta: 0
+    maxDelta: 0
+    useMinAfter: 0
+    minAfter: 0
+    useMaxAfter: 0
+    maxAfter: 0
+    titleTemplate: '[{time}] {subject} satisfied hunger'
+    bodyTemplate: Hunger urgency dropped to {value}.
+  - name: Need Relief - Water
+    eventType: 1
+    visibility: 0
+    severity: 0
+    verbosity: 1
+    tags: 1
+    weight: 1
+    cooldownHours: 0
+    signalIdEquals: 
+    signalIdPrefix: 
+    needIdEquals: Water
+    resourceIdEquals: 
+    activityIdEquals: 
+    contextIdEquals: 
+    reasonIdEquals: 
+    useEffectType: 0
+    effectType: 0
+    useMinValue: 0
+    minValue: 0
+    useMaxValue: 0
+    maxValue: 0
+    useMinDelta: 0
+    minDelta: 0
+    useMaxDelta: 0
+    maxDelta: 0
+    useMinAfter: 0
+    minAfter: 0
+    useMaxAfter: 0
+    maxAfter: 0
+    titleTemplate: '[{time}] {subject} quenched thirst'
+    bodyTemplate: Water urgency dropped to {value}.
+  - name: Need Relief - Sleep
+    eventType: 1
+    visibility: 0
+    severity: 0
+    verbosity: 1
+    tags: 1
+    weight: 1
+    cooldownHours: 0
+    signalIdEquals: 
+    signalIdPrefix: 
+    needIdEquals: Sleep
+    resourceIdEquals: 
+    activityIdEquals: 
+    contextIdEquals: 
+    reasonIdEquals: 
+    useEffectType: 0
+    effectType: 0
+    useMinValue: 0
+    minValue: 0
+    useMaxValue: 0
+    maxValue: 0
+    useMinDelta: 0
+    minDelta: 0
+    useMaxDelta: 0
+    maxDelta: 0
+    useMinAfter: 0
+    minAfter: 0
+    useMaxAfter: 0
+    maxAfter: 0
+    titleTemplate: '[{time}] {subject} feels rested'
+    bodyTemplate: Sleep urgency dropped to {value}.
+  - name: Override - Seek Food
+    eventType: 4
+    visibility: 0
+    severity: 1
+    verbosity: 1
+    tags: 8
+    weight: 1
+    cooldownHours: 0
+    signalIdEquals: 
+    signalIdPrefix: 
+    needIdEquals: 
+    resourceIdEquals: 
+    activityIdEquals: Override.SeekFood
+    contextIdEquals: 
+    reasonIdEquals: 
+    useEffectType: 0
+    effectType: 0
+    useMinValue: 0
+    minValue: 0
+    useMaxValue: 0
+    maxValue: 0
+    useMinDelta: 0
+    minDelta: 0
+    useMaxDelta: 0
+    maxDelta: 0
+    useMinAfter: 0
+    minAfter: 0
+    useMaxAfter: 0
+    maxAfter: 0
+    titleTemplate: '[{time}] {subject} interrupts to seek food'
+    bodyTemplate: 'Override activity: {activity}.'
+  - name: Override - Seek Water
+    eventType: 4
+    visibility: 0
+    severity: 1
+    verbosity: 1
+    tags: 8
+    weight: 1
+    cooldownHours: 0
+    signalIdEquals: 
+    signalIdPrefix: 
+    needIdEquals: 
+    resourceIdEquals: 
+    activityIdEquals: Override.SeekWater
+    contextIdEquals: 
+    reasonIdEquals: 
+    useEffectType: 0
+    effectType: 0
+    useMinValue: 0
+    minValue: 0
+    useMaxValue: 0
+    maxValue: 0
+    useMinDelta: 0
+    minDelta: 0
+    useMaxDelta: 0
+    maxDelta: 0
+    useMinAfter: 0
+    minAfter: 0
+    useMaxAfter: 0
+    maxAfter: 0
+    titleTemplate: '[{time}] {subject} interrupts to seek water'
+    bodyTemplate: 'Override activity: {activity}.'
+  - name: Override - Sleep
+    eventType: 4
+    visibility: 0
+    severity: 1
+    verbosity: 1
+    tags: 8
+    weight: 1
+    cooldownHours: 0
+    signalIdEquals: 
+    signalIdPrefix: 
+    needIdEquals: 
+    resourceIdEquals: 
+    activityIdEquals: Override.Sleep
+    contextIdEquals: 
+    reasonIdEquals: 
+    useEffectType: 0
+    effectType: 0
+    useMinValue: 0
+    minValue: 0
+    useMaxValue: 0
+    maxValue: 0
+    useMinDelta: 0
+    minDelta: 0
+    useMaxDelta: 0
+    maxDelta: 0
+    useMinAfter: 0
+    minAfter: 0
+    useMaxAfter: 0
+    maxAfter: 0
+    titleTemplate: '[{time}] {subject} interrupts to sleep'
+    bodyTemplate: 'Override activity: {activity}.'
+  - name: Resource Change - Food
+    eventType: 10
+    visibility: 0
+    severity: 0
+    verbosity: 1
+    tags: 2
+    weight: 1
+    cooldownHours: 0
+    signalIdEquals: 
+    signalIdPrefix: 
+    needIdEquals: 
+    resourceIdEquals: Food
+    activityIdEquals: 
+    contextIdEquals: 
+    reasonIdEquals: 
+    useEffectType: 0
+    effectType: 0
+    useMinValue: 0
+    minValue: 0
+    useMaxValue: 0
+    maxValue: 0
+    useMinDelta: 0
+    minDelta: 0
+    useMaxDelta: 0
+    maxDelta: 0
+    useMinAfter: 0
+    minAfter: 0
+    useMaxAfter: 0
+    maxAfter: 0
+    titleTemplate: '[{time}] {subject} food updated'
+    bodyTemplate: Food changed by {delta} (now {after}).
+  - name: Resource Change - Water
+    eventType: 10
+    visibility: 0
+    severity: 0
+    verbosity: 1
+    tags: 2
+    weight: 1
+    cooldownHours: 0
+    signalIdEquals: 
+    signalIdPrefix: 
+    needIdEquals: 
+    resourceIdEquals: Water
+    activityIdEquals: 
+    contextIdEquals: 
+    reasonIdEquals: 
+    useEffectType: 0
+    effectType: 0
+    useMinValue: 0
+    minValue: 0
+    useMaxValue: 0
+    maxValue: 0
+    useMinDelta: 0
+    minDelta: 0
+    useMaxDelta: 0
+    maxDelta: 0
+    useMinAfter: 0
+    minAfter: 0
+    useMaxAfter: 0
+    maxAfter: 0
+    titleTemplate: '[{time}] {subject} water updated'
+    bodyTemplate: Water changed by {delta} (now {after}).
+  - name: Resource Change - Sleep
+    eventType: 10
+    visibility: 0
+    severity: 0
+    verbosity: 1
+    tags: 2
+    weight: 1
+    cooldownHours: 0
+    signalIdEquals: 
+    signalIdPrefix: 
+    needIdEquals: 
+    resourceIdEquals: Sleep
+    activityIdEquals: 
+    contextIdEquals: 
+    reasonIdEquals: 
+    useEffectType: 0
+    effectType: 0
+    useMinValue: 0
+    minValue: 0
+    useMaxValue: 0
+    maxValue: 0
+    useMinDelta: 0
+    minDelta: 0
+    useMaxDelta: 0
+    maxDelta: 0
+    useMinAfter: 0
+    minAfter: 0
+    useMaxAfter: 0
+    maxAfter: 0
+    titleTemplate: '[{time}] {subject} rest updated'
+    bodyTemplate: Sleep changed by {delta} (now {after}).
+  - name: Trade Success - Food
+    eventType: 7
+    visibility: 0
+    severity: 0
+    verbosity: 1
+    tags: 4
+    weight: 1
+    cooldownHours: 0
+    signalIdEquals: 
+    signalIdPrefix: 
+    needIdEquals: 
+    resourceIdEquals: Food
+    activityIdEquals: 
+    contextIdEquals: 
+    reasonIdEquals: 
+    useEffectType: 0
+    effectType: 0
+    useMinValue: 0
+    minValue: 0
+    useMaxValue: 0
+    maxValue: 0
+    useMinDelta: 0
+    minDelta: 0
+    useMaxDelta: 0
+    maxDelta: 0
+    useMinAfter: 0
+    minAfter: 0
+    useMaxAfter: 0
+    maxAfter: 0
+    titleTemplate: '[{time}] {subject} obtained food'
+    bodyTemplate: Resolved {need} with {target} (amount {value}).
+  - name: Trade Success - Water
+    eventType: 7
+    visibility: 0
+    severity: 0
+    verbosity: 1
+    tags: 4
+    weight: 1
+    cooldownHours: 0
+    signalIdEquals: 
+    signalIdPrefix: 
+    needIdEquals: 
+    resourceIdEquals: Water
+    activityIdEquals: 
+    contextIdEquals: 
+    reasonIdEquals: 
+    useEffectType: 0
+    effectType: 0
+    useMinValue: 0
+    minValue: 0
+    useMaxValue: 0
+    maxValue: 0
+    useMinDelta: 0
+    minDelta: 0
+    useMaxDelta: 0
+    maxDelta: 0
+    useMinAfter: 0
+    minAfter: 0
+    useMaxAfter: 0
+    maxAfter: 0
+    titleTemplate: '[{time}] {subject} obtained water'
+    bodyTemplate: Resolved {need} with {target} (amount {value}).
+  - name: Signal - Work Tick Food
+    eventType: 17
+    visibility: 1
+    severity: 0
+    verbosity: 2
+    tags: 640
+    weight: 1
+    cooldownHours: 0
+    signalIdEquals: Signal.Work.Tick.ProduceFood
+    signalIdPrefix: 
+    needIdEquals: 
+    resourceIdEquals: 
+    activityIdEquals: 
+    contextIdEquals: 
+    reasonIdEquals: 
+    useEffectType: 0
+    effectType: 0
+    useMinValue: 0
+    minValue: 0
+    useMaxValue: 0
+    maxValue: 0
+    useMinDelta: 0
+    minDelta: 0
+    useMaxDelta: 0
+    maxDelta: 0
+    useMinAfter: 0
+    minAfter: 0
+    useMaxAfter: 0
+    maxAfter: 0
+    titleTemplate: '[{time}] Work tick'
+    bodyTemplate: '{signal} value {value} from {subject}.'
+  - name: Signal - Work Tick Water
+    eventType: 17
+    visibility: 1
+    severity: 0
+    verbosity: 2
+    tags: 640
+    weight: 1
+    cooldownHours: 0
+    signalIdEquals: Signal.Work.Tick.ProduceWater
+    signalIdPrefix: 
+    needIdEquals: 
+    resourceIdEquals: 
+    activityIdEquals: 
+    contextIdEquals: 
+    reasonIdEquals: 
+    useEffectType: 0
+    effectType: 0
+    useMinValue: 0
+    minValue: 0
+    useMaxValue: 0
+    maxValue: 0
+    useMinDelta: 0
+    minDelta: 0
+    useMaxDelta: 0
+    maxDelta: 0
+    useMinAfter: 0
+    minAfter: 0
+    useMaxAfter: 0
+    maxAfter: 0
+    titleTemplate: '[{time}] Work tick'
+    bodyTemplate: '{signal} value {value} from {subject}.'

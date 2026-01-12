@@ -1312,7 +1312,7 @@ GameObject:
   - component: {fileID: 1733549452}
   - component: {fileID: 1733549453}
   m_Layer: 0
-  m_Name: Em_VillageLogLabel
+  m_Name: Em_VillageLogScroll
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1405,6 +1405,55 @@ RectTransform:
   m_AnchoredPosition: {x: -5, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1799643387
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1799643389}
+  - component: {fileID: 1799643388}
+  m_Layer: 0
+  m_Name: EM_NPCStatusUIManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1799643388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1799643387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41e3bfdfb40b4d7eac55b5eab513e938, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_NpcStatusUiManager
+  statusTextPrefab: {fileID: 2401345131082811844, guid: 65fc43ba3c5b53f478657320f4f41dd6, type: 3}
+  statusRoot: {fileID: 0}
+  worldOffset: {x: 0, y: 2, z: 0}
+  refreshInterval: 0.25
+  faceCamera: 0
+--- !u!4 &1799643389
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1799643387}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.54689, y: 0, z: -2.8542}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1893299853
 GameObject:
   m_ObjectHideFlags: 0
@@ -1416,6 +1465,7 @@ GameObject:
   - component: {fileID: 1893299854}
   - component: {fileID: 1893299855}
   - component: {fileID: 1893299856}
+  - component: {fileID: 1893299857}
   m_Layer: 0
   m_Name: EM_LogUIManager
   m_TagString: Untagged
@@ -1479,17 +1529,37 @@ MonoBehaviour:
   m_GameObject: {fileID: 1893299853}
   m_Enabled: 1
   m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6faf96d13cf4daaadf41c1b371cab75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_NarrativeLogUiManager
+  logScrollRect: {fileID: 1733549453}
+  logContent: {fileID: 1987609348}
+  logLinePrefab: {fileID: 3981265325607759151, guid: 661e4db54599e0542988c1720dc20329, type: 3}
+  refreshInterval: 0.25
+  maxLogLines: 50
+  maxLogCharacters: 6000
+  autoScroll: 1
+  settings: {fileID: 11400000, guid: 4e9bedf6685399643b75d18b65f15ecd, type: 2}
+--- !u!114 &1893299857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1893299853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d1da494df1f0a014398f81f32fa4b4e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_LogUiManager
   timeLabel: {fileID: 2107908077}
-  logScrollRect: {fileID: 1733549453}
-  logContent: {fileID: 1987609348}
-  logLinePrefab: {fileID: 3981265325607759151, guid: 661e4db54599e0542988c1720dc20329, type: 3}
+  logScrollRect: {fileID: 0}
+  logContent: {fileID: 0}
+  logLinePrefab: {fileID: 0}
   templates: {fileID: 11400000, guid: 7954b7fb88122a645ac6a95221d4ea6f, type: 2}
   refreshInterval: 0.25
-  maxLogLines: 150
-  maxLogCharacters: 40000
+  maxLogLines: 40
+  maxLogCharacters: 4000
   autoScroll: 1
   logSettings: {fileID: 11400000, guid: 2a64f83952171be4abeaef76de4002ad, type: 2}
 --- !u!1 &1924287884
@@ -1965,6 +2035,54 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 420, y: 28}
   m_Pivot: {x: 0, y: 1}
+--- !u!1 &2137539570
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2137539572}
+  - component: {fileID: 2137539571}
+  m_Layer: 0
+  m_Name: EM_NarrativeLogAssembler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2137539571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2137539570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c700e3d0a9df45508010cc182973f808, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_NarrativeLogAssembler
+  settings: {fileID: 11400000, guid: 4e9bedf6685399643b75d18b65f15ecd, type: 2}
+  templates: {fileID: 11400000, guid: d9d8f17ccfb9fa74487db194c41d2b49, type: 2}
+  refreshIntervalOverride: 0
+  enableProcessing: 1
+--- !u!4 &2137539572
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2137539570}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.54689, y: -0, z: -2.8542}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1974,3 +2092,5 @@ SceneRoots:
   - {fileID: 2051985149}
   - {fileID: 610679697}
   - {fileID: 1976551968}
+  - {fileID: 2137539572}
+  - {fileID: 1799643389}
