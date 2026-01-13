@@ -8,6 +8,8 @@ namespace EmergentMechanics
     public partial struct EM_System_Trade
     {
         #region Queue
+        private const float QueueReservationFallbackSeconds = 5f;
+
         private bool TryGetQueueEntryIndex(DynamicBuffer<EM_BufferElement_TradeQueueEntry> queue, Entity requester, out int index)
         {
             index = -1;
@@ -101,6 +103,100 @@ namespace EmergentMechanics
             float3 offset = new float3(math.cos(angle), 0f, math.sin(angle)) * radius;
             position = transform.Position + offset;
             return true;
+        }
+
+        private bool TryResolveQueueSlotNodeIndex(Entity anchorEntity, int slotIndex, out int nodeIndex)
+        {
+            nodeIndex = -1;
+
+            float3 slotPosition;
+            bool hasSlotPosition = TryGetQueueSlotPosition(anchorEntity, slotIndex, out slotPosition);
+
+            if (!hasSlotPosition)
+                return false;
+
+            return EM_Utility_LocationGrid.TryGetNodeIndex(slotPosition, currentGrid, out nodeIndex);
+        }
+
+        private float ResolveQueueReservationTimeout(EM_Component_NpcTradeInteraction tradeInteraction)
+        {
+            if (tradeInteraction.WaitSeconds > 0f)
+                return tradeInteraction.WaitSeconds;
+
+            return QueueReservationFallbackSeconds;
+        }
+
+        private bool TryReserveQueueSlot(Entity requester, int nodeIndex, double timeSeconds, float reservationSeconds)
+        {
+            if (nodeIndex < 0)
+                return false;
+
+            if (!locationOccupancyLookup.HasBuffer(currentGridEntity))
+                return false;
+
+            if (!locationReservationLookup.HasBuffer(currentGridEntity))
+                return false;
+
+            DynamicBuffer<EM_BufferElement_LocationOccupancy> occupancy = locationOccupancyLookup[currentGridEntity];
+            DynamicBuffer<EM_BufferElement_LocationReservation> reservations = locationReservationLookup[currentGridEntity];
+
+            if (nodeIndex >= occupancy.Length || nodeIndex >= reservations.Length)
+                return false;
+
+            Entity occupant = occupancy[nodeIndex].Occupant;
+
+            if (occupant != Entity.Null && occupant != requester)
+                return false;
+
+            EM_BufferElement_LocationReservation entry = reservations[nodeIndex];
+
+            if (entry.ReservedBy == requester)
+            {
+                entry.ReservedUntilTimeSeconds = timeSeconds + math.max(0.1f, reservationSeconds);
+                reservations[nodeIndex] = entry;
+                return true;
+            }
+
+            if (entry.ReservedBy != Entity.Null)
+            {
+                if (entry.ReservedUntilTimeSeconds > 0d && timeSeconds >= entry.ReservedUntilTimeSeconds)
+                {
+                    entry.ReservedBy = Entity.Null;
+                    entry.ReservedUntilTimeSeconds = -1d;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            entry.ReservedBy = requester;
+            entry.ReservedUntilTimeSeconds = timeSeconds + math.max(0.1f, reservationSeconds);
+            reservations[nodeIndex] = entry;
+            return true;
+        }
+
+        private void ClearQueueSlotReservation(Entity requester, int nodeIndex)
+        {
+            if (nodeIndex < 0)
+                return;
+
+            if (!locationReservationLookup.HasBuffer(currentGridEntity))
+                return;
+
+            DynamicBuffer<EM_BufferElement_LocationReservation> reservations = locationReservationLookup[currentGridEntity];
+
+            if (nodeIndex >= reservations.Length)
+                return;
+
+            EM_BufferElement_LocationReservation entry = reservations[nodeIndex];
+
+            if (entry.ReservedBy != requester)
+                return;
+
+            entry.ReservedBy = Entity.Null;
+            entry.ReservedUntilTimeSeconds = -1d;
+            reservations[nodeIndex] = entry;
         }
         #endregion
     }

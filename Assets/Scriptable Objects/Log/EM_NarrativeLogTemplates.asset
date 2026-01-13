@@ -199,6 +199,68 @@ MonoBehaviour:
     maxAfter: 0
     titleTemplate: '[{time}] {subject} feels rested'
     bodyTemplate: Sleep urgency dropped to {value}.
+  - name: Schedule Start - Regular
+    eventType: 2
+    visibility: 0
+    severity: 0
+    verbosity: 0
+    tags: 8
+    weight: 1
+    cooldownHours: 0
+    signalIdEquals: 
+    signalIdPrefix: 
+    needIdEquals: 
+    resourceIdEquals: 
+    activityIdEquals: 
+    contextIdEquals: 
+    reasonIdEquals: 
+    useEffectType: 0
+    effectType: 0
+    useMinValue: 0
+    minValue: 0
+    useMaxValue: 0
+    maxValue: 0
+    useMinDelta: 0
+    minDelta: 0
+    useMaxDelta: 0
+    maxDelta: 0
+    useMinAfter: 0
+    minAfter: 0
+    useMaxAfter: 0
+    maxAfter: 0
+    titleTemplate: '[{time}] {subject} starts {activity}'
+    bodyTemplate: Starting scheduled activity.
+  - name: Schedule End - Regular
+    eventType: 3
+    visibility: 0
+    severity: 0
+    verbosity: 0
+    tags: 8
+    weight: 1
+    cooldownHours: 0
+    signalIdEquals: 
+    signalIdPrefix: 
+    needIdEquals: 
+    resourceIdEquals: 
+    activityIdEquals: 
+    contextIdEquals: 
+    reasonIdEquals: 
+    useEffectType: 0
+    effectType: 0
+    useMinValue: 0
+    minValue: 0
+    useMaxValue: 0
+    maxValue: 0
+    useMinDelta: 0
+    minDelta: 0
+    useMaxDelta: 0
+    maxDelta: 0
+    useMinAfter: 0
+    minAfter: 0
+    useMaxAfter: 0
+    maxAfter: 0
+    titleTemplate: '[{time}] {subject} ends {activity}'
+    bodyTemplate: Returning to schedule.
   - name: Override - Seek Food
     eventType: 4
     visibility: 0
@@ -292,6 +354,37 @@ MonoBehaviour:
     maxAfter: 0
     titleTemplate: '[{time}] {subject} interrupts to sleep'
     bodyTemplate: 'Override activity: {activity}.'
+  - name: Override End - Return to Schedule
+    eventType: 5
+    visibility: 0
+    severity: 0
+    verbosity: 1
+    tags: 8
+    weight: 1
+    cooldownHours: 0
+    signalIdEquals: 
+    signalIdPrefix: 
+    needIdEquals: 
+    resourceIdEquals: 
+    activityIdEquals: 
+    contextIdEquals: 
+    reasonIdEquals: 
+    useEffectType: 0
+    effectType: 0
+    useMinValue: 0
+    minValue: 0
+    useMaxValue: 0
+    maxValue: 0
+    useMinDelta: 0
+    minDelta: 0
+    useMaxDelta: 0
+    maxDelta: 0
+    useMinAfter: 0
+    minAfter: 0
+    useMaxAfter: 0
+    maxAfter: 0
+    titleTemplate: '[{time}] {subject} returns to schedule'
+    bodyTemplate: Override {activity} ended.
   - name: Resource Change - Food
     eventType: 10
     visibility: 0
@@ -509,3 +602,67 @@ MonoBehaviour:
     maxAfter: 0
     titleTemplate: '[{time}] Work tick'
     bodyTemplate: '{signal} value {value} from {subject}.'
+  - name: Relationship-Increase
+    eventType: 16
+    visibility: 2
+    severity: 0
+    verbosity: 1
+    tags: 32
+    weight: 1
+    cooldownHours: 0
+    signalIdEquals: Signal.Work.Tick.ProduceWater
+    signalIdPrefix: 
+    needIdEquals: 
+    resourceIdEquals: 
+    activityIdEquals: 
+    contextIdEquals: 
+    reasonIdEquals: 
+    useEffectType: 1
+    effectType: 5
+    useMinValue: 0
+    minValue: 0
+    useMaxValue: 0
+    maxValue: 0
+    useMinDelta: 0
+    minDelta: 0
+    useMaxDelta: 0
+    maxDelta: 0
+    useMinAfter: 0
+    minAfter: 0
+    useMaxAfter: 0
+    maxAfter: 0
+    titleTemplate: "[{time}] Relationship improvement : {subject} \u2192 {target}"
+    bodyTemplate: "{subject}  improves his relationship with {target} ({before} \u2192
+      {after}, delta {delta})"
+  - name: Relationship-decrease
+    eventType: 16
+    visibility: 2
+    severity: 0
+    verbosity: 1
+    tags: 32
+    weight: 1
+    cooldownHours: 0
+    signalIdEquals: Signal.Work.Tick.ProduceWater
+    signalIdPrefix: 
+    needIdEquals: 
+    resourceIdEquals: 
+    activityIdEquals: 
+    contextIdEquals: 
+    reasonIdEquals: 
+    useEffectType: 1
+    effectType: 5
+    useMinValue: 0
+    minValue: 0
+    useMaxValue: 0
+    maxValue: 0
+    useMinDelta: 0
+    minDelta: 0
+    useMaxDelta: 1
+    maxDelta: -0.01
+    useMinAfter: 0
+    minAfter: 0
+    useMaxAfter: 0
+    maxAfter: 0
+    titleTemplate: "[{time}] Relationship decreased : {subject} \u2192 {target}"
+    bodyTemplate: "{subject}  worsened his relationship with {target} ({before} \u2192
+      {after}, delta {delta})"

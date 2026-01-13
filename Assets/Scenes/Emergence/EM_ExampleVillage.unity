@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 177125723}
   - component: {fileID: 177125725}
   - component: {fileID: 177125724}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -205,7 +205,7 @@ GameObject:
   - component: {fileID: 338148267}
   - component: {fileID: 338148269}
   - component: {fileID: 338148268}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -280,7 +280,7 @@ GameObject:
   - component: {fileID: 464910604}
   - component: {fileID: 464910606}
   - component: {fileID: 464910605}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: ValueLabel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -417,7 +417,7 @@ GameObject:
   - component: {fileID: 571593489}
   - component: {fileID: 571593491}
   - component: {fileID: 571593490}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -490,7 +490,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 585332631}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Handle Slide Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -630,7 +630,7 @@ GameObject:
   m_Component:
   - component: {fileID: 767635840}
   - component: {fileID: 767635841}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -722,7 +722,7 @@ GameObject:
   - component: {fileID: 877233835}
   - component: {fileID: 877233834}
   - component: {fileID: 877233836}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: ViewPort
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -955,7 +955,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1203928144}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Sliding Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -992,7 +992,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1472760657}
   - component: {fileID: 1472760658}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: EM_SimulationSpeed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1046,7 +1046,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1485084898}
   - component: {fileID: 1485084899}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: HorizontalLayout
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1111,7 +1111,7 @@ GameObject:
   - component: {fileID: 1599425723}
   - component: {fileID: 1599425725}
   - component: {fileID: 1599425724}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1187,7 +1187,7 @@ GameObject:
   - component: {fileID: 1657349075}
   - component: {fileID: 1657349074}
   - component: {fileID: 1657349073}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Scrollbar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1311,7 +1311,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1733549452}
   - component: {fileID: 1733549453}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Em_VillageLogScroll
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1378,7 +1378,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1797032955}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1439,6 +1439,11 @@ MonoBehaviour:
   worldOffset: {x: 0, y: 2, z: 0}
   refreshInterval: 0.25
   faceCamera: 0
+  uiBlockLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  selectionScreenRadiusPixels: 48
+  selectionRadius: 0.75
 --- !u!4 &1799643389
 Transform:
   m_ObjectHideFlags: 0
@@ -1466,7 +1471,7 @@ GameObject:
   - component: {fileID: 1893299855}
   - component: {fileID: 1893299856}
   - component: {fileID: 1893299857}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: EM_LogUIManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1705,7 +1710,7 @@ GameObject:
   - component: {fileID: 1987609348}
   - component: {fileID: 1987609350}
   - component: {fileID: 1987609349}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1909,7 +1914,7 @@ GameObject:
   - component: {fileID: 2107908079}
   - component: {fileID: 2107908078}
   - component: {fileID: 2107908077}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: EM_TimeLabel
   m_TagString: Untagged
   m_Icon: {fileID: 0}

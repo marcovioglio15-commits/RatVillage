@@ -66,9 +66,9 @@ MonoBehaviour:
     tradeCapable: 0
     startHour: 0
     endHour: 0
-    useDuration: 0
+    useDuration: 1
     minDurationHours: 0
-    maxDurationHours: 0
+    maxDurationHours: 2
     legacyTickIntervalHours: 0
     legacyTickSignalCurve:
       serializedVersion: 2

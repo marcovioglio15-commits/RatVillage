@@ -33,15 +33,30 @@ namespace EmergentMechanics
         [Tooltip("When enabled, status text rotates to face the camera.")]
         [SerializeField] private bool faceCamera = true;
         #endregion
+
+        #region Selection
+        [Tooltip("UI layers that block NPC selection when the pointer is over them.")]
+        [Header("Selection")]
+        [SerializeField] private LayerMask uiBlockLayers = 1 << 5;
+
+        [Tooltip("Maximum screen-space distance in pixels to select an NPC.")]
+        [SerializeField] private float selectionScreenRadiusPixels = 48f;
+
+        [Tooltip("Maximum world-space distance from the click ray used to select an NPC.")]
+        [SerializeField] private float selectionRadius = 0.75f;
+        #endregion
         #endregion
 
         #region State
         private readonly Dictionary<Entity, NpcStatusEntry> entries = new Dictionary<Entity, NpcStatusEntry>();
-        private readonly HashSet<Entity> activeEntities = new HashSet<Entity>();
+        private readonly HashSet<Entity> visibleEntities = new HashSet<Entity>();
         private readonly List<Entity> removalBuffer = new List<Entity>();
         private World cachedWorld;
         private EntityManager entityManager;
+        private EntityQuery gridQuery;
         private EntityQuery npcQuery;
+        private bool hasGridQuery;
+        private bool hasNpcQuery;
         private Camera cachedCamera;
         private float nextRefreshTime;
         #endregion
@@ -62,6 +77,8 @@ namespace EmergentMechanics
         {
             if (!EnsureWorld())
                 return;
+
+            HandleSelectionInput();
 
             if (statusTextPrefab == null)
                 return;

@@ -31,7 +31,14 @@ namespace EmergentMechanics
         private BufferLookup<EM_BufferElement_RelationshipType> relationshipTypeLookup;
         private BufferLookup<EM_BufferElement_TradeAttemptedProvider> attemptedProviderLookup;
         private BufferLookup<EM_BufferElement_TradeQueueEntry> tradeQueueLookup;
+        private BufferLookup<EM_BufferElement_LocationOccupancy> locationOccupancyLookup;
+        private BufferLookup<EM_BufferElement_LocationReservation> locationReservationLookup;
         private BufferLookup<EM_BufferElement_SignalEvent> signalLookup;
+        #endregion
+
+        #region Grid Cache
+        private Entity currentGridEntity;
+        private EM_Component_LocationGrid currentGrid;
         #endregion
         #endregion
 
@@ -40,6 +47,7 @@ namespace EmergentMechanics
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<EM_Component_TradeSettings>();
+            state.RequireForUpdate<EM_Component_LocationGrid>();
             state.RequireForUpdate<EM_BufferElement_Intent>();
             tradeSettingsLookup = state.GetComponentLookup<EM_Component_TradeSettings>(true);
             randomLookup = state.GetComponentLookup<EM_Component_RandomSeed>(false);
@@ -62,11 +70,16 @@ namespace EmergentMechanics
             relationshipTypeLookup = state.GetBufferLookup<EM_BufferElement_RelationshipType>(true);
             attemptedProviderLookup = state.GetBufferLookup<EM_BufferElement_TradeAttemptedProvider>(false);
             tradeQueueLookup = state.GetBufferLookup<EM_BufferElement_TradeQueueEntry>(false);
+            locationOccupancyLookup = state.GetBufferLookup<EM_BufferElement_LocationOccupancy>(false);
+            locationReservationLookup = state.GetBufferLookup<EM_BufferElement_LocationReservation>(false);
             signalLookup = state.GetBufferLookup<EM_BufferElement_SignalEvent>(false);
         }
 
         public void OnUpdate(ref SystemState state)
         {
+            if (!TryResolveGrid(ref state, out currentGridEntity, out currentGrid))
+                return;
+
             NativeParallelHashMap<Entity, double> readyMap = BuildReadyMap(ref state);
 
             if (readyMap.Count() == 0)
@@ -108,6 +121,8 @@ namespace EmergentMechanics
             relationshipTypeLookup.Update(ref state);
             attemptedProviderLookup.Update(ref state);
             tradeQueueLookup.Update(ref state);
+            locationOccupancyLookup.Update(ref state);
+            locationReservationLookup.Update(ref state);
             signalLookup.Update(ref state);
 
             NativeList<Entity> candidates = new NativeList<Entity>(Allocator.Temp);

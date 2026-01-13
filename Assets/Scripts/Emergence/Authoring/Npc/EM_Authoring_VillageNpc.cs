@@ -201,6 +201,7 @@ namespace EmergentMechanics
                 AddComponent(entity, new EM_Component_NpcNeedTickState { NextTick = -1d });
                 AddComponent(entity, new EM_Component_NpcNeedRateSettings { RateMultiplierVariance = math.max(0f, authoring.needRateVariance) });
                 AddMovementComponents(authoring, entity, this);
+                AddActivityTargetingComponents(authoring, entity, this);
                 AddTradeInteractionComponents(authoring, entity, this);
                 AddHealthComponents(authoring, entity, this);
                 AddComponent<EM_Component_SignalEmitter>(entity);

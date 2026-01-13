@@ -11,7 +11,8 @@ namespace EmergentMechanics
         private static void MoveAlongPath(RefRW<LocalTransform> transform, EM_Component_NpcMovementSettings settings, float speedScale, float deltaTime,
             RefRW<EM_Component_NpcMovementState> movementState, RefRW<EM_Component_NpcNavigationState> navigationState,
             EM_Component_LocationGrid grid, RefRW<EM_Component_NpcLocationState> locationState, DynamicBuffer<EM_BufferElement_LocationNode> nodes,
-            DynamicBuffer<EM_BufferElement_LocationOccupancy> occupancy, DynamicBuffer<EM_BufferElement_NpcPathNode> pathNodes, Entity entity,
+            DynamicBuffer<EM_BufferElement_LocationOccupancy> occupancy, DynamicBuffer<EM_BufferElement_LocationReservation> reservations,
+            DynamicBuffer<EM_BufferElement_NpcPathNode> pathNodes, Entity entity, double timeSeconds,
             ref NativeParallelHashMap<int, Entity> anchorMap)
         {
             if (navigationState.ValueRO.HasPath == 0 || pathNodes.Length == 0)
@@ -45,7 +46,7 @@ namespace EmergentMechanics
                 return;
             }
 
-            if (IsNodeBlocked(nextNodeIndex, entity, occupancy))
+            if (IsNodeBlocked(nextNodeIndex, entity, occupancy, reservations, timeSeconds))
             {
                 movementState.ValueRW.CurrentSpeed = 0f;
                 navigationState.ValueRW.IsMoving = 0;
@@ -71,7 +72,7 @@ namespace EmergentMechanics
             if (distance <= stopRadius || currentSpeed <= 0f)
             {
                 transform.ValueRW.Position = targetPosition;
-                UpdateNodeOccupancy(nextNodeIndex, entity, locationState, nodes, occupancy, ref anchorMap);
+                UpdateNodeOccupancy(nextNodeIndex, entity, locationState, nodes, occupancy, reservations, ref anchorMap);
                 navigationState.ValueRW.PathIndex = pathIndex + 1;
                 return;
             }
@@ -82,7 +83,7 @@ namespace EmergentMechanics
             if (step >= distance)
             {
                 transform.ValueRW.Position = targetPosition;
-                UpdateNodeOccupancy(nextNodeIndex, entity, locationState, nodes, occupancy, ref anchorMap);
+                UpdateNodeOccupancy(nextNodeIndex, entity, locationState, nodes, occupancy, reservations, ref anchorMap);
                 navigationState.ValueRW.PathIndex = pathIndex + 1;
                 return;
             }

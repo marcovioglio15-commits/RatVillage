@@ -212,15 +212,28 @@ namespace EmergentMechanics
             scheduleTarget.ValueRW.TradeCapable = tradeCapable;
         }
 
-        private static bool IsTargetLocationReady(FixedString64Bytes targetLocationId, FixedString64Bytes currentLocationId)
+        private static bool IsTargetLocationReady(FixedString64Bytes targetLocationId, EM_Component_NpcActivityTargetState activityTargetState,
+            int currentNodeIndex)
         {
             if (targetLocationId.Length == 0)
                 return true;
 
-            if (currentLocationId.Length == 0)
+            if (activityTargetState.LocationId.Length == 0)
                 return false;
 
-            return currentLocationId.Equals(targetLocationId);
+            if (!activityTargetState.LocationId.Equals(targetLocationId))
+                return false;
+
+            if (activityTargetState.HasReservation == 0)
+                return false;
+
+            if (activityTargetState.ReservedNodeIndex < 0)
+                return false;
+
+            if (currentNodeIndex < 0)
+                return false;
+
+            return activityTargetState.ReservedNodeIndex == currentNodeIndex;
         }
         #endregion
 

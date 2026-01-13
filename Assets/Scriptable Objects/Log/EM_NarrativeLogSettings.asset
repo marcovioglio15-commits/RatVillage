@@ -31,4 +31,4 @@ MonoBehaviour:
   resourceDeltaMin: 1
   resourceLowThreshold: 1
   resourceDepletedThreshold: 0
-  relationshipDeltaMin: 0.1
+  relationshipDeltaMin: 0

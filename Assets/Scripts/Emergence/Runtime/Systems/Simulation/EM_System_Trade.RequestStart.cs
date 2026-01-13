@@ -192,6 +192,7 @@ namespace EmergentMechanics
             tradeRequest.ValueRW.StartTimeSeconds = timeSeconds;
             tradeRequest.ValueRW.WaitStartTimeSeconds = -1d;
             tradeRequest.ValueRW.QueueSlotIndex = -1;
+            tradeRequest.ValueRW.QueueSlotNodeIndex = -1;
             tradeRequest.ValueRW.IsOverrideRequest = scheduleTarget.ValueRO.IsOverride;
             tradeRequest.ValueRW.Stage = EM_TradeRequestStage.Traveling;
 

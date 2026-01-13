@@ -87,6 +87,7 @@ namespace EmergentMechanics
                 StartTimeSeconds = -1d,
                 WaitStartTimeSeconds = -1d,
                 QueueSlotIndex = -1,
+                QueueSlotNodeIndex = -1,
                 IsOverrideRequest = 0,
                 Stage = EM_TradeRequestStage.None
             });

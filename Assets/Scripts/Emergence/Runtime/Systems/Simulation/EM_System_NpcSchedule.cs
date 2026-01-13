@@ -14,6 +14,7 @@ namespace EmergentMechanics
         private ComponentLookup<EM_Component_RandomSeed> randomLookup;
         private BufferLookup<EM_BufferElement_SignalEvent> signalLookup;
         private ComponentLookup<EM_Component_SocietyMember> memberLookup;
+        private ComponentLookup<EM_Component_NpcActivityTargetState> activityTargetLookup;
         #endregion
 
         #region Unity Lifecycle
@@ -21,10 +22,12 @@ namespace EmergentMechanics
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<EM_Component_NpcSchedule>();
+            state.RequireForUpdate<EM_Component_NpcActivityTargetState>();
             clockLookup = state.GetComponentLookup<EM_Component_SocietyClock>(true);
             randomLookup = state.GetComponentLookup<EM_Component_RandomSeed>(false);
             signalLookup = state.GetBufferLookup<EM_BufferElement_SignalEvent>(false);
             memberLookup = state.GetComponentLookup<EM_Component_SocietyMember>(true);
+            activityTargetLookup = state.GetComponentLookup<EM_Component_NpcActivityTargetState>(true);
         }
 
         // Evaluate per-NPC schedules and emit activity signals.
@@ -50,6 +53,7 @@ namespace EmergentMechanics
             randomLookup.Update(ref state);
             signalLookup.Update(ref state);
             memberLookup.Update(ref state);
+            activityTargetLookup.Update(ref state);
 
             // Schedule evaluation and signal emission.
             foreach ((RefRO<EM_Component_NpcSchedule> schedule, RefRW<EM_Component_NpcScheduleState> scheduleState,
@@ -79,6 +83,10 @@ namespace EmergentMechanics
 
                 DynamicBuffer<EM_BufferElement_SignalEvent> signals = signalLookup[entity];
 
+                if (!activityTargetLookup.HasComponent(entity))
+                    continue;
+
+                EM_Component_NpcActivityTargetState activityTargetState = activityTargetLookup[entity];
                 EM_Component_SocietyClock clock = clockLookup[societyRoot];
                 float dayLength = math.max(clock.DayLengthSeconds, 0.01f);
                 float speed = math.max(0f, clock.BaseSimulationSpeed * clock.SimulationSpeedMultiplier);
@@ -195,7 +203,7 @@ namespace EmergentMechanics
                 byte overrideFlag = (byte)(overrideActive ? 1 : 0);
                 UpdateScheduleTarget(scheduleTarget, entryIndex, activityId, targetLocationId, overrideFlag, targetTradeCapable);
 
-                bool locationReady = IsTargetLocationReady(targetLocationId, locationState.ValueRO.CurrentLocationId);
+                bool locationReady = IsTargetLocationReady(targetLocationId, activityTargetState, locationState.ValueRO.CurrentNodeIndex);
                 bool canStart = hasEntryData && activityId.Length > 0 && locationReady;
                 int activeEntryIndex = canStart ? entryIndex : -1;
                 FixedString64Bytes activeActivityId = canStart ? activityId : default;

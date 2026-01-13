@@ -19,14 +19,15 @@ namespace EmergentMechanics
                 return;
 
             EnsureCamera();
+            removalBuffer.Clear();
 
-            NativeArray<Entity> entities = npcQuery.ToEntityArray(Allocator.Temp);
-            activeEntities.Clear();
-
-            for (int i = 0; i < entities.Length; i++)
+            foreach (Entity entity in visibleEntities)
             {
-                Entity entity = entities[i];
-                activeEntities.Add(entity);
+                if (!entityManager.Exists(entity))
+                {
+                    removalBuffer.Add(entity);
+                    continue;
+                }
 
                 NpcStatusEntry entry;
 
@@ -36,21 +37,9 @@ namespace EmergentMechanics
                 UpdateEntryText(entry);
             }
 
-            entities.Dispose();
-
-            removalBuffer.Clear();
-
-            foreach (KeyValuePair<Entity, NpcStatusEntry> pair in entries)
-            {
-                if (activeEntities.Contains(pair.Key))
-                    continue;
-
-                removalBuffer.Add(pair.Key);
-            }
-
             for (int i = 0; i < removalBuffer.Count; i++)
             {
-                RemoveEntry(removalBuffer[i]);
+                ToggleEntryVisibility(removalBuffer[i], false);
             }
         }
         #endregion
@@ -72,14 +61,14 @@ namespace EmergentMechanics
                     continue;
                 }
 
-                if (!entityManager.HasComponent<LocalTransform>(entity))
+                float3 position;
+
+                if (TryGetWorldPosition(entity, out position) == false)
                 {
                     removalBuffer.Add(entity);
                     continue;
                 }
 
-                LocalTransform transformData = entityManager.GetComponentData<LocalTransform>(entity);
-                float3 position = transformData.Position;
                 Vector3 worldPosition = new Vector3(position.x, position.y, position.z) + worldOffset;
                 entry.Transform.position = worldPosition;
 
@@ -89,8 +78,29 @@ namespace EmergentMechanics
 
             for (int i = 0; i < removalBuffer.Count; i++)
             {
-                RemoveEntry(removalBuffer[i]);
+                ToggleEntryVisibility(removalBuffer[i], false);
             }
+        }
+        #endregion
+
+        #region Position
+        private bool TryGetWorldPosition(Entity entity, out float3 position)
+        {
+            position = float3.zero;
+
+            if (entityManager.HasComponent<LocalToWorld>(entity))
+            {
+                LocalToWorld worldTransform = entityManager.GetComponentData<LocalToWorld>(entity);
+                position = worldTransform.Value.c3.xyz;
+                return true;
+            }
+
+            if (!entityManager.HasComponent<LocalTransform>(entity))
+                return false;
+
+            LocalTransform transformData = entityManager.GetComponentData<LocalTransform>(entity);
+            position = transformData.Position;
+            return true;
         }
         #endregion
 
@@ -101,6 +111,8 @@ namespace EmergentMechanics
                 return;
 
             StringBuilder builder = new StringBuilder(128);
+            AppendActivityLine(entry.Entity, builder);
+            builder.AppendLine();
             AppendNeedsLine(entry.Entity, builder);
             builder.AppendLine();
             AppendResourcesLine(entry.Entity, builder);
@@ -244,7 +256,7 @@ namespace EmergentMechanics
             }
 
             entries.Clear();
-            activeEntities.Clear();
+            visibleEntities.Clear();
             removalBuffer.Clear();
         }
         #endregion
@@ -261,20 +273,37 @@ namespace EmergentMechanics
                 return false;
 
             entityManager = cachedWorld.EntityManager;
-            npcQuery = entityManager.CreateEntityQuery(ComponentType.ReadOnly<EM_Component_NpcType>(),
-                ComponentType.ReadOnly<LocalTransform>(), ComponentType.Exclude<Prefab>());
+            gridQuery = entityManager.CreateEntityQuery(ComponentType.ReadOnly<EM_Component_LocationGrid>(),
+                ComponentType.ReadOnly<EM_BufferElement_LocationOccupancy>());
+            npcQuery = entityManager.CreateEntityQuery(ComponentType.ReadOnly<EM_Component_NpcLocationState>(),
+                ComponentType.Exclude<Prefab>());
+            hasGridQuery = true;
+            hasNpcQuery = true;
             return true;
         }
 
         private void EnsureCamera()
         {
-            if (!faceCamera)
-                return;
-
             if (cachedCamera != null && cachedCamera.isActiveAndEnabled)
                 return;
 
             cachedCamera = Camera.main;
+
+            if (cachedCamera != null)
+                return;
+
+            Camera[] cameras = Camera.allCameras;
+
+            for (int i = 0; i < cameras.Length; i++)
+            {
+                Camera candidate = cameras[i];
+
+                if (candidate == null || !candidate.isActiveAndEnabled)
+                    continue;
+
+                cachedCamera = candidate;
+                return;
+            }
         }
 
         private Transform ResolveRoot()

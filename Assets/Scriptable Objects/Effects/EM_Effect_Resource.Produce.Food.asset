@@ -20,7 +20,7 @@ MonoBehaviour:
   parameterId: Food
   secondaryIdDefinition: {fileID: 0}
   secondaryId: 
-  magnitude: 10
+  magnitude: 100
   useClamp: 0
   minValue: 0
   maxValue: 1

@@ -9,7 +9,8 @@ namespace EmergentMechanics
         #region Pathfinding
         private static bool TryBuildPath(int startIndex, int goalIndex, Entity entity, EM_Component_LocationGrid grid,
             DynamicBuffer<EM_BufferElement_LocationNode> nodes, DynamicBuffer<EM_BufferElement_LocationOccupancy> occupancy,
-            DynamicBuffer<EM_BufferElement_NpcPathNode> pathNodes)
+            DynamicBuffer<EM_BufferElement_LocationReservation> reservations, DynamicBuffer<EM_BufferElement_NpcPathNode> pathNodes,
+            double timeSeconds)
         {
             int width = grid.Width;
             int height = grid.Height;
@@ -70,7 +71,7 @@ namespace EmergentMechanics
                     if (nodes[neighborIndex].Walkable == 0)
                         continue;
 
-                    if (IsNodeBlocked(neighborIndex, entity, occupancy) && neighborIndex != goalIndex)
+                    if (IsNodeBlocked(neighborIndex, entity, occupancy, reservations, timeSeconds) && neighborIndex != goalIndex)
                         continue;
 
                     float tentative = gScore[currentIndex] + 1f;

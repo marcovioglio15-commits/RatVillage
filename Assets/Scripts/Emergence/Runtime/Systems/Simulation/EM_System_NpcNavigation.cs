@@ -33,8 +33,9 @@ namespace EmergentMechanics
 
             DynamicBuffer<EM_BufferElement_LocationNode> nodes = SystemAPI.GetBuffer<EM_BufferElement_LocationNode>(gridEntity);
             DynamicBuffer<EM_BufferElement_LocationOccupancy> occupancy = SystemAPI.GetBuffer<EM_BufferElement_LocationOccupancy>(gridEntity);
+            DynamicBuffer<EM_BufferElement_LocationReservation> reservations = SystemAPI.GetBuffer<EM_BufferElement_LocationReservation>(gridEntity);
 
-            if (nodes.Length == 0 || nodes.Length != occupancy.Length)
+            if (nodes.Length == 0 || nodes.Length != occupancy.Length || nodes.Length != reservations.Length)
                 return;
 
             NativeParallelHashMap<int, Entity> anchorMap = BuildAnchorMap(ref state, gridEntity);
@@ -42,6 +43,7 @@ namespace EmergentMechanics
             clockLookup.Update(ref state);
             anchorLookup.Update(ref state);
             float deltaTime = SystemAPI.Time.DeltaTime;
+            double worldTimeSeconds = SystemAPI.Time.ElapsedTime;
 
             foreach ((RefRW<LocalTransform> transform, RefRO<EM_Component_NpcMovementSettings> settings,
                 RefRW<EM_Component_NpcMovementState> movementState, RefRW<EM_Component_NpcNavigationState> navigationState,
@@ -54,7 +56,8 @@ namespace EmergentMechanics
                     .WithEntityAccess())
             {
                 float speedScale = ResolveSpeedScale(member.SocietyRoot);
-                UpdateCurrentNode(transform.ValueRO.Position, entity, grid, nodes, occupancy, locationState, ref anchorMap);
+                double timeSeconds = ResolveSimulatedTimeSeconds(member.SocietyRoot, worldTimeSeconds);
+                UpdateCurrentNode(transform.ValueRO.Position, entity, grid, nodes, occupancy, reservations, locationState, ref anchorMap);
 
                 if (navigationState.ValueRO.DestinationKind == EM_NpcDestinationKind.None)
                 {
@@ -63,9 +66,9 @@ namespace EmergentMechanics
                 }
 
                 UpdateDestinationAnchor(navigationState);
-                EnsurePath(entity, grid, nodes, occupancy, navigationState, pathNodes, locationState.ValueRO);
+                EnsurePath(entity, grid, nodes, occupancy, reservations, navigationState, pathNodes, locationState.ValueRO, timeSeconds);
                 MoveAlongPath(transform, settings.ValueRO, speedScale, deltaTime, movementState, navigationState, grid, locationState,
-                    nodes, occupancy, pathNodes, entity, ref anchorMap);
+                    nodes, occupancy, reservations, pathNodes, entity, timeSeconds, ref anchorMap);
             }
 
             anchorMap.Dispose();

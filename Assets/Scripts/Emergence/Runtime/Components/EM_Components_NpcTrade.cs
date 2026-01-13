@@ -36,6 +36,7 @@ namespace EmergentMechanics
         public double StartTimeSeconds;
         public double WaitStartTimeSeconds;
         public int QueueSlotIndex;
+        public int QueueSlotNodeIndex;
         public byte IsOverrideRequest;
         public EM_TradeRequestStage Stage;
         #endregion

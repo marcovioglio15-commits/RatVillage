@@ -259,9 +259,11 @@ namespace EmergentMechanics
 
                 DynamicBuffer<EM_BufferElement_LocationNode> nodeBuffer = AddBuffer<EM_BufferElement_LocationNode>(gridEntity);
                 DynamicBuffer<EM_BufferElement_LocationOccupancy> occupancyBuffer = AddBuffer<EM_BufferElement_LocationOccupancy>(gridEntity);
+                DynamicBuffer<EM_BufferElement_LocationReservation> reservationBuffer = AddBuffer<EM_BufferElement_LocationReservation>(gridEntity);
                 int nodeCount = gridWidth * gridHeight;
                 nodeBuffer.ResizeUninitialized(nodeCount);
                 occupancyBuffer.ResizeUninitialized(nodeCount);
+                reservationBuffer.ResizeUninitialized(nodeCount);
 
                 for (int i = 0; i < nodeCount; i++)
                 {
@@ -284,6 +286,11 @@ namespace EmergentMechanics
                     occupancyBuffer[i] = new EM_BufferElement_LocationOccupancy
                     {
                         Occupant = Entity.Null
+                    };
+                    reservationBuffer[i] = new EM_BufferElement_LocationReservation
+                    {
+                        ReservedBy = Entity.Null,
+                        ReservedUntilTimeSeconds = -1d
                     };
 
                     if (locationDefinition == null)

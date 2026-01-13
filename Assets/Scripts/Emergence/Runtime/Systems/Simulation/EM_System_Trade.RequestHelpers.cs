@@ -21,6 +21,7 @@ namespace EmergentMechanics
                 }
             }
 
+            ClearQueueSlotReservation(requester, tradeRequest.ValueRO.QueueSlotNodeIndex);
             attemptedProviders.Clear();
             ResetTradeRequest(tradeRequest);
             ClearTradeDestination(navigationState);
@@ -38,6 +39,7 @@ namespace EmergentMechanics
             tradeRequest.ValueRW.StartTimeSeconds = -1d;
             tradeRequest.ValueRW.WaitStartTimeSeconds = -1d;
             tradeRequest.ValueRW.QueueSlotIndex = -1;
+            tradeRequest.ValueRW.QueueSlotNodeIndex = -1;
             tradeRequest.ValueRW.IsOverrideRequest = 0;
             tradeRequest.ValueRW.Stage = EM_TradeRequestStage.None;
         }
@@ -146,6 +148,8 @@ namespace EmergentMechanics
 
             if (found)
             {
+                ClearQueueSlotReservation(requester, tradeRequest.ValueRO.QueueSlotNodeIndex);
+                tradeRequest.ValueRW.QueueSlotNodeIndex = -1;
                 tradeRequest.ValueRW.Provider = nextProvider;
                 tradeRequest.ValueRW.TargetAnchor = nextAnchor;
                 tradeRequest.ValueRW.StartTimeSeconds = timeSeconds;

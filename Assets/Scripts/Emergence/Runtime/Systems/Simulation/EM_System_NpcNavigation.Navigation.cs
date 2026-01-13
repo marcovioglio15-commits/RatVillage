@@ -21,6 +21,14 @@ namespace EmergentMechanics
             return speed;
         }
 
+        private double ResolveSimulatedTimeSeconds(Entity societyRoot, double fallbackTimeSeconds)
+        {
+            if (societyRoot == Entity.Null || !clockLookup.HasComponent(societyRoot))
+                return fallbackTimeSeconds;
+
+            return clockLookup[societyRoot].SimulatedTimeSeconds;
+        }
+
         private void UpdateDestinationAnchor(RefRW<EM_Component_NpcNavigationState> navigationState)
         {
             if (navigationState.ValueRO.DestinationAnchor == Entity.Null)
@@ -34,8 +42,9 @@ namespace EmergentMechanics
         }
 
         private static void EnsurePath(Entity entity, EM_Component_LocationGrid grid, DynamicBuffer<EM_BufferElement_LocationNode> nodes,
-            DynamicBuffer<EM_BufferElement_LocationOccupancy> occupancy, RefRW<EM_Component_NpcNavigationState> navigationState,
-            DynamicBuffer<EM_BufferElement_NpcPathNode> pathNodes, EM_Component_NpcLocationState locationState)
+            DynamicBuffer<EM_BufferElement_LocationOccupancy> occupancy, DynamicBuffer<EM_BufferElement_LocationReservation> reservations,
+            RefRW<EM_Component_NpcNavigationState> navigationState, DynamicBuffer<EM_BufferElement_NpcPathNode> pathNodes,
+            EM_Component_NpcLocationState locationState, double timeSeconds)
         {
             int destinationIndex = navigationState.ValueRO.DestinationNodeIndex;
 
@@ -71,7 +80,8 @@ namespace EmergentMechanics
                 return;
 
             pathNodes.Clear();
-            bool built = TryBuildPath(locationState.CurrentNodeIndex, destinationIndex, entity, grid, nodes, occupancy, pathNodes);
+            bool built = TryBuildPath(locationState.CurrentNodeIndex, destinationIndex, entity, grid, nodes, occupancy, reservations,
+                pathNodes, timeSeconds);
 
             if (!built)
             {

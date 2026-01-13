@@ -45,7 +45,7 @@ namespace EmergentMechanics
 
             if (!queued)
             {
-                bool enqueued = TryEnterQueue(requester, timeSeconds, tradeRequest, navigationState);
+                bool enqueued = TryEnterQueue(requester, timeSeconds, tradeInteraction, tradeRequest, navigationState);
 
                 if (!enqueued)
                 {
@@ -69,6 +69,20 @@ namespace EmergentMechanics
             }
 
             int slotIndex = providerQueue[queueIndex].SlotIndex;
+            int slotNodeIndex;
+            bool hasSlotNodeIndex = TryResolveQueueSlotNodeIndex(targetAnchor, slotIndex, out slotNodeIndex);
+
+            if (hasSlotNodeIndex)
+            {
+                tradeRequest.ValueRW.QueueSlotNodeIndex = slotNodeIndex;
+                float reservationSeconds = ResolveQueueReservationTimeout(tradeInteraction.ValueRO);
+                TryReserveQueueSlot(requester, slotNodeIndex, timeSeconds, reservationSeconds);
+            }
+            else
+            {
+                tradeRequest.ValueRW.QueueSlotNodeIndex = -1;
+            }
+
             float3 queuePosition;
             bool hasQueuePosition = TryGetQueueSlotPosition(targetAnchor, slotIndex, out queuePosition);
 
@@ -86,8 +100,8 @@ namespace EmergentMechanics
                 maxEntries, ref debugLog, scheduleOverride, navigationState, false);
         }
 
-        private bool TryEnterQueue(Entity requester, double timeSeconds, RefRW<EM_Component_TradeRequestState> tradeRequest,
-            RefRW<EM_Component_NpcNavigationState> navigationState)
+        private bool TryEnterQueue(Entity requester, double timeSeconds, RefRO<EM_Component_NpcTradeInteraction> tradeInteraction,
+            RefRW<EM_Component_TradeRequestState> tradeRequest, RefRW<EM_Component_NpcNavigationState> navigationState)
         {
             Entity provider = tradeRequest.ValueRO.Provider;
             Entity targetAnchor = tradeRequest.ValueRO.TargetAnchor;
@@ -132,6 +146,20 @@ namespace EmergentMechanics
 
             if (tradeRequest.ValueRO.WaitStartTimeSeconds < 0d)
                 tradeRequest.ValueRW.WaitStartTimeSeconds = timeSeconds;
+
+            int slotNodeIndex;
+            bool hasSlotNodeIndex = TryResolveQueueSlotNodeIndex(targetAnchor, slotIndex, out slotNodeIndex);
+
+            if (hasSlotNodeIndex)
+            {
+                tradeRequest.ValueRW.QueueSlotNodeIndex = slotNodeIndex;
+                float reservationSeconds = ResolveQueueReservationTimeout(tradeInteraction.ValueRO);
+                TryReserveQueueSlot(requester, slotNodeIndex, timeSeconds, reservationSeconds);
+            }
+            else
+            {
+                tradeRequest.ValueRW.QueueSlotNodeIndex = -1;
+            }
 
             float3 queuePosition;
             bool hasQueuePosition = TryGetQueueSlotPosition(targetAnchor, slotIndex, out queuePosition);

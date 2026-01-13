@@ -84,18 +84,20 @@ namespace EmergentMechanics
             if (entity == Entity.Null)
                 return "None";
 
+            string entityId = FormatEntityId(entity);
+
             if (!entityManager.Exists(entity))
-                return entity.Index.ToString(CultureInfo.InvariantCulture);
+                return entityId;
 
             if (entityManager.HasComponent<EM_Component_NpcType>(entity))
             {
                 EM_Component_NpcType npcType = entityManager.GetComponentData<EM_Component_NpcType>(entity);
 
-                if (npcType.TypeId.Length > 0)
-                    return FormatId(npcType.TypeId);
+                string name = npcType.TypeId.Length > 0 ? FormatId(npcType.TypeId) : "NPC";
+                return string.Format(CultureInfo.InvariantCulture, "{0} #{1}", name, entityId);
             }
 
-            return entity.Index.ToString(CultureInfo.InvariantCulture);
+            return entityId;
         }
 
         internal static string FormatId(FixedString64Bytes id)
@@ -230,6 +232,13 @@ namespace EmergentMechanics
         private static string FormatValue(float value)
         {
             return value.ToString("0.##", CultureInfo.InvariantCulture);
+        }
+
+        private static string FormatEntityId(Entity entity)
+        {
+            string index = entity.Index.ToString(CultureInfo.InvariantCulture);
+            string version = entity.Version.ToString(CultureInfo.InvariantCulture);
+            return index + ":" + version;
         }
         #endregion
     }

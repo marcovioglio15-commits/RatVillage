@@ -63,7 +63,7 @@ namespace EmergentMechanics
 
             if (IsProviderBusy(provider, requester, timeSeconds))
             {
-                bool queued = TryEnterQueue(requester, timeSeconds, tradeRequest, navigationState);
+                bool queued = TryEnterQueue(requester, timeSeconds, tradeInteraction, tradeRequest, navigationState);
 
                 if (!queued)
                 {
@@ -79,7 +79,7 @@ namespace EmergentMechanics
 
             if (providerQueue.Length > 0 && !IsRequesterFirstInQueue(providerQueue, requester))
             {
-                bool queued = TryEnterQueue(requester, timeSeconds, tradeRequest, navigationState);
+                bool queued = TryEnterQueue(requester, timeSeconds, tradeInteraction, tradeRequest, navigationState);
 
                 if (!queued)
                 {

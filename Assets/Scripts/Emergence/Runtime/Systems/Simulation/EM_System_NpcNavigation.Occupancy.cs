@@ -9,7 +9,8 @@ namespace EmergentMechanics
         #region Occupancy
         private static void UpdateCurrentNode(float3 position, Entity entity, EM_Component_LocationGrid grid,
             DynamicBuffer<EM_BufferElement_LocationNode> nodes, DynamicBuffer<EM_BufferElement_LocationOccupancy> occupancy,
-            RefRW<EM_Component_NpcLocationState> locationState, ref NativeParallelHashMap<int, Entity> anchorMap)
+            DynamicBuffer<EM_BufferElement_LocationReservation> reservations, RefRW<EM_Component_NpcLocationState> locationState,
+            ref NativeParallelHashMap<int, Entity> anchorMap)
         {
             int nodeIndex;
 
@@ -21,6 +22,7 @@ namespace EmergentMechanics
 
             ClearOccupancy(locationState.ValueRO.CurrentNodeIndex, entity, occupancy);
             occupancy[nodeIndex] = new EM_BufferElement_LocationOccupancy { Occupant = entity };
+            ClearReservationForEntity(nodeIndex, entity, reservations);
 
             locationState.ValueRW.CurrentNodeIndex = nodeIndex;
             locationState.ValueRW.CurrentLocationId = nodes[nodeIndex].LocationId;
@@ -32,13 +34,14 @@ namespace EmergentMechanics
 
         private static void UpdateNodeOccupancy(int nodeIndex, Entity entity, RefRW<EM_Component_NpcLocationState> locationState,
             DynamicBuffer<EM_BufferElement_LocationNode> nodes, DynamicBuffer<EM_BufferElement_LocationOccupancy> occupancy,
-            ref NativeParallelHashMap<int, Entity> anchorMap)
+            DynamicBuffer<EM_BufferElement_LocationReservation> reservations, ref NativeParallelHashMap<int, Entity> anchorMap)
         {
             if (nodeIndex < 0 || nodeIndex >= occupancy.Length)
                 return;
 
             ClearOccupancy(locationState.ValueRO.CurrentNodeIndex, entity, occupancy);
             occupancy[nodeIndex] = new EM_BufferElement_LocationOccupancy { Occupant = entity };
+            ClearReservationForEntity(nodeIndex, entity, reservations);
             locationState.ValueRW.CurrentNodeIndex = nodeIndex;
             locationState.ValueRW.CurrentLocationId = nodes[nodeIndex].LocationId;
 
@@ -61,7 +64,23 @@ namespace EmergentMechanics
             occupancy[nodeIndex] = entry;
         }
 
-        private static bool IsNodeBlocked(int nodeIndex, Entity entity, DynamicBuffer<EM_BufferElement_LocationOccupancy> occupancy)
+        private static void ClearReservationForEntity(int nodeIndex, Entity entity, DynamicBuffer<EM_BufferElement_LocationReservation> reservations)
+        {
+            if (nodeIndex < 0 || nodeIndex >= reservations.Length)
+                return;
+
+            EM_BufferElement_LocationReservation entry = reservations[nodeIndex];
+
+            if (entry.ReservedBy != entity)
+                return;
+
+            entry.ReservedBy = Entity.Null;
+            entry.ReservedUntilTimeSeconds = -1d;
+            reservations[nodeIndex] = entry;
+        }
+
+        private static bool IsNodeBlocked(int nodeIndex, Entity entity, DynamicBuffer<EM_BufferElement_LocationOccupancy> occupancy,
+            DynamicBuffer<EM_BufferElement_LocationReservation> reservations, double timeSeconds)
         {
             if (nodeIndex < 0 || nodeIndex >= occupancy.Length)
                 return true;
@@ -69,9 +88,37 @@ namespace EmergentMechanics
             Entity occupant = occupancy[nodeIndex].Occupant;
 
             if (occupant == Entity.Null)
+                return IsReservationBlocked(nodeIndex, entity, reservations, timeSeconds);
+
+            if (occupant == entity)
                 return false;
 
-            return occupant != entity;
+            return true;
+        }
+
+        private static bool IsReservationBlocked(int nodeIndex, Entity entity, DynamicBuffer<EM_BufferElement_LocationReservation> reservations,
+            double timeSeconds)
+        {
+            if (nodeIndex < 0 || nodeIndex >= reservations.Length)
+                return true;
+
+            EM_BufferElement_LocationReservation entry = reservations[nodeIndex];
+
+            if (entry.ReservedBy == Entity.Null)
+                return false;
+
+            if (entry.ReservedBy == entity)
+                return false;
+
+            if (entry.ReservedUntilTimeSeconds > 0d && timeSeconds >= entry.ReservedUntilTimeSeconds)
+            {
+                entry.ReservedBy = Entity.Null;
+                entry.ReservedUntilTimeSeconds = -1d;
+                reservations[nodeIndex] = entry;
+                return false;
+            }
+
+            return true;
         }
         #endregion
     }

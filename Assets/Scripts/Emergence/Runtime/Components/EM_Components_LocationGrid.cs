@@ -40,5 +40,13 @@ namespace EmergentMechanics
         public Entity Occupant;
         #endregion
     }
+
+    public struct EM_BufferElement_LocationReservation : IBufferElementData
+    {
+        #region Data
+        public Entity ReservedBy;
+        public double ReservedUntilTimeSeconds;
+        #endregion
+    }
     #endregion
 }
