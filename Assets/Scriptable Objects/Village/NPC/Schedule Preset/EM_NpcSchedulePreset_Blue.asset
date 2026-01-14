@@ -62,12 +62,12 @@ MonoBehaviour:
     legacyTickSignalId: 
   - activityIdDefinition: {fileID: 11400000, guid: 03476dd9832b06040b063b228e754cb1, type: 2}
     activityId: Override.Sleep
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 0d6ba9bbadd9db441aedf6eb725baef0, type: 2}
     tradeCapable: 0
     startHour: 0
     endHour: 0
     useDuration: 1
-    minDurationHours: 0
+    minDurationHours: 1
     maxDurationHours: 2
     legacyTickIntervalHours: 0
     legacyTickSignalCurve:

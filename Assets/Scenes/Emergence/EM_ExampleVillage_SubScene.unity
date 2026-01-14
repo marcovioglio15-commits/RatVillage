@@ -1053,15 +1053,15 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 0d6ba9bbadd9db441aedf6eb725baef0, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 0d6ba9bbadd9db441aedf6eb725baef0, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 0d6ba9bbadd9db441aedf6eb725baef0, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 0d6ba9bbadd9db441aedf6eb725baef0, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 0d6ba9bbadd9db441aedf6eb725baef0, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
@@ -1093,15 +1093,15 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 0d6ba9bbadd9db441aedf6eb725baef0, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 0d6ba9bbadd9db441aedf6eb725baef0, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 0d6ba9bbadd9db441aedf6eb725baef0, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 0d6ba9bbadd9db441aedf6eb725baef0, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 0d6ba9bbadd9db441aedf6eb725baef0, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
@@ -1487,15 +1487,15 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
@@ -1527,15 +1527,15 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
@@ -1779,7 +1779,15 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: e51363292d9b9854d9d0dc7301286468, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: e51363292d9b9854d9d0dc7301286468, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: e51363292d9b9854d9d0dc7301286468, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: e51363292d9b9854d9d0dc7301286468, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: e51363292d9b9854d9d0dc7301286468, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
@@ -1811,23 +1819,15 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: e51363292d9b9854d9d0dc7301286468, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: e51363292d9b9854d9d0dc7301286468, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: e51363292d9b9854d9d0dc7301286468, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: e51363292d9b9854d9d0dc7301286468, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: e51363292d9b9854d9d0dc7301286468, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
