@@ -131,6 +131,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PF_NpcOrange (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 3413567824012304399, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
       propertyPath: societyRoot
       value: 
@@ -195,6 +199,10 @@ PrefabInstance:
     - target: {fileID: 3413567824012304399, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: m_Name
       value: PF_NpcBlue (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3413567824012304399, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: societyRoot
@@ -261,6 +269,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PF_NpcOrange (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 3413567824012304399, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
       propertyPath: societyRoot
       value: 
@@ -325,6 +337,10 @@ PrefabInstance:
     - target: {fileID: 3413567824012304399, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: m_Name
       value: PF_NpcBlue (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3413567824012304399, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: societyRoot
@@ -391,6 +407,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PF_NpcOrange (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 3413567824012304399, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
       propertyPath: societyRoot
       value: 
@@ -455,6 +475,10 @@ PrefabInstance:
     - target: {fileID: 3413567824012304399, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: m_Name
       value: PF_NpcBlue (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3413567824012304399, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: societyRoot
@@ -521,6 +545,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PF_NpcRed (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 3413567824012304399, guid: 936c1d72502bd9e47a5fad73f454eaa8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 936c1d72502bd9e47a5fad73f454eaa8, type: 3}
       propertyPath: societyRoot
       value: 
@@ -581,6 +609,10 @@ PrefabInstance:
     - target: {fileID: 3413567824012304399, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: m_Name
       value: PF_NpcBlue (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3413567824012304399, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: societyRoot
@@ -646,6 +678,10 @@ PrefabInstance:
     - target: {fileID: 3413567824012304399, guid: 936c1d72502bd9e47a5fad73f454eaa8, type: 3}
       propertyPath: m_Name
       value: PF_NpcRed (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3413567824012304399, guid: 936c1d72502bd9e47a5fad73f454eaa8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 936c1d72502bd9e47a5fad73f454eaa8, type: 3}
       propertyPath: societyRoot
@@ -741,6 +777,118 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1459310854
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1459310858}
+  - component: {fileID: 1459310857}
+  - component: {fileID: 1459310856}
+  - component: {fileID: 1459310855}
+  m_Layer: 0
+  m_Name: Cube
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &1459310855
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1459310854}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1459310856
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1459310854}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1459310857
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1459310854}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1459310858
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1459310854}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -10.3, y: 0, z: 13.41}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1488502804
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -752,6 +900,10 @@ PrefabInstance:
     - target: {fileID: 3413567824012304399, guid: 936c1d72502bd9e47a5fad73f454eaa8, type: 3}
       propertyPath: m_Name
       value: PF_NpcRed (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3413567824012304399, guid: 936c1d72502bd9e47a5fad73f454eaa8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 936c1d72502bd9e47a5fad73f454eaa8, type: 3}
       propertyPath: societyRoot
@@ -813,6 +965,10 @@ PrefabInstance:
     - target: {fileID: 3413567824012304399, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
       propertyPath: m_Name
       value: PF_NpcOrange
+      objectReference: {fileID: 0}
+    - target: {fileID: 3413567824012304399, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
       propertyPath: societyRoot
@@ -879,6 +1035,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PF_NpcOrange (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 3413567824012304399, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
       propertyPath: societyRoot
       value: 
@@ -943,6 +1103,10 @@ PrefabInstance:
     - target: {fileID: 3413567824012304399, guid: 936c1d72502bd9e47a5fad73f454eaa8, type: 3}
       propertyPath: m_Name
       value: PF_NpcRed
+      objectReference: {fileID: 0}
+    - target: {fileID: 3413567824012304399, guid: 936c1d72502bd9e47a5fad73f454eaa8, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 936c1d72502bd9e47a5fad73f454eaa8, type: 3}
       propertyPath: societyRoot
@@ -1605,7 +1769,7 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 49cf91f467101e640bd5d0ef4140e127, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
@@ -1859,6 +2023,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PF_NpcOrange (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3413567824012304399, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
       propertyPath: societyRoot
       value: 
@@ -1924,6 +2092,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PF_NpcOrange (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 3413567824012304399, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
       propertyPath: societyRoot
       value: 
@@ -1988,6 +2160,10 @@ PrefabInstance:
     - target: {fileID: 3413567824012304399, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: m_Name
       value: PF_NpcBlue (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3413567824012304399, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: societyRoot
@@ -2059,8 +2235,64 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1984070724}
     - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
+      propertyPath: logMessageColor.g
+      value: 0.47453213
+      objectReference: {fileID: 0}
+    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
+      propertyPath: needs.Array.data[0].MaxValue
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
+      propertyPath: needs.Array.data[1].MaxValue
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
+      propertyPath: needs.Array.data[2].MaxValue
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: resources.Array.data[0].Amount
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
+      propertyPath: needs.Array.data[2].ActivityRates.Array.data[0].RatePerHour.m_Curve.Array.data[1].time
+      value: 0.4565277
+      objectReference: {fileID: 0}
+    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
+      propertyPath: needs.Array.data[2].ActivityRates.Array.data[0].RatePerHour.m_Curve.Array.data[2].time
+      value: 0.97516185
+      objectReference: {fileID: 0}
+    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
+      propertyPath: needs.Array.data[2].ActivityRates.Array.data[0].RatePerHour.m_Curve.Array.data[1].value
+      value: 0.010974124
+      objectReference: {fileID: 0}
+    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
+      propertyPath: needs.Array.data[2].ActivityRates.Array.data[0].RatePerHour.m_Curve.Array.data[2].value
+      value: 0.012063816
+      objectReference: {fileID: 0}
+    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
+      propertyPath: needs.Array.data[2].ActivityRates.Array.data[0].RatePerHour.m_Curve.Array.data[0].inSlope
+      value: 0.024038242
+      objectReference: {fileID: 0}
+    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
+      propertyPath: needs.Array.data[2].ActivityRates.Array.data[0].RatePerHour.m_Curve.Array.data[1].inSlope
+      value: 0.013069661
+      objectReference: {fileID: 0}
+    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
+      propertyPath: needs.Array.data[2].ActivityRates.Array.data[0].RatePerHour.m_Curve.Array.data[2].inSlope
+      value: 0.0021010805
+      objectReference: {fileID: 0}
+    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
+      propertyPath: needs.Array.data[2].ActivityRates.Array.data[0].RatePerHour.m_Curve.Array.data[0].outSlope
+      value: 0.024038242
+      objectReference: {fileID: 0}
+    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
+      propertyPath: needs.Array.data[2].ActivityRates.Array.data[0].RatePerHour.m_Curve.Array.data[1].outSlope
+      value: 0.013069661
+      objectReference: {fileID: 0}
+    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
+      propertyPath: needs.Array.data[2].ActivityRates.Array.data[0].RatePerHour.m_Curve.Array.data[2].outSlope
+      value: 0.0021010805
       objectReference: {fileID: 0}
     - target: {fileID: 8471115441510017071, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2118,6 +2350,10 @@ PrefabInstance:
     - target: {fileID: 3413567824012304399, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: m_Name
       value: PF_NpcBlue (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3413567824012304399, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: societyRoot
@@ -2183,6 +2419,10 @@ PrefabInstance:
     - target: {fileID: 3413567824012304399, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: m_Name
       value: PF_NpcBlue (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3413567824012304399, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: societyRoot
@@ -2405,6 +2645,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PF_NpcOrange (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 3413567824012304399, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
       propertyPath: societyRoot
       value: 
@@ -2485,4 +2729,5 @@ SceneRoots:
   - {fileID: 1165391072}
   - {fileID: 1488502804}
   - {fileID: 1062645496}
+  - {fileID: 1459310858}
   - {fileID: 1605651162}

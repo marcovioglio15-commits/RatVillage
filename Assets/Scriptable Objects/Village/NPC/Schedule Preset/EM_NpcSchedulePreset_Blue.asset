@@ -20,9 +20,9 @@ MonoBehaviour:
     tradeCapable: 0
     startHour: 0
     endHour: 0
-    useDuration: 0
+    useDuration: 1
     minDurationHours: 0
-    maxDurationHours: 0
+    maxDurationHours: 1
     legacyTickIntervalHours: 0
     legacyTickSignalCurve:
       serializedVersion: 2
@@ -43,9 +43,9 @@ MonoBehaviour:
     tradeCapable: 0
     startHour: 0
     endHour: 0
-    useDuration: 0
+    useDuration: 1
     minDurationHours: 0
-    maxDurationHours: 0
+    maxDurationHours: 1
     legacyTickIntervalHours: 0
     legacyTickSignalCurve:
       serializedVersion: 2
@@ -68,7 +68,7 @@ MonoBehaviour:
     endHour: 0
     useDuration: 1
     minDurationHours: 1
-    maxDurationHours: 2
+    maxDurationHours: 1
     legacyTickIntervalHours: 0
     legacyTickSignalCurve:
       serializedVersion: 2
@@ -87,8 +87,8 @@ MonoBehaviour:
     activityId: Work
     locationDefinition: {fileID: 11400000, guid: a4144a8ba0bb99b48a4e4bc33b1515bc, type: 2}
     tradeCapable: 1
-    startHour: 0
-    endHour: 24
+    startHour: 6
+    endHour: 13
     useDuration: 0
     minDurationHours: 0
     maxDurationHours: 0
@@ -129,6 +129,81 @@ MonoBehaviour:
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
+    tradePolicy: 0
+    allowedTradeNeeds: []
+    legacyStartSignalIdDefinition: {fileID: 0}
+    legacyStartSignalId: 
+    legacyTickSignalIdDefinition: {fileID: 0}
+    legacyTickSignalId: 
+  - activityIdDefinition: {fileID: 11400000, guid: 67d3d15d8c81e474086a46568dd94676, type: 2}
+    activityId: Work
+    locationDefinition: {fileID: 11400000, guid: 49cf91f467101e640bd5d0ef4140e127, type: 2}
+    tradeCapable: 0
+    startHour: 13
+    endHour: 14
+    useDuration: 0
+    minDurationHours: 0
+    maxDurationHours: 0
+    legacyTickIntervalHours: 0
+    legacyTickSignalCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    signalEntries:
+    - startSignalIdDefinition: {fileID: 0}
+      startSignalId: 
+      tickSignalIdDefinition: {fileID: 11400000, guid: c09a0eee90c546741adfa36498734c8d, type: 2}
+      tickSignalId: Signal.Work.Tick.ProduceFood
+      tickIntervalHours: 1
+      tickSignalCurve:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+    tradePolicy: 0
+    allowedTradeNeeds: []
+    legacyStartSignalIdDefinition: {fileID: 0}
+    legacyStartSignalId: 
+    legacyTickSignalIdDefinition: {fileID: 0}
+    legacyTickSignalId: 
+  - activityIdDefinition: {fileID: 11400000, guid: 03476dd9832b06040b063b228e754cb1, type: 2}
+    activityId: Override.Sleep
+    locationDefinition: {fileID: 11400000, guid: 0d6ba9bbadd9db441aedf6eb725baef0, type: 2}
+    tradeCapable: 0
+    startHour: 14
+    endHour: 6
+    useDuration: 0
+    minDurationHours: 0
+    maxDurationHours: 0
+    legacyTickIntervalHours: 0
+    legacyTickSignalCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    signalEntries: []
     tradePolicy: 0
     allowedTradeNeeds: []
     legacyStartSignalIdDefinition: {fileID: 0}

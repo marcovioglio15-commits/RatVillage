@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42af5827dde31ff4e8f41d79ba4d477c, type: 3}
+  m_Name: EM_Effect_Lunch.Consume.Food
+  m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_EffectDefinition
+  effectIdDefinition: {fileID: 11400000, guid: 509da72ef83da5a418e95ef3fd277d8f, type: 2}
+  effectId: Effect.Id
+  effectType: 0
+  target: 0
+  parameterIdDefinition: {fileID: 11400000, guid: bb08d13ab847f4e498d901bd00407fc1, type: 2}
+  parameterId: 
+  secondaryIdDefinition: {fileID: 0}
+  secondaryId: 
+  magnitude: -0.1
+  useClamp: 0
+  minValue: 0
+  maxValue: 1

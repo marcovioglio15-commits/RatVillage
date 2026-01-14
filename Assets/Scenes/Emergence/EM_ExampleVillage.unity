@@ -1438,7 +1438,7 @@ MonoBehaviour:
   statusRoot: {fileID: 0}
   worldOffset: {x: 0, y: 2, z: 0}
   refreshInterval: 0.25
-  faceCamera: 0
+  faceCamera: 1
   uiBlockLayers:
     serializedVersion: 2
     m_Bits: 0
