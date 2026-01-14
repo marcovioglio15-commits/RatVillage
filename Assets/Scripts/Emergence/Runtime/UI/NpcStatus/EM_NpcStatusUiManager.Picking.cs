@@ -106,7 +106,7 @@ namespace EmergentMechanics
                 if (candidates.Length == 0)
                     return false;
 
-                float bestDistanceSq = maxDistance * maxDistance;
+                float bestDistanceSq = float.MaxValue;
                 Entity bestEntity = Entity.Null;
 
                 for (int i = 0; i < candidates.Length; i++)
@@ -126,8 +126,14 @@ namespace EmergentMechanics
                     float deltaX = candidateScreen.x - screenPosition.x;
                     float deltaY = candidateScreen.y - screenPosition.y;
                     float distanceSq = deltaX * deltaX + deltaY * deltaY;
+                    float extraRadius = math.max(0f, candidateScreen.z) * math.max(0f, selectionScreenRadiusPerMeter);
+                    float radius = maxDistance + extraRadius;
+                    float radiusSq = radius * radius;
 
-                    if (distanceSq > bestDistanceSq)
+                    if (distanceSq > radiusSq)
+                        continue;
+
+                    if (distanceSq >= bestDistanceSq)
                         continue;
 
                     bestDistanceSq = distanceSq;
@@ -174,7 +180,7 @@ namespace EmergentMechanics
                 if (candidates.Length == 0)
                     return false;
 
-                float bestDistanceSq = maxDistanceSq;
+                float bestDistanceSq = float.MaxValue;
                 Entity bestEntity = Entity.Null;
 
                 for (int i = 0; i < candidates.Length; i++)
@@ -194,8 +200,14 @@ namespace EmergentMechanics
 
                     Vector3 closest = ray.origin + ray.direction * projection;
                     float distanceSq = (candidateWorld - closest).sqrMagnitude;
+                    float extraRadius = math.max(0f, projection) * math.max(0f, selectionRadiusPerMeter);
+                    float radius = maxDistance + extraRadius;
+                    float radiusSq = radius * radius;
 
-                    if (distanceSq > bestDistanceSq)
+                    if (distanceSq > radiusSq)
+                        continue;
+
+                    if (distanceSq >= bestDistanceSq)
                         continue;
 
                     bestDistanceSq = distanceSq;

@@ -50,6 +50,8 @@ namespace EmergentMechanics
             {
                 movementState.ValueRW.CurrentSpeed = 0f;
                 navigationState.ValueRW.IsMoving = 0;
+                navigationState.ValueRW.HasPath = 0;
+                navigationState.ValueRW.PathIndex = 0;
                 return;
             }
 

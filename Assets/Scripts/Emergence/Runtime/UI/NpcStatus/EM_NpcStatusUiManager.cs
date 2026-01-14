@@ -42,8 +42,14 @@ namespace EmergentMechanics
         [Tooltip("Maximum screen-space distance in pixels to select an NPC.")]
         [SerializeField] private float selectionScreenRadiusPixels = 48f;
 
+        [Tooltip("Extra screen-space radius in pixels added per meter of camera distance.")]
+        [SerializeField] private float selectionScreenRadiusPerMeter = 0.25f;
+
         [Tooltip("Maximum world-space distance from the click ray used to select an NPC.")]
         [SerializeField] private float selectionRadius = 0.75f;
+
+        [Tooltip("Extra world-space radius added per meter along the click ray.")]
+        [SerializeField] private float selectionRadiusPerMeter = 0.02f;
         #endregion
         #endregion
 

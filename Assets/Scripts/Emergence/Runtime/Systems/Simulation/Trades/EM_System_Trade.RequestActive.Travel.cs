@@ -8,6 +8,8 @@ namespace EmergentMechanics
     public partial struct EM_System_Trade
     {
         #region TradeRequestTravel
+        private const float TravelTimeoutMultiplier = 3f;
+
         private void UpdateTravelingRequest(Entity requester, Entity societyRoot, double timeSeconds, EM_Component_TradeSettings tradeSettings,
             IntentPolicy policy, ref EM_Component_RandomSeed seed, RefRO<EM_Component_NpcTradeInteraction> tradeInteraction,
             RefRO<EM_Component_NpcLocationState> locationState, RefRO<LocalTransform> transform,
@@ -51,7 +53,16 @@ namespace EmergentMechanics
             }
 
             if (!locationState.ValueRO.CurrentLocationId.Equals(targetLocationId))
+            {
+                if (IsTravelTimedOut(tradeRequest.ValueRO, navigationState.ValueRO, tradeInteraction.ValueRO, timeSeconds))
+                {
+                    HandleProviderFailure(requester, societyRoot, timeSeconds, tradeSettings, policy, ref seed, tradeRequest, attemptedProviders,
+                        intents, needs, needData, remainingAmount, signals, candidates, candidateSocieties, ref providerLock, hasDebugBuffer,
+                        debugBuffer, maxEntries, ref debugLog, ReasonProviderTimeout, scheduleOverride, navigationState);
+                }
+
                 return;
+            }
 
             if (!IsProviderAtLocation(provider, targetLocationId))
             {
@@ -94,6 +105,27 @@ namespace EmergentMechanics
             TryHandleTradeAttempt(requester, societyRoot, timeSeconds, tradeSettings, policy, ref seed, tradeRequest, attemptedProviders, intents, needs,
                 resources, needData, remainingAmount, signals, candidates, candidateSocieties, ref providerLock, hasDebugBuffer, debugBuffer, maxEntries,
                 ref debugLog, scheduleOverride, navigationState, false);
+        }
+
+        private static bool IsTravelTimedOut(EM_Component_TradeRequestState tradeRequest, EM_Component_NpcNavigationState navigationState,
+            EM_Component_NpcTradeInteraction tradeInteraction, double timeSeconds)
+        {
+            if (tradeRequest.StartTimeSeconds < 0d)
+                return false;
+
+            if (tradeInteraction.WaitSeconds <= 0f)
+                return false;
+
+            if (navigationState.IsMoving != 0)
+                return false;
+
+            double elapsedSeconds = timeSeconds - tradeRequest.StartTimeSeconds;
+            float timeoutSeconds = math.max(tradeInteraction.WaitSeconds, 0f) * TravelTimeoutMultiplier;
+
+            if (timeoutSeconds <= 0f)
+                return false;
+
+            return elapsedSeconds >= timeoutSeconds;
         }
         #endregion
     }
