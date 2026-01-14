@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: EM_Location_BlueBed
   m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_LocationDefinition
   id: Location.Bed.Blue
-  displayName: Blue's Workplace
+  displayName: Blue's Bed
   color: {r: 0, g: 0, b: 1, a: 0.67058825}
   queueRadius: 2
   queueSlotCount: 4

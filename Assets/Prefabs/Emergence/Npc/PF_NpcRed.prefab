@@ -141,9 +141,9 @@ MonoBehaviour:
   initialReputation: 1
   npcTypeIdDefinition: {fileID: 11400000, guid: 9a4e03965de634042bc60d18e60f0d54, type: 2}
   npcTypeId: Red
-  logMessageColor: {r: 1, g: 0, b: 0, a: 1}
+  logMessageColor: {r: 0.836478, g: 0, b: 0, a: 1}
   schedulePreset: {fileID: 11400000, guid: 26832a5be94a4eb47bca4a7843f2e748, type: 2}
-  needRateVariance: 0.1
+  needRateVariance: 0.3
   needs:
   - NeedIdDefinition: {fileID: 11400000, guid: bb08d13ab847f4e498d901bd00407fc1, type: 2}
     NeedId: Hunger

@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 08dc9d692ff7435d9bcb30e0bfc662e0, type: 3}
-  m_Name: EM_Location_OrangeBed
+  m_Name: EM_Location_Blue.Dillydallying
   m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_LocationDefinition
-  id: Location.Bed.Orange
-  displayName: Orange's Bed
-  color: {r: 1, g: 0.7688161, b: 0.23921567, a: 1}
+  id: Location.Dillydallying.Blue
+  displayName: Blue's Cazzegging Spot
+  color: {r: 0, g: 0.92364573, b: 1, a: 0.9019608}
   queueRadius: 2
   queueSlotCount: 4

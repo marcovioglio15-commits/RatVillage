@@ -291,11 +291,34 @@ MonoBehaviour:
     legacyStartSignalId: 
     legacyTickSignalIdDefinition: {fileID: 0}
     legacyTickSignalId: 
+  - activityIdDefinition: {fileID: 11400000, guid: c1a62162a79142f47a25943a969d73b9, type: 2}
+    activityId: Override.Sleep
+    locationDefinition: {fileID: 11400000, guid: 5a500be1f0e5fef49917ab61ab7c3f50, type: 2}
+    tradeCapable: 1
+    startHour: 19
+    endHour: 22
+    useDuration: 0
+    minDurationHours: 0
+    maxDurationHours: 0
+    legacyTickIntervalHours: 0
+    legacyTickSignalCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    signalEntries: []
+    tradePolicy: 0
+    allowedTradeNeeds: []
+    legacyStartSignalIdDefinition: {fileID: 0}
+    legacyStartSignalId: 
+    legacyTickSignalIdDefinition: {fileID: 0}
+    legacyTickSignalId: 
   - activityIdDefinition: {fileID: 11400000, guid: 03476dd9832b06040b063b228e754cb1, type: 2}
     activityId: Override.Sleep
     locationDefinition: {fileID: 11400000, guid: 0d6ba9bbadd9db441aedf6eb725baef0, type: 2}
     tradeCapable: 0
-    startHour: 19
+    startHour: 22
     endHour: 6
     useDuration: 0
     minDurationHours: 0

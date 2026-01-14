@@ -143,7 +143,7 @@ MonoBehaviour:
   npcTypeId: Orange
   logMessageColor: {r: 1, g: 0.43602607, b: 0, a: 1}
   schedulePreset: {fileID: 11400000, guid: 8b11abd408225d6458ca9cced093d3a6, type: 2}
-  needRateVariance: 0.1
+  needRateVariance: 0.3
   needs:
   - NeedIdDefinition: {fileID: 11400000, guid: bb08d13ab847f4e498d901bd00407fc1, type: 2}
     NeedId: Hunger

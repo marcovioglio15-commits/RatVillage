@@ -83,11 +83,126 @@ MonoBehaviour:
     legacyStartSignalId: 
     legacyTickSignalIdDefinition: {fileID: 0}
     legacyTickSignalId: 
+  - activityIdDefinition: {fileID: 11400000, guid: 03476dd9832b06040b063b228e754cb1, type: 2}
+    activityId: Work
+    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
+    tradeCapable: 0
+    startHour: 0
+    endHour: 10
+    useDuration: 0
+    minDurationHours: 0
+    maxDurationHours: 0
+    legacyTickIntervalHours: 0
+    legacyTickSignalCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    signalEntries: []
+    tradePolicy: 0
+    allowedTradeNeeds: []
+    legacyStartSignalIdDefinition: {fileID: 0}
+    legacyStartSignalId: 
+    legacyTickSignalIdDefinition: {fileID: 0}
+    legacyTickSignalId: 
   - activityIdDefinition: {fileID: 11400000, guid: 20e60703ccb2c34448b06b9f8703adcd, type: 2}
     activityId: Work
     locationDefinition: {fileID: 11400000, guid: f59251d9904ed7246a3ab4e4fee49434, type: 2}
     tradeCapable: 1
-    startHour: 0
+    startHour: 10
+    endHour: 15
+    useDuration: 0
+    minDurationHours: 0
+    maxDurationHours: 0
+    legacyTickIntervalHours: 0
+    legacyTickSignalCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    signalEntries: []
+    tradePolicy: 0
+    allowedTradeNeeds: []
+    legacyStartSignalIdDefinition: {fileID: 0}
+    legacyStartSignalId: 
+    legacyTickSignalIdDefinition: {fileID: 0}
+    legacyTickSignalId: 
+  - activityIdDefinition: {fileID: 11400000, guid: 67d3d15d8c81e474086a46568dd94676, type: 2}
+    activityId: Work
+    locationDefinition: {fileID: 11400000, guid: 9db9746afde5b0248a18402372fba93c, type: 2}
+    tradeCapable: 1
+    startHour: 15
+    endHour: 16
+    useDuration: 0
+    minDurationHours: 0
+    maxDurationHours: 0
+    legacyTickIntervalHours: 0
+    legacyTickSignalCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    signalEntries: []
+    tradePolicy: 0
+    allowedTradeNeeds: []
+    legacyStartSignalIdDefinition: {fileID: 0}
+    legacyStartSignalId: 
+    legacyTickSignalIdDefinition: {fileID: 0}
+    legacyTickSignalId: 
+  - activityIdDefinition: {fileID: 11400000, guid: 20e60703ccb2c34448b06b9f8703adcd, type: 2}
+    activityId: Work
+    locationDefinition: {fileID: 11400000, guid: f59251d9904ed7246a3ab4e4fee49434, type: 2}
+    tradeCapable: 1
+    startHour: 16
+    endHour: 20
+    useDuration: 0
+    minDurationHours: 0
+    maxDurationHours: 0
+    legacyTickIntervalHours: 0
+    legacyTickSignalCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    signalEntries: []
+    tradePolicy: 0
+    allowedTradeNeeds: []
+    legacyStartSignalIdDefinition: {fileID: 0}
+    legacyStartSignalId: 
+    legacyTickSignalIdDefinition: {fileID: 0}
+    legacyTickSignalId: 
+  - activityIdDefinition: {fileID: 11400000, guid: 67d3d15d8c81e474086a46568dd94676, type: 2}
+    activityId: Work
+    locationDefinition: {fileID: 11400000, guid: 9db9746afde5b0248a18402372fba93c, type: 2}
+    tradeCapable: 1
+    startHour: 20
+    endHour: 21
+    useDuration: 0
+    minDurationHours: 0
+    maxDurationHours: 0
+    legacyTickIntervalHours: 0
+    legacyTickSignalCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 0
+      m_PostInfinity: 0
+      m_RotationOrder: 0
+    signalEntries: []
+    tradePolicy: 0
+    allowedTradeNeeds: []
+    legacyStartSignalIdDefinition: {fileID: 0}
+    legacyStartSignalId: 
+    legacyTickSignalIdDefinition: {fileID: 0}
+    legacyTickSignalId: 
+  - activityIdDefinition: {fileID: 11400000, guid: 03476dd9832b06040b063b228e754cb1, type: 2}
+    activityId: Work
+    locationDefinition: {fileID: 11400000, guid: 028c5a81a3be9244ea9b16623933886e, type: 2}
+    tradeCapable: 1
+    startHour: 21
     endHour: 24
     useDuration: 0
     minDurationHours: 0

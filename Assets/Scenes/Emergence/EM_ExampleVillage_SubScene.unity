@@ -799,7 +799,7 @@ PrefabInstance:
       objectReference: {fileID: 1984070724}
     - target: {fileID: 8471115441510017071, guid: 936c1d72502bd9e47a5fad73f454eaa8, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.73
+      value: -8.23
       objectReference: {fileID: 0}
     - target: {fileID: 8471115441510017071, guid: 936c1d72502bd9e47a5fad73f454eaa8, type: 3}
       propertyPath: m_LocalPosition.y
@@ -807,7 +807,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8471115441510017071, guid: 936c1d72502bd9e47a5fad73f454eaa8, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -1.5
       objectReference: {fileID: 0}
     - target: {fileID: 8471115441510017071, guid: 936c1d72502bd9e47a5fad73f454eaa8, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1215,7 +1215,9 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: c919f8c26a4332142a74f3a46f813fc5, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: c919f8c26a4332142a74f3a46f813fc5, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
@@ -1235,11 +1237,9 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 5a500be1f0e5fef49917ab61ab7c3f50, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 5a500be1f0e5fef49917ab61ab7c3f50, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 0
@@ -1295,9 +1295,9 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 9db9746afde5b0248a18402372fba93c, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 9db9746afde5b0248a18402372fba93c, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
@@ -1345,7 +1345,9 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 028c5a81a3be9244ea9b16623933886e, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: 028c5a81a3be9244ea9b16623933886e, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
@@ -1353,11 +1355,9 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: c919f8c26a4332142a74f3a46f813fc5, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 9db9746afde5b0248a18402372fba93c, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 11400000, guid: 49cf91f467101e640bd5d0ef4140e127, type: 2}
   - walkable: 1
@@ -1395,9 +1395,9 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: c919f8c26a4332142a74f3a46f813fc5, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 9db9746afde5b0248a18402372fba93c, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 11400000, guid: 49cf91f467101e640bd5d0ef4140e127, type: 2}
   - walkable: 1
@@ -1493,7 +1493,7 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 028c5a81a3be9244ea9b16623933886e, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
@@ -1501,9 +1501,9 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 9db9746afde5b0248a18402372fba93c, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 9db9746afde5b0248a18402372fba93c, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 11400000, guid: 3e72f521413a22e48b37552ccacfb0ae, type: 2}
   - walkable: 1
@@ -1529,11 +1529,11 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 5a500be1f0e5fef49917ab61ab7c3f50, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 5a500be1f0e5fef49917ab61ab7c3f50, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 028c5a81a3be9244ea9b16623933886e, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
@@ -1543,9 +1543,9 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 11400000, guid: 49cf91f467101e640bd5d0ef4140e127, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 9db9746afde5b0248a18402372fba93c, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: c919f8c26a4332142a74f3a46f813fc5, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
@@ -1585,7 +1585,7 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 11400000, guid: 49cf91f467101e640bd5d0ef4140e127, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: c919f8c26a4332142a74f3a46f813fc5, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
@@ -1629,9 +1629,9 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 028c5a81a3be9244ea9b16623933886e, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 028c5a81a3be9244ea9b16623933886e, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
@@ -1719,7 +1719,7 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 5a500be1f0e5fef49917ab61ab7c3f50, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 0
@@ -1759,7 +1759,7 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 5a500be1f0e5fef49917ab61ab7c3f50, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 0
@@ -1773,9 +1773,9 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 028c5a81a3be9244ea9b16623933886e, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 028c5a81a3be9244ea9b16623933886e, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
@@ -1815,9 +1815,9 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 5a500be1f0e5fef49917ab61ab7c3f50, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 5a500be1f0e5fef49917ab61ab7c3f50, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
@@ -2123,64 +2123,8 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1984070724}
     - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
-      propertyPath: logMessageColor.g
-      value: 0.47453213
-      objectReference: {fileID: 0}
-    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
-      propertyPath: needs.Array.data[0].MaxValue
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
-      propertyPath: needs.Array.data[1].MaxValue
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
-      propertyPath: needs.Array.data[2].MaxValue
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: resources.Array.data[0].Amount
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
-      propertyPath: needs.Array.data[2].ActivityRates.Array.data[0].RatePerHour.m_Curve.Array.data[1].time
-      value: 0.4565277
-      objectReference: {fileID: 0}
-    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
-      propertyPath: needs.Array.data[2].ActivityRates.Array.data[0].RatePerHour.m_Curve.Array.data[2].time
-      value: 0.97516185
-      objectReference: {fileID: 0}
-    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
-      propertyPath: needs.Array.data[2].ActivityRates.Array.data[0].RatePerHour.m_Curve.Array.data[1].value
-      value: 0.010974124
-      objectReference: {fileID: 0}
-    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
-      propertyPath: needs.Array.data[2].ActivityRates.Array.data[0].RatePerHour.m_Curve.Array.data[2].value
-      value: 0.012063816
-      objectReference: {fileID: 0}
-    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
-      propertyPath: needs.Array.data[2].ActivityRates.Array.data[0].RatePerHour.m_Curve.Array.data[0].inSlope
-      value: 0.024038242
-      objectReference: {fileID: 0}
-    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
-      propertyPath: needs.Array.data[2].ActivityRates.Array.data[0].RatePerHour.m_Curve.Array.data[1].inSlope
-      value: 0.013069661
-      objectReference: {fileID: 0}
-    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
-      propertyPath: needs.Array.data[2].ActivityRates.Array.data[0].RatePerHour.m_Curve.Array.data[2].inSlope
-      value: 0.0021010805
-      objectReference: {fileID: 0}
-    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
-      propertyPath: needs.Array.data[2].ActivityRates.Array.data[0].RatePerHour.m_Curve.Array.data[0].outSlope
-      value: 0.024038242
-      objectReference: {fileID: 0}
-    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
-      propertyPath: needs.Array.data[2].ActivityRates.Array.data[0].RatePerHour.m_Curve.Array.data[1].outSlope
-      value: 0.013069661
-      objectReference: {fileID: 0}
-    - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
-      propertyPath: needs.Array.data[2].ActivityRates.Array.data[0].RatePerHour.m_Curve.Array.data[2].outSlope
-      value: 0.0021010805
       objectReference: {fileID: 0}
     - target: {fileID: 8471115441510017071, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: m_LocalPosition.x
