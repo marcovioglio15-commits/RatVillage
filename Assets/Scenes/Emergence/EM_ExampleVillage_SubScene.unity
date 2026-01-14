@@ -2240,15 +2240,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: needs.Array.data[0].MaxValue
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: needs.Array.data[1].MaxValue
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: needs.Array.data[2].MaxValue
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: resources.Array.data[0].Amount
