@@ -15,6 +15,7 @@ namespace EmergentMechanics
         private BufferLookup<EM_BufferElement_SignalEvent> signalLookup;
         private ComponentLookup<EM_Component_SocietyMember> memberLookup;
         private ComponentLookup<EM_Component_NpcActivityTargetState> activityTargetLookup;
+        private ComponentLookup<EM_Component_TradeRequestState> tradeRequestLookup;
         #endregion
 
         #region Unity Lifecycle
@@ -28,6 +29,7 @@ namespace EmergentMechanics
             signalLookup = state.GetBufferLookup<EM_BufferElement_SignalEvent>(false);
             memberLookup = state.GetComponentLookup<EM_Component_SocietyMember>(true);
             activityTargetLookup = state.GetComponentLookup<EM_Component_NpcActivityTargetState>(true);
+            tradeRequestLookup = state.GetComponentLookup<EM_Component_TradeRequestState>(true);
         }
 
         // Evaluate per-NPC schedules and emit activity signals.
@@ -54,6 +56,7 @@ namespace EmergentMechanics
             signalLookup.Update(ref state);
             memberLookup.Update(ref state);
             activityTargetLookup.Update(ref state);
+            tradeRequestLookup.Update(ref state);
 
             // Schedule evaluation and signal emission.
             foreach ((RefRO<EM_Component_NpcSchedule> schedule, RefRW<EM_Component_NpcScheduleState> scheduleState,
@@ -95,7 +98,15 @@ namespace EmergentMechanics
                 float timeOfDay = clock.TimeOfDay;
                 double timeSeconds = clock.SimulatedTimeSeconds;
 
-                UpdateOverride(scheduleOverride, deltaHours);
+                bool holdOverrideForTrade = false;
+
+                if (tradeRequestLookup.HasComponent(entity))
+                {
+                    EM_Component_TradeRequestState tradeRequest = tradeRequestLookup[entity];
+                    holdOverrideForTrade = tradeRequest.Stage != EM_TradeRequestStage.None &&
+                        tradeRequest.IsOverrideRequest != 0;
+                }
+                UpdateOverride(scheduleOverride, holdOverrideForTrade ? 0f : deltaHours);
                 bool overrideActive = scheduleOverride.ValueRO.RemainingHours > 0f && scheduleOverride.ValueRO.ActivityId.Length > 0;
 
                 UpdateDuration(scheduleDuration, overrideActive ? 0f : deltaHours);
@@ -203,11 +214,13 @@ namespace EmergentMechanics
                 byte overrideFlag = (byte)(overrideActive ? 1 : 0);
                 UpdateScheduleTarget(scheduleTarget, entryIndex, activityId, targetLocationId, overrideFlag, targetTradeCapable);
 
+                bool hasTargetActivity = hasEntryData && activityId.Length > 0;
                 bool locationReady = IsTargetLocationReady(targetLocationId, activityTargetState, locationState.ValueRO.CurrentNodeIndex);
-                bool canStart = hasEntryData && activityId.Length > 0 && locationReady;
+                bool canStart = hasTargetActivity && locationReady;
+                bool pendingStart = hasTargetActivity && !locationReady;
                 int activeEntryIndex = canStart ? entryIndex : -1;
-                FixedString64Bytes activeActivityId = canStart ? activityId : default;
-                byte activeOverrideFlag = (byte)(canStart && overrideActive ? 1 : 0);
+                FixedString64Bytes activeActivityId = canStart || pendingStart ? activityId : default;
+                byte activeOverrideFlag = (byte)((canStart || pendingStart) && overrideActive ? 1 : 0);
 
                 FixedString64Bytes previousActivityId = scheduleState.ValueRO.CurrentActivityId;
                 bool activityChanged = scheduleState.ValueRO.CurrentEntryIndex != activeEntryIndex ||
@@ -249,7 +262,7 @@ namespace EmergentMechanics
                         }
                     }
 
-                    if (activeActivityId.Length > 0 && hasStartSignals)
+                    if (canStart && activeActivityId.Length > 0 && hasStartSignals)
                     {
                         ref BlobArray<EM_Blob_NpcScheduleSignal> signalEntries = ref entries[activeEntryIndex].Signals;
 
@@ -265,7 +278,7 @@ namespace EmergentMechanics
                         }
                     }
 
-                    if (hasDebugBuffer && activeActivityId.Length > 0)
+                    if (hasDebugBuffer && canStart && activeActivityId.Length > 0)
                     {
                         EM_Component_Event debugEvent = ScheduleLogEvent(EM_DebugEventType.ScheduleWindow, timeOfDay,
                             societyRoot, entity, activeActivityId, 1f);

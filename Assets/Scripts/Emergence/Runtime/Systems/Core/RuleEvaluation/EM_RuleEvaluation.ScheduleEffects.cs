@@ -42,6 +42,21 @@ namespace EmergentMechanics
                 return true;
             }
 
+            if (scheduleOverride.RemainingHours > 0f && scheduleOverride.ActivityId.Length > 0 &&
+                scheduleOverride.ActivityId.Equals(activityId))
+            {
+                after = before;
+                return false;
+            }
+
+            int entryIndex = FindEntryIndexByActivityId(schedule.Schedule, activityId);
+
+            if (entryIndex < 0)
+            {
+                after = before;
+                return false;
+            }
+
             if (IsOverrideOnCooldown(target, activityId, timeSeconds, ref overrideCooldownSettingsLookup, ref overrideCooldownStateLookup))
             {
                 after = before;
@@ -63,7 +78,7 @@ namespace EmergentMechanics
             scheduleOverride.ActivityId = activityId;
             scheduleOverride.RemainingHours = durationHours;
             scheduleOverride.DurationHours = durationHours;
-            scheduleOverride.EntryIndex = FindEntryIndexByActivityId(schedule.Schedule, activityId);
+            scheduleOverride.EntryIndex = entryIndex;
             scheduleOverrideLookup[target] = scheduleOverride;
             after = durationHours;
             return true;

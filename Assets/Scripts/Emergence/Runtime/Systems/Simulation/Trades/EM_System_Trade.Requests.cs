@@ -54,8 +54,8 @@ namespace EmergentMechanics
             }
 
             TryStartTradeRequest(requester, societyRoot, timeSeconds, tradeSettings, policy, ref tradeEntry, ref seed, tradeInteraction,
-                scheduleTarget, navigationState, tradeRequest, attemptedProviders, intents, needs, settings, resources, signals, candidates,
-                candidateSocieties, ref providerLock, hasDebugBuffer, debugBuffer, maxEntries, ref debugLog);
+                scheduleTarget, scheduleOverride, navigationState, tradeRequest, attemptedProviders, intents, needs, settings, resources, signals,
+                candidates, candidateSocieties, ref providerLock, hasDebugBuffer, debugBuffer, maxEntries, ref debugLog);
         }
         #endregion
     }

@@ -106,11 +106,8 @@ namespace EmergentMechanics
                 return true;
             }
 
-            if (debugEvent.EffectType == EmergenceEffectType.OverrideSchedule && debugEvent.After > 0f)
-            {
-                signal = BuildScheduleOverrideSignal(debugEvent);
-                return true;
-            }
+            if (debugEvent.EffectType == EmergenceEffectType.OverrideSchedule)
+                return false;
 
             if (debugEvent.EffectType == EmergenceEffectType.EmitSignal)
             {

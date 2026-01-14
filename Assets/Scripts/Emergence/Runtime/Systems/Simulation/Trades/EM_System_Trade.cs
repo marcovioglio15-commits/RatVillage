@@ -11,6 +11,7 @@ namespace EmergentMechanics
         #region Fields
         #region Lookups
         private ComponentLookup<EM_Component_TradeSettings> tradeSettingsLookup;
+        private ComponentLookup<EM_Component_SocietyClock> clockLookup;
         private ComponentLookup<EM_Component_RandomSeed> randomLookup;
         private ComponentLookup<EM_Component_NpcType> npcTypeLookup;
         private ComponentLookup<EM_Component_NpcLocationState> locationStateLookup;
@@ -50,6 +51,7 @@ namespace EmergentMechanics
             state.RequireForUpdate<EM_Component_LocationGrid>();
             state.RequireForUpdate<EM_BufferElement_Intent>();
             tradeSettingsLookup = state.GetComponentLookup<EM_Component_TradeSettings>(true);
+            clockLookup = state.GetComponentLookup<EM_Component_SocietyClock>(true);
             randomLookup = state.GetComponentLookup<EM_Component_RandomSeed>(false);
             npcTypeLookup = state.GetComponentLookup<EM_Component_NpcType>(true);
             locationStateLookup = state.GetComponentLookup<EM_Component_NpcLocationState>(true);
@@ -81,6 +83,8 @@ namespace EmergentMechanics
                 return;
 
             NativeParallelHashMap<Entity, double> readyMap = BuildReadyMap(ref state);
+            clockLookup.Update(ref state);
+            ForceReadySocietiesWithOverrides(ref state, ref readyMap);
 
             if (readyMap.Count() == 0)
             {

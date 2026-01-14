@@ -57,7 +57,7 @@ namespace EmergentMechanics
 
             if (hasDebugBuffer)
             {
-                EM_Component_Event successEvent = EM_Utility_LogEvent.BuildInteractionEvent(EM_DebugEventType.InteractionSuccess, default,
+                EM_Component_Event successEvent = EM_Utility_LogEvent.BuildInteractionEvent(EM_DebugEventType.InteractionSuccess, ReasonSociety,
                     requester, societyRoot, societyRoot, needData.NeedId, needData.ResourceId, transferAmount, timeSeconds);
                 EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, successEvent);
             }

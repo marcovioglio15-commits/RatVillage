@@ -2346,7 +2346,7 @@ MonoBehaviour:
   healthDamageSignalId: Health.Damage
   tradeTickIntervalHours: 0.01
   tradeBaseAcceptance: 0.5
-  tradeAffinityWeight: 0.5
+  tradeAffinityWeight: 0.75
   tradeSuccessSignalIdDefinition: {fileID: 11400000, guid: a3ac1efa163841e4c80f18120ac8c7de, type: 2}
   tradeSuccessSignalId: Signal.Trade.Success
   tradeFailSignalIdDefinition: {fileID: 11400000, guid: f3b3ff318fe3c44439dae6cb0bfe66e8, type: 2}

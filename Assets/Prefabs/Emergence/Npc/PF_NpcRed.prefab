@@ -114,8 +114,8 @@ MonoBehaviour:
         m_RotationOrder: 4
     ResourceIdDefinition: {fileID: 11400000, guid: f3c7958a16ce9da4fbdbb82dbad55a8a, type: 2}
     ResourceId: Food
-    RequestAmount: 1
-    NeedSatisfactionPerUnit: 0.6
+    RequestAmount: 2
+    NeedSatisfactionPerUnit: 0.3
     DamageThreshold: 0.9
     DamagePerHour: 10
   - NeedIdDefinition: {fileID: 11400000, guid: e7ca60fafb33e624796c4844bf252696, type: 2}
@@ -178,8 +178,8 @@ MonoBehaviour:
         m_RotationOrder: 4
     ResourceIdDefinition: {fileID: 11400000, guid: 102c3a71d7b716f48b701df6024f73cb, type: 2}
     ResourceId: Water
-    RequestAmount: 1
-    NeedSatisfactionPerUnit: 0.6
+    RequestAmount: 2
+    NeedSatisfactionPerUnit: 0.3
     DamageThreshold: 0.9
     DamagePerHour: 10
   - NeedIdDefinition: {fileID: 11400000, guid: c4e22a71fca2cba4f846af0b73310230, type: 2}
@@ -303,17 +303,17 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.5
+      value: 0.2
       inSlope: 0
-      outSlope: 1
+      outSlope: 1.6
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
       time: 1
-      value: 1.5
-      inSlope: 1
+      value: 1.8
+      inSlope: 1.6
       outSlope: 0
       tangentMode: 0
       weightedMode: 0
@@ -322,8 +322,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  affinityMultiplierMin: 0
-  affinityMultiplierMax: 2
+  affinityMultiplierMin: 0.2
+  affinityMultiplierMax: 1.8
   moveSpeed: 2
   acceleration: 8
   turnSpeed: 360

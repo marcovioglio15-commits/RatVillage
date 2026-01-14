@@ -58,6 +58,7 @@ namespace EmergentMechanics
                     continue;
 
                 logLines.Add(line);
+                Debug.Log(line);
                 appended = true;
             }
 
@@ -83,6 +84,7 @@ namespace EmergentMechanics
                         continue;
 
                     logLines.Add(line);
+                    Debug.Log(line);
                     appended = true;
                 }
             }

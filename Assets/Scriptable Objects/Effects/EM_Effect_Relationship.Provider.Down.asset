@@ -20,7 +20,7 @@ MonoBehaviour:
   parameterId: 
   secondaryIdDefinition: {fileID: 0}
   secondaryId: 
-  magnitude: -0.01
+  magnitude: -0.03
   useClamp: 0
   minValue: 0
   maxValue: 1

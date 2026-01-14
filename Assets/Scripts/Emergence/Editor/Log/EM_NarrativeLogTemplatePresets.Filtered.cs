@@ -42,7 +42,7 @@ namespace EmergentMechanics
 
             EM_NarrativeTemplateDefinition scheduleEnd = CreateDefinition("Schedule End - Regular",
                 EM_NarrativeEventType.ScheduleEnd, EM_NarrativeSeverity.Info, EM_NarrativeTagMask.Schedule,
-                "[{time}] {subject} ends {activity}", "Returning to schedule.");
+                "[{time}] {subject} ends {activity}", "Ended activity.");
             scheduleEnd.Verbosity = EM_NarrativeVerbosity.Low;
 
             EM_NarrativeTemplateDefinition seekFoodOverride = CreateDefinition("Override - Seek Food",
@@ -83,11 +83,37 @@ namespace EmergentMechanics
                 EM_NarrativeEventType.TradeSuccess, EM_NarrativeSeverity.Info, EM_NarrativeTagMask.Trade,
                 "[{time}] {subject} obtained food", "Resolved {need} with {target} (amount {value}).");
             tradeFood.ResourceIdEquals = "Food";
+            tradeFood.ReasonIdEquals = "Trade";
 
             EM_NarrativeTemplateDefinition tradeWater = CreateDefinition("Trade Success - Water",
                 EM_NarrativeEventType.TradeSuccess, EM_NarrativeSeverity.Info, EM_NarrativeTagMask.Trade,
                 "[{time}] {subject} obtained water", "Resolved {need} with {target} (amount {value}).");
             tradeWater.ResourceIdEquals = "Water";
+            tradeWater.ReasonIdEquals = "Trade";
+
+            EM_NarrativeTemplateDefinition inventoryFood = CreateDefinition("Inventory Resolve - Food",
+                EM_NarrativeEventType.TradeSuccess, EM_NarrativeSeverity.Info, EM_NarrativeTagMask.Trade,
+                "[{time}] {subject} used inventory {resource}", "Resolved {need} from inventory (amount {value}).");
+            inventoryFood.ResourceIdEquals = "Food";
+            inventoryFood.ReasonIdEquals = "Inventory";
+
+            EM_NarrativeTemplateDefinition inventoryWater = CreateDefinition("Inventory Resolve - Water",
+                EM_NarrativeEventType.TradeSuccess, EM_NarrativeSeverity.Info, EM_NarrativeTagMask.Trade,
+                "[{time}] {subject} used inventory {resource}", "Resolved {need} from inventory (amount {value}).");
+            inventoryWater.ResourceIdEquals = "Water";
+            inventoryWater.ReasonIdEquals = "Inventory";
+
+            EM_NarrativeTemplateDefinition societyFood = CreateDefinition("Society Resolve - Food",
+                EM_NarrativeEventType.TradeSuccess, EM_NarrativeSeverity.Info, EM_NarrativeTagMask.Trade,
+                "[{time}] {subject} drew {resource} from society", "Resolved {need} from society stockpile (amount {value}).");
+            societyFood.ResourceIdEquals = "Food";
+            societyFood.ReasonIdEquals = "Society";
+
+            EM_NarrativeTemplateDefinition societyWater = CreateDefinition("Society Resolve - Water",
+                EM_NarrativeEventType.TradeSuccess, EM_NarrativeSeverity.Info, EM_NarrativeTagMask.Trade,
+                "[{time}] {subject} drew {resource} from society", "Resolved {need} from society stockpile (amount {value}).");
+            societyWater.ResourceIdEquals = "Water";
+            societyWater.ReasonIdEquals = "Society";
 
             EM_NarrativeTemplateDefinition workFood = CreateDesignerDefinition("Signal - Work Tick Food",
                 EM_NarrativeEventType.SignalRaw, EM_NarrativeSeverity.Info, EM_NarrativeTagMask.Signal | EM_NarrativeTagMask.Designer,
@@ -120,6 +146,10 @@ namespace EmergentMechanics
                 sleepResource,
                 tradeFood,
                 tradeWater,
+                inventoryFood,
+                inventoryWater,
+                societyFood,
+                societyWater,
                 workFood,
                 workWater
             };

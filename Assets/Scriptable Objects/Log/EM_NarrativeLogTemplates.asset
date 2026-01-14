@@ -260,7 +260,7 @@ MonoBehaviour:
     useMaxAfter: 0
     maxAfter: 0
     titleTemplate: '[{time}] {subject} ends {activity}'
-    bodyTemplate: Returning to schedule.
+    bodyTemplate: Ended activity.
   - name: Override - Seek Food
     eventType: 4
     visibility: 0
@@ -492,7 +492,7 @@ MonoBehaviour:
     resourceIdEquals: Food
     activityIdEquals: 
     contextIdEquals: 
-    reasonIdEquals: 
+    reasonIdEquals: Trade
     useEffectType: 0
     effectType: 0
     useMinValue: 0
@@ -523,7 +523,7 @@ MonoBehaviour:
     resourceIdEquals: Water
     activityIdEquals: 
     contextIdEquals: 
-    reasonIdEquals: 
+    reasonIdEquals: Trade
     useEffectType: 0
     effectType: 0
     useMinValue: 0
@@ -540,6 +540,130 @@ MonoBehaviour:
     maxAfter: 0
     titleTemplate: '[{time}] {subject} obtained water'
     bodyTemplate: Resolved {need} with {target} (amount {value}).
+  - name: Inventory Resolve - Food
+    eventType: 7
+    visibility: 0
+    severity: 0
+    verbosity: 1
+    tags: 4
+    weight: 1
+    cooldownHours: 0
+    signalIdEquals: 
+    signalIdPrefix: 
+    needIdEquals: 
+    resourceIdEquals: Food
+    activityIdEquals: 
+    contextIdEquals: 
+    reasonIdEquals: Inventory
+    useEffectType: 0
+    effectType: 0
+    useMinValue: 0
+    minValue: 0
+    useMaxValue: 0
+    maxValue: 0
+    useMinDelta: 0
+    minDelta: 0
+    useMaxDelta: 0
+    maxDelta: 0
+    useMinAfter: 0
+    minAfter: 0
+    useMaxAfter: 0
+    maxAfter: 0
+    titleTemplate: '[{time}] {subject} used inventory {resource}'
+    bodyTemplate: Resolved {need} from inventory (amount {value}).
+  - name: Inventory Resolve - Water
+    eventType: 7
+    visibility: 0
+    severity: 0
+    verbosity: 1
+    tags: 4
+    weight: 1
+    cooldownHours: 0
+    signalIdEquals: 
+    signalIdPrefix: 
+    needIdEquals: 
+    resourceIdEquals: Water
+    activityIdEquals: 
+    contextIdEquals: 
+    reasonIdEquals: Inventory
+    useEffectType: 0
+    effectType: 0
+    useMinValue: 0
+    minValue: 0
+    useMaxValue: 0
+    maxValue: 0
+    useMinDelta: 0
+    minDelta: 0
+    useMaxDelta: 0
+    maxDelta: 0
+    useMinAfter: 0
+    minAfter: 0
+    useMaxAfter: 0
+    maxAfter: 0
+    titleTemplate: '[{time}] {subject} used inventory {resource}'
+    bodyTemplate: Resolved {need} from inventory (amount {value}).
+  - name: Society Resolve - Food
+    eventType: 7
+    visibility: 0
+    severity: 0
+    verbosity: 1
+    tags: 4
+    weight: 1
+    cooldownHours: 0
+    signalIdEquals: 
+    signalIdPrefix: 
+    needIdEquals: 
+    resourceIdEquals: Food
+    activityIdEquals: 
+    contextIdEquals: 
+    reasonIdEquals: Society
+    useEffectType: 0
+    effectType: 0
+    useMinValue: 0
+    minValue: 0
+    useMaxValue: 0
+    maxValue: 0
+    useMinDelta: 0
+    minDelta: 0
+    useMaxDelta: 0
+    maxDelta: 0
+    useMinAfter: 0
+    minAfter: 0
+    useMaxAfter: 0
+    maxAfter: 0
+    titleTemplate: '[{time}] {subject} drew {resource} from society'
+    bodyTemplate: Resolved {need} from society stockpile (amount {value}).
+  - name: Society Resolve - Water
+    eventType: 7
+    visibility: 0
+    severity: 0
+    verbosity: 1
+    tags: 4
+    weight: 1
+    cooldownHours: 0
+    signalIdEquals: 
+    signalIdPrefix: 
+    needIdEquals: 
+    resourceIdEquals: Water
+    activityIdEquals: 
+    contextIdEquals: 
+    reasonIdEquals: Society
+    useEffectType: 0
+    effectType: 0
+    useMinValue: 0
+    minValue: 0
+    useMaxValue: 0
+    maxValue: 0
+    useMinDelta: 0
+    minDelta: 0
+    useMaxDelta: 0
+    maxDelta: 0
+    useMinAfter: 0
+    minAfter: 0
+    useMaxAfter: 0
+    maxAfter: 0
+    titleTemplate: '[{time}] {subject} drew {resource} from society'
+    bodyTemplate: Resolved {need} from society stockpile (amount {value}).
   - name: Signal - Work Tick Food
     eventType: 17
     visibility: 1
@@ -623,8 +747,8 @@ MonoBehaviour:
     minValue: 0
     useMaxValue: 0
     maxValue: 0
-    useMinDelta: 0
-    minDelta: 0
+    useMinDelta: 1
+    minDelta: 0.01
     useMaxDelta: 0
     maxDelta: 0
     useMinAfter: 0

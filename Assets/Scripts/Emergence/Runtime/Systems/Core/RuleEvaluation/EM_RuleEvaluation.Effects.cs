@@ -19,6 +19,8 @@ namespace EmergentMechanics
             float after = 0f;
             float delta = 0f;
             bool applied = false;
+            Entity logSubject = subject;
+            Entity logTarget = target;
 
             if (effect.EffectType == EmergenceEffectType.ModifyNeed)
             {
@@ -60,6 +62,8 @@ namespace EmergentMechanics
                 applied = ApplyRelationshipDelta(target, other, magnitude, ref lookups.RelationshipLookup, ref lookups.RelationshipTypeLookup,
                     ref lookups.NpcTypeLookup, out before, out after);
                 delta = after - before;
+                logSubject = target;
+                logTarget = other;
             }
             else if (effect.EffectType == EmergenceEffectType.AddIntent)
             {
@@ -101,7 +105,7 @@ namespace EmergentMechanics
                 return applied;
 
             EM_Component_Event effectEvent = EM_Utility_LogEvent.BuildEffectEvent(effect.EffectType, effect.ParameterId, contextId,
-                delta, before, after, subject, target, societyRoot, timeSeconds);
+                delta, before, after, logSubject, logTarget, societyRoot, timeSeconds);
             EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, effectEvent);
             return applied;
         }

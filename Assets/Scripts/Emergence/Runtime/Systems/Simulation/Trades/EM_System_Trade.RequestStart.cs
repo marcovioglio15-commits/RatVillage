@@ -10,7 +10,8 @@ namespace EmergentMechanics
         private void TryStartTradeRequest(Entity requester, Entity societyRoot, double timeSeconds, EM_Component_TradeSettings tradeSettings,
             IntentPolicy policy, ref EM_Blob_NpcScheduleEntry tradeEntry, ref EM_Component_RandomSeed seed,
             RefRO<EM_Component_NpcTradeInteraction> tradeInteraction, RefRO<EM_Component_NpcScheduleTarget> scheduleTarget,
-            RefRW<EM_Component_NpcNavigationState> navigationState, RefRW<EM_Component_TradeRequestState> tradeRequest,
+            RefRW<EM_Component_NpcScheduleOverride> scheduleOverride, RefRW<EM_Component_NpcNavigationState> navigationState,
+            RefRW<EM_Component_TradeRequestState> tradeRequest,
             DynamicBuffer<EM_BufferElement_TradeAttemptedProvider> attemptedProviders, DynamicBuffer<EM_BufferElement_Intent> intents,
             DynamicBuffer<EM_BufferElement_Need> needs, DynamicBuffer<EM_BufferElement_NeedSetting> settings,
             DynamicBuffer<EM_BufferElement_Resource> resources, DynamicBuffer<EM_BufferElement_SignalEvent> signals,
@@ -28,6 +29,8 @@ namespace EmergentMechanics
 
             if (!hasIntent)
                 return;
+
+            bool isOverrideRequest = scheduleTarget.ValueRO.IsOverride != 0;
 
             NeedResolutionData needData;
             bool hasNeedData = ResolveNeedData(intent, settings, out needData);
@@ -49,6 +52,9 @@ namespace EmergentMechanics
 
             if (urgency < policy.MinUrgencyToKeep)
             {
+                if (isOverrideRequest)
+                    EndOverride(scheduleOverride);
+
                 RemoveIntentAt(intentIndex, intents);
                 return;
             }
@@ -67,6 +73,9 @@ namespace EmergentMechanics
 
             if (remainingAmount <= 0f)
             {
+                if (isOverrideRequest)
+                    EndOverride(scheduleOverride);
+
                 RemoveIntentAt(intentIndex, intents);
                 return;
             }
@@ -77,6 +86,9 @@ namespace EmergentMechanics
 
                 if (remainingNeedAmount <= 0f)
                 {
+                    if (isOverrideRequest)
+                        EndOverride(scheduleOverride);
+
                     RemoveIntentAt(intentIndex, intents);
                     return;
                 }
@@ -86,6 +98,9 @@ namespace EmergentMechanics
 
             if (remainingAmount <= 0f)
             {
+                if (isOverrideRequest)
+                    EndOverride(scheduleOverride);
+
                 RemoveIntentAt(intentIndex, intents);
                 return;
             }
@@ -100,7 +115,7 @@ namespace EmergentMechanics
 
                     if (hasDebugBuffer)
                     {
-                        EM_Component_Event successEvent = EM_Utility_LogEvent.BuildInteractionEvent(EM_DebugEventType.InteractionSuccess, default,
+                        EM_Component_Event successEvent = EM_Utility_LogEvent.BuildInteractionEvent(EM_DebugEventType.InteractionSuccess, ReasonInventory,
                             requester, requester, societyRoot, needData.NeedId, needData.ResourceId, inventoryResolved, timeSeconds);
                         EM_Utility_LogEvent.AppendEvent(debugBuffer, maxEntries, ref debugLog, successEvent);
                     }
@@ -109,6 +124,9 @@ namespace EmergentMechanics
 
             if (remainingAmount <= 0f)
             {
+                if (isOverrideRequest)
+                    EndOverride(scheduleOverride);
+
                 RemoveIntentAt(intentIndex, intents);
                 return;
             }
@@ -119,6 +137,9 @@ namespace EmergentMechanics
 
                 if (remainingNeedAmount <= 0f)
                 {
+                    if (isOverrideRequest)
+                        EndOverride(scheduleOverride);
+
                     RemoveIntentAt(intentIndex, intents);
                     return;
                 }
@@ -134,6 +155,9 @@ namespace EmergentMechanics
 
             if (remainingAmount <= 0f)
             {
+                if (isOverrideRequest)
+                    EndOverride(scheduleOverride);
+
                 RemoveIntentAt(intentIndex, intents);
                 return;
             }
@@ -144,6 +168,9 @@ namespace EmergentMechanics
 
                 if (remainingNeedAmount <= 0f)
                 {
+                    if (isOverrideRequest)
+                        EndOverride(scheduleOverride);
+
                     RemoveIntentAt(intentIndex, intents);
                     return;
                 }

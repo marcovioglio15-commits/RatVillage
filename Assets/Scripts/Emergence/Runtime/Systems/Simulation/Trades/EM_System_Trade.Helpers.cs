@@ -30,6 +30,26 @@ namespace EmergentMechanics
             return readyMap;
         }
 
+        private void ForceReadySocietiesWithOverrides(ref SystemState state, ref NativeParallelHashMap<Entity, double> readyMap)
+        {
+            foreach ((RefRO<EM_Component_SocietyMember> member, RefRO<EM_Component_NpcScheduleTarget> scheduleTarget)
+                in SystemAPI.Query<RefRO<EM_Component_SocietyMember>, RefRO<EM_Component_NpcScheduleTarget>>())
+            {
+                if (scheduleTarget.ValueRO.IsOverride == 0)
+                    continue;
+
+                Entity societyRoot = member.ValueRO.SocietyRoot;
+
+                if (societyRoot == Entity.Null || readyMap.ContainsKey(societyRoot))
+                    continue;
+
+                if (!clockLookup.HasComponent(societyRoot))
+                    continue;
+
+                readyMap.TryAdd(societyRoot, clockLookup[societyRoot].SimulatedTimeSeconds);
+            }
+        }
+
         // Convert a tick interval in simulated hours into seconds.
         private static float GetIntervalSeconds(float intervalHours)
         {
