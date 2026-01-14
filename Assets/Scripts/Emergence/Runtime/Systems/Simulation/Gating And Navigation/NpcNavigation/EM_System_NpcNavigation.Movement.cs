@@ -69,6 +69,7 @@ namespace EmergentMechanics
             currentSpeed = MoveTowards(currentSpeed, desiredSpeed, acceleration * deltaTime);
             movementState.ValueRW.CurrentSpeed = currentSpeed;
 
+            float3 direction = math.normalizesafe(toTarget);
             if (distance <= stopRadius || currentSpeed <= 0f)
             {
                 transform.ValueRW.Position = targetPosition;
@@ -77,7 +78,8 @@ namespace EmergentMechanics
                 return;
             }
 
-            float3 direction = math.normalizesafe(toTarget);
+            float turnSpeed = math.max(0f, settings.TurnSpeed) * speedScale;
+            UpdateFacing(transform, direction, turnSpeed, deltaTime);
             float step = currentSpeed * deltaTime;
 
             if (step >= distance)
@@ -91,6 +93,46 @@ namespace EmergentMechanics
             float3 nextPosition = currentPosition + direction * step;
             transform.ValueRW.Position = nextPosition;
             navigationState.ValueRW.IsMoving = 1;
+        }
+
+        private static void UpdateFacing(RefRW<LocalTransform> transform, float3 direction, float turnSpeed, float deltaTime)
+        {
+            if (turnSpeed <= 0f || deltaTime <= 0f)
+                return;
+
+            float3 planarDirection = new float3(direction.x, 0f, direction.z);
+            float directionLengthSq = math.lengthsq(planarDirection);
+
+            if (directionLengthSq <= 1e-6f)
+                return;
+
+            planarDirection = math.normalize(planarDirection);
+            quaternion targetRotation = quaternion.LookRotationSafe(planarDirection, new float3(0f, 1f, 0f));
+            quaternion currentRotation = transform.ValueRO.Rotation;
+            float3 currentForward = math.mul(currentRotation, new float3(0f, 0f, 1f));
+            currentForward.y = 0f;
+
+            float forwardLengthSq = math.lengthsq(currentForward);
+
+            if (forwardLengthSq <= 1e-6f)
+            {
+                transform.ValueRW.Rotation = targetRotation;
+                return;
+            }
+
+            currentForward = math.normalize(currentForward);
+            float dot = math.clamp(math.dot(currentForward, planarDirection), -1f, 1f);
+            float angle = math.acos(dot);
+
+            if (angle <= 1e-5f)
+            {
+                transform.ValueRW.Rotation = targetRotation;
+                return;
+            }
+
+            float maxRadians = math.radians(turnSpeed) * deltaTime;
+            float t = math.min(1f, maxRadians / angle);
+            transform.ValueRW.Rotation = math.slerp(currentRotation, targetRotation, t);
         }
 
         private static void StopMovement(RefRW<EM_Component_NpcNavigationState> navigationState, RefRW<EM_Component_NpcMovementState> movementState)
