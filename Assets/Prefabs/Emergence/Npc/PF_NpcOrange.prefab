@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 441275666551612119}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.9063079, z: -0, w: -0.42261827}
-  m_LocalPosition: {x: -8.3899, y: 0, z: 8.38889}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -421,7 +421,7 @@ MonoBehaviour:
   stopRadius: 0.25
   tradeInteractionDistance: 5
   tradeWaitSeconds: 10
-  allowMidwayTradeAnywhere: 1
+  allowMidwayTradeAnywhere: 0
   sameOverrideCooldownHours: 2
   anyOverrideCooldownHours: 1
   maxHealth: 100

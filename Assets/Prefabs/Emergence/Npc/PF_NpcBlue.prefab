@@ -331,7 +331,7 @@ MonoBehaviour:
   stopRadius: 0.25
   tradeInteractionDistance: 5
   tradeWaitSeconds: 10
-  allowMidwayTradeAnywhere: 1
+  allowMidwayTradeAnywhere: 0
   sameOverrideCooldownHours: 2
   anyOverrideCooldownHours: 1
   maxHealth: 100

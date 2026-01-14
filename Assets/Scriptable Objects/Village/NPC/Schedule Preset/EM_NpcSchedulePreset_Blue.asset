@@ -86,7 +86,7 @@ MonoBehaviour:
   - activityIdDefinition: {fileID: 11400000, guid: 20e60703ccb2c34448b06b9f8703adcd, type: 2}
     activityId: Work
     locationDefinition: {fileID: 11400000, guid: 52d4aa1ac3efb4442b7425e8ac38faa0, type: 2}
-    tradeCapable: 0
+    tradeCapable: 1
     startHour: 6
     endHour: 13
     useDuration: 0
@@ -190,7 +190,7 @@ MonoBehaviour:
   - activityIdDefinition: {fileID: 11400000, guid: 20e60703ccb2c34448b06b9f8703adcd, type: 2}
     activityId: Work
     locationDefinition: {fileID: 11400000, guid: 52d4aa1ac3efb4442b7425e8ac38faa0, type: 2}
-    tradeCapable: 0
+    tradeCapable: 1
     startHour: 14
     endHour: 18
     useDuration: 0

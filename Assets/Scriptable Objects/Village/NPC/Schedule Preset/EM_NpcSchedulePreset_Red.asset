@@ -86,7 +86,7 @@ MonoBehaviour:
   - activityIdDefinition: {fileID: 11400000, guid: 20e60703ccb2c34448b06b9f8703adcd, type: 2}
     activityId: Work
     locationDefinition: {fileID: 11400000, guid: f59251d9904ed7246a3ab4e4fee49434, type: 2}
-    tradeCapable: 0
+    tradeCapable: 1
     startHour: 0
     endHour: 24
     useDuration: 0
