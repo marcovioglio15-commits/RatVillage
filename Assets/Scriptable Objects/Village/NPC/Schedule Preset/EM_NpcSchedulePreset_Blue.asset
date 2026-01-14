@@ -85,8 +85,8 @@ MonoBehaviour:
     legacyTickSignalId: 
   - activityIdDefinition: {fileID: 11400000, guid: 20e60703ccb2c34448b06b9f8703adcd, type: 2}
     activityId: Work
-    locationDefinition: {fileID: 11400000, guid: a4144a8ba0bb99b48a4e4bc33b1515bc, type: 2}
-    tradeCapable: 1
+    locationDefinition: {fileID: 11400000, guid: 52d4aa1ac3efb4442b7425e8ac38faa0, type: 2}
+    tradeCapable: 0
     startHour: 6
     endHour: 13
     useDuration: 0
@@ -189,8 +189,8 @@ MonoBehaviour:
     legacyTickSignalId: 
   - activityIdDefinition: {fileID: 11400000, guid: 20e60703ccb2c34448b06b9f8703adcd, type: 2}
     activityId: Work
-    locationDefinition: {fileID: 11400000, guid: a4144a8ba0bb99b48a4e4bc33b1515bc, type: 2}
-    tradeCapable: 1
+    locationDefinition: {fileID: 11400000, guid: 52d4aa1ac3efb4442b7425e8ac38faa0, type: 2}
+    tradeCapable: 0
     startHour: 14
     endHour: 18
     useDuration: 0

@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EmergentMechanics.EM_LocationDefinition
   id: Location.Bed.Red
   displayName: Red's Workplace
-  color: {r: 1, g: 0.23921567, b: 0.27887517, a: 0.18431373}
+  color: {r: 1, g: 0.23921567, b: 0.27887517, a: 1}
   queueRadius: 2
   queueSlotCount: 4

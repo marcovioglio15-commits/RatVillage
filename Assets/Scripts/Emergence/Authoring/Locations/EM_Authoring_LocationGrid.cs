@@ -109,7 +109,7 @@ namespace EmergentMechanics
                 nodes = ResizeNodes(nodes, expected, true);
         }
 
-        private void OnDrawGizmosSelected()
+        private void OnDrawGizmos()
         {
             if (!drawGizmos)
                 return;

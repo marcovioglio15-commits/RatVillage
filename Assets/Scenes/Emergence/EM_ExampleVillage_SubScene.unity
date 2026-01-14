@@ -133,7 +133,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3413567824012304399, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
       propertyPath: societyRoot
@@ -202,7 +202,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3413567824012304399, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: societyRoot
@@ -271,7 +271,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3413567824012304399, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
       propertyPath: societyRoot
@@ -340,7 +340,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3413567824012304399, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: societyRoot
@@ -409,7 +409,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3413567824012304399, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
       propertyPath: societyRoot
@@ -478,7 +478,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3413567824012304399, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: societyRoot
@@ -547,7 +547,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3413567824012304399, guid: 936c1d72502bd9e47a5fad73f454eaa8, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 936c1d72502bd9e47a5fad73f454eaa8, type: 3}
       propertyPath: societyRoot
@@ -612,7 +612,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3413567824012304399, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: societyRoot
@@ -681,7 +681,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3413567824012304399, guid: 936c1d72502bd9e47a5fad73f454eaa8, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 936c1d72502bd9e47a5fad73f454eaa8, type: 3}
       propertyPath: societyRoot
@@ -777,118 +777,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1459310854
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1459310858}
-  - component: {fileID: 1459310857}
-  - component: {fileID: 1459310856}
-  - component: {fileID: 1459310855}
-  m_Layer: 0
-  m_Name: Cube
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!65 &1459310855
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1459310854}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!23 &1459310856
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1459310854}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &1459310857
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1459310854}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &1459310858
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1459310854}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10.3, y: 0, z: 13.41}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1488502804
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -903,7 +791,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3413567824012304399, guid: 936c1d72502bd9e47a5fad73f454eaa8, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 936c1d72502bd9e47a5fad73f454eaa8, type: 3}
       propertyPath: societyRoot
@@ -968,7 +856,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3413567824012304399, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
       propertyPath: societyRoot
@@ -1037,7 +925,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3413567824012304399, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
       propertyPath: societyRoot
@@ -1106,7 +994,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3413567824012304399, guid: 936c1d72502bd9e47a5fad73f454eaa8, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 936c1d72502bd9e47a5fad73f454eaa8, type: 3}
       propertyPath: societyRoot
@@ -1196,67 +1084,27 @@ MonoBehaviour:
   blockedColor: {r: 0.8, g: 0.2, b: 0.70880145, a: 0.2}
   gridLineColor: {r: 1, g: 1, b: 1, a: 0.6}
   nodes:
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: 0d6ba9bbadd9db441aedf6eb725baef0, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: 0d6ba9bbadd9db441aedf6eb725baef0, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: 0d6ba9bbadd9db441aedf6eb725baef0, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: 0d6ba9bbadd9db441aedf6eb725baef0, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: 0d6ba9bbadd9db441aedf6eb725baef0, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
   - walkable: 0
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
     locationDefinition: {fileID: 11400000, guid: 0d6ba9bbadd9db441aedf6eb725baef0, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 11400000, guid: 0d6ba9bbadd9db441aedf6eb725baef0, type: 2}
@@ -1266,151 +1114,15 @@ MonoBehaviour:
     locationDefinition: {fileID: 11400000, guid: 0d6ba9bbadd9db441aedf6eb725baef0, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 11400000, guid: 0d6ba9bbadd9db441aedf6eb725baef0, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
   - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: 3e72f521413a22e48b37552ccacfb0ae, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: ab5c9d319951b704fa088826cdcdcb18, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: 3e72f521413a22e48b37552ccacfb0ae, type: 2}
   - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
   - walkable: 0
     locationDefinition: {fileID: 0}
@@ -1433,43 +1145,15 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 0d6ba9bbadd9db441aedf6eb725baef0, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 0d6ba9bbadd9db441aedf6eb725baef0, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 0
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 0d6ba9bbadd9db441aedf6eb725baef0, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 0d6ba9bbadd9db441aedf6eb725baef0, type: 2}
   - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: 3e72f521413a22e48b37552ccacfb0ae, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 0d6ba9bbadd9db441aedf6eb725baef0, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
@@ -1480,29 +1164,7 @@ MonoBehaviour:
     locationDefinition: {fileID: 0}
   - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
   - walkable: 1
     locationDefinition: {fileID: 0}
@@ -1540,73 +1202,9 @@ MonoBehaviour:
     locationDefinition: {fileID: 0}
   - walkable: 1
     locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: a4144a8ba0bb99b48a4e4bc33b1515bc, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: ab5c9d319951b704fa088826cdcdcb18, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: ab5c9d319951b704fa088826cdcdcb18, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: ab5c9d319951b704fa088826cdcdcb18, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: ab5c9d319951b704fa088826cdcdcb18, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
   - walkable: 0
     locationDefinition: {fileID: 0}
   - walkable: 0
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: a4144a8ba0bb99b48a4e4bc33b1515bc, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 0
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 0
-    locationDefinition: {fileID: 0}
-  - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
     locationDefinition: {fileID: 0}
@@ -1646,33 +1244,9 @@ MonoBehaviour:
     locationDefinition: {fileID: 0}
   - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
   - walkable: 0
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: a4144a8ba0bb99b48a4e4bc33b1515bc, type: 2}
-  - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
     locationDefinition: {fileID: 0}
@@ -1681,61 +1255,15 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 49cf91f467101e640bd5d0ef4140e127, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: 49cf91f467101e640bd5d0ef4140e127, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: a4144a8ba0bb99b48a4e4bc33b1515bc, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: a4144a8ba0bb99b48a4e4bc33b1515bc, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: f59251d9904ed7246a3ab4e4fee49434, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
@@ -1744,6 +1272,68 @@ MonoBehaviour:
     locationDefinition: {fileID: 0}
   - walkable: 1
     locationDefinition: {fileID: 11400000, guid: 3e72f521413a22e48b37552ccacfb0ae, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: 52d4aa1ac3efb4442b7425e8ac38faa0, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 0
+    locationDefinition: {fileID: 0}
+  - walkable: 0
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 0
+    locationDefinition: {fileID: 0}
+  - walkable: 0
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
@@ -1772,54 +1362,16 @@ MonoBehaviour:
     locationDefinition: {fileID: 11400000, guid: 49cf91f467101e640bd5d0ef4140e127, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: 3e72f521413a22e48b37552ccacfb0ae, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: f59251d9904ed7246a3ab4e4fee49434, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
@@ -1847,22 +1399,12 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
+    locationDefinition: {fileID: 11400000, guid: 49cf91f467101e640bd5d0ef4140e127, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: a4144a8ba0bb99b48a4e4bc33b1515bc, type: 2}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
   - walkable: 1
     locationDefinition: {fileID: 0}
@@ -1873,15 +1415,7 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 0}
-  - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: a4144a8ba0bb99b48a4e4bc33b1515bc, type: 2}
+    locationDefinition: {fileID: 11400000, guid: 52d4aa1ac3efb4442b7425e8ac38faa0, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
@@ -1893,6 +1427,30 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: 52d4aa1ac3efb4442b7425e8ac38faa0, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: f59251d9904ed7246a3ab4e4fee49434, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 0
+    locationDefinition: {fileID: 0}
+  - walkable: 0
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: 52d4aa1ac3efb4442b7425e8ac38faa0, type: 2}
+  - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
     locationDefinition: {fileID: 0}
@@ -1907,7 +1465,11 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
-    locationDefinition: {fileID: 11400000, guid: a4144a8ba0bb99b48a4e4bc33b1515bc, type: 2}
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
@@ -1915,6 +1477,14 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 0
+    locationDefinition: {fileID: 0}
+  - walkable: 0
     locationDefinition: {fileID: 0}
   - walkable: 1
     locationDefinition: {fileID: 0}
@@ -1943,6 +1513,324 @@ MonoBehaviour:
   - walkable: 1
     locationDefinition: {fileID: 0}
   - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: 3e72f521413a22e48b37552ccacfb0ae, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 0
+    locationDefinition: {fileID: 0}
+  - walkable: 0
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: 49cf91f467101e640bd5d0ef4140e127, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: 52d4aa1ac3efb4442b7425e8ac38faa0, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 0
+    locationDefinition: {fileID: 0}
+  - walkable: 0
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: 49cf91f467101e640bd5d0ef4140e127, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: 49cf91f467101e640bd5d0ef4140e127, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 0
+    locationDefinition: {fileID: 0}
+  - walkable: 0
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: 3e72f521413a22e48b37552ccacfb0ae, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: 52d4aa1ac3efb4442b7425e8ac38faa0, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 0
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: 52d4aa1ac3efb4442b7425e8ac38faa0, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 0
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: f59251d9904ed7246a3ab4e4fee49434, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 0
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: 52d4aa1ac3efb4442b7425e8ac38faa0, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: 3e72f521413a22e48b37552ccacfb0ae, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 0
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: 3e72f521413a22e48b37552ccacfb0ae, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 0
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 11400000, guid: b5c658e3552c82045815cd661b150dd4, type: 2}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
+    locationDefinition: {fileID: 0}
+  - walkable: 1
     locationDefinition: {fileID: 11400000, guid: e51363292d9b9854d9d0dc7301286468, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 11400000, guid: e51363292d9b9854d9d0dc7301286468, type: 2}
@@ -1954,33 +1842,33 @@ MonoBehaviour:
     locationDefinition: {fileID: 11400000, guid: e51363292d9b9854d9d0dc7301286468, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
   - walkable: 1
     locationDefinition: {fileID: 11400000, guid: e51363292d9b9854d9d0dc7301286468, type: 2}
@@ -1992,9 +1880,9 @@ MonoBehaviour:
     locationDefinition: {fileID: 11400000, guid: e51363292d9b9854d9d0dc7301286468, type: 2}
   - walkable: 1
     locationDefinition: {fileID: 11400000, guid: e51363292d9b9854d9d0dc7301286468, type: 2}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
-  - walkable: 1
+  - walkable: 0
     locationDefinition: {fileID: 0}
 --- !u!4 &1605651162
 Transform:
@@ -2005,7 +1893,7 @@ Transform:
   m_GameObject: {fileID: 1605651160}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.76, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2025,7 +1913,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3413567824012304399, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
       propertyPath: societyRoot
@@ -2094,7 +1982,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3413567824012304399, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
       propertyPath: societyRoot
@@ -2163,7 +2051,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3413567824012304399, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: societyRoot
@@ -2353,7 +2241,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3413567824012304399, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: societyRoot
@@ -2422,7 +2310,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3413567824012304399, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 5e4b0cd0a670611418ebb64372dcaff5, type: 3}
       propertyPath: societyRoot
@@ -2647,7 +2535,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3413567824012304399, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7125374675004103240, guid: 60a108ca09961f14bbc32d18af1ab3f3, type: 3}
       propertyPath: societyRoot
@@ -2729,5 +2617,4 @@ SceneRoots:
   - {fileID: 1165391072}
   - {fileID: 1488502804}
   - {fileID: 1062645496}
-  - {fileID: 1459310858}
   - {fileID: 1605651162}
