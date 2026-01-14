@@ -23,7 +23,7 @@ namespace EmergentMechanics
 
             foreach (Entity entity in visibleEntities)
             {
-                if (!entityManager.Exists(entity))
+                if (!IsEntityAlive(entity))
                 {
                     removalBuffer.Add(entity);
                     continue;
@@ -55,7 +55,7 @@ namespace EmergentMechanics
                 Entity entity = pair.Key;
                 NpcStatusEntry entry = pair.Value;
 
-                if (!entityManager.Exists(entity))
+                if (!IsEntityAlive(entity))
                 {
                     removalBuffer.Add(entity);
                     continue;
@@ -80,6 +80,27 @@ namespace EmergentMechanics
             {
                 ToggleEntryVisibility(removalBuffer[i], false);
             }
+        }
+        #endregion
+
+        #region State
+        private bool IsEntityAlive(Entity entity)
+        {
+            if (!entityManager.Exists(entity))
+                return false;
+
+            if (entityManager.HasComponent<Disabled>(entity))
+                return false;
+
+            if (entityManager.HasComponent<EM_Component_NpcHealth>(entity))
+            {
+                EM_Component_NpcHealth health = entityManager.GetComponentData<EM_Component_NpcHealth>(entity);
+
+                if (health.Current <= 0f)
+                    return false;
+            }
+
+            return true;
         }
         #endregion
 

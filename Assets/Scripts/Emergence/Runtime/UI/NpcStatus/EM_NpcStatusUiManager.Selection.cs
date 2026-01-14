@@ -98,7 +98,7 @@ namespace EmergentMechanics
                 return;
             }
 
-            if (!entityManager.Exists(entity))
+            if (!IsEntityAlive(entity))
                 return;
 
             if (!visibleEntities.Add(entity))

@@ -1,5 +1,6 @@
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Mathematics;
 
 namespace EmergentMechanics
 {
@@ -52,6 +53,15 @@ namespace EmergentMechanics
             int entryIndex = FindEntryIndexByActivityId(schedule.Schedule, activityId);
 
             if (entryIndex < 0)
+            {
+                after = before;
+                return false;
+            }
+
+            ref EM_Blob_NpcScheduleEntry entry = ref schedule.Schedule.Value.Entries[entryIndex];
+            durationHours = ClampOverrideDuration(durationHours, ref entry);
+
+            if (durationHours <= 0f)
             {
                 after = before;
                 return false;
@@ -140,6 +150,23 @@ namespace EmergentMechanics
                 return false;
 
             return elapsedSeconds < sameCooldownHours * 3600d;
+        }
+
+        private static float ClampOverrideDuration(float durationHours, ref EM_Blob_NpcScheduleEntry entry)
+        {
+            if (durationHours <= 0f)
+                return durationHours;
+
+            if (entry.UseDuration == 0)
+                return durationHours;
+
+            float minDuration = math.max(entry.MinDurationHours, 0f);
+            float maxDuration = math.max(entry.MaxDurationHours, minDuration);
+
+            if (maxDuration <= 0f)
+                return 0f;
+
+            return math.clamp(durationHours, minDuration, maxDuration);
         }
 
         private static bool TryArbitrateScheduleOverride(Entity target, double timeSeconds, float priority, FixedString64Bytes activityId,
